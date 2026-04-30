@@ -94,13 +94,13 @@ public class Player extends Mob {
             handleBlockActions(input);
         }
 
-        Vector3f movementPerSecond = calculateMovementVector(input, deltaSeconds);
-        Vector3f movementThisFrame = movementPerSecond.mul((float) deltaSeconds);
+        final Vector3f movementPerSecond = calculateMovementVector(input, deltaSeconds);
+        final Vector3f movementThisFrame = movementPerSecond.mul((float) deltaSeconds);
         move(movementThisFrame);
     }
 
-    private void handleMouseCapture(InputState input) {
-        boolean shouldCapture = !mouseCaptured
+    private void handleMouseCapture(final InputState input) {
+        final boolean shouldCapture = !mouseCaptured
                 && (input.isMousePressed(GLFW_MOUSE_BUTTON_LEFT) || input.isMousePressed(GLFW_MOUSE_BUTTON_RIGHT));
         if (shouldCapture) {
             captureMouse();
@@ -112,8 +112,8 @@ public class Player extends Mob {
     }
 
     private void updateMouseLook() {
-        double[] mouseX = new double[1];
-        double[] mouseY = new double[1];
+        final double[] mouseX = new double[1];
+        final double[] mouseY = new double[1];
         glfwGetCursorPos(window, mouseX, mouseY);
 
         if (!hasLastMousePosition) {
@@ -123,8 +123,8 @@ public class Player extends Mob {
             return;
         }
 
-        double dx = mouseX[0] - lastMouseX;
-        double dy = mouseY[0] - lastMouseY;
+        final double dx = mouseX[0] - lastMouseX;
+        final double dy = mouseY[0] - lastMouseY;
         lastMouseX = mouseX[0];
         lastMouseY = mouseY[0];
 
@@ -132,7 +132,7 @@ public class Player extends Mob {
         setPitch(getPitch() - dy * MOUSE_SENSITIVITY);
     }
 
-    private void handleBlockActions(InputState input) {
+    private void handleBlockActions(final InputState input) {
         if (input.isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
             destroyBlockInView();
         }
@@ -141,7 +141,7 @@ public class Player extends Mob {
         }
     }
 
-    private void handleHotbarSelectionInput(InputState input) {
+    private void handleHotbarSelectionInput(final InputState input) {
         for (int i = 0; i < HOTBAR_KEYS.length; i++) {
             if (input.isKeyPressed(HOTBAR_KEYS[i])) {
                 selectedHotbarSlot = i;
@@ -149,10 +149,10 @@ public class Player extends Mob {
         }
     }
 
-    private Vector3f calculateMovementVector(InputState input, double deltaSeconds) {
-        double yawRad = Math.toRadians(getYaw());
-        Vector3f forward = new Vector3f(-Math.sin(yawRad), 0, -Math.cos(yawRad));
-        Vector3f right = new Vector3f(Math.cos(yawRad), 0, -Math.sin(yawRad));
+    private Vector3f calculateMovementVector(final InputState input, final double deltaSeconds) {
+        final double yawRad = Math.toRadians(getYaw());
+        final Vector3f forward = new Vector3f(-Math.sin(yawRad), 0, -Math.cos(yawRad));
+        final Vector3f right = new Vector3f(Math.cos(yawRad), 0, -Math.sin(yawRad));
         Vector3f movement = Vector3f.ZERO;
 
         if (input.isKeyDown(GLFW_KEY_W)) {
@@ -200,7 +200,7 @@ public class Player extends Mob {
         }
 
         if (input.isKeyPressed(GLFW_KEY_R)) {
-            Vector3f spawnPoint = world.getSpawnPoint();
+            final Vector3f spawnPoint = world.getSpawnPoint();
             teleport(spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ(), -8.0, getYaw());
         }
 
@@ -208,20 +208,20 @@ public class Player extends Mob {
     }
 
     public void destroyBlockInView() {
-        RaycastHit hit = raycastSolidBlock(BREAK_REACH, RAYCAST_STEP);
+        final RaycastHit hit = raycastSolidBlock(BREAK_REACH, RAYCAST_STEP);
         if (hit != null) {
             world.removeBlock(hit.hitX, hit.hitY, hit.hitZ);
         }
     }
 
-    public void placeBlockInView(BlockType type) {
-        RaycastHit hit = raycastSolidBlock(BREAK_REACH, RAYCAST_STEP);
+    public void placeBlockInView(final BlockType type) {
+        final RaycastHit hit = raycastSolidBlock(BREAK_REACH, RAYCAST_STEP);
         if (hit == null || !hit.hasPlacementCandidate) {
             return;
         }
 
-        double size = GameConfig.BLOCK_SIZE;
-        HitBox candidate = new HitBox(
+        final double size = GameConfig.BLOCK_SIZE;
+        final HitBox candidate = new HitBox(
                 new Vector3f(hit.placeX * size, hit.placeY * size, hit.placeZ * size),
                 new Vector3f((hit.placeX + 1) * size, (hit.placeY + 1) * size, (hit.placeZ + 1) * size)
         );
@@ -232,9 +232,9 @@ public class Player extends Mob {
         world.placeBlock(hit.placeX, hit.placeY, hit.placeZ, type);
     }
 
-    private RaycastHit raycastSolidBlock(double reach, double step) {
-        Vector3f direction = getViewDirection();
-        Vector3f start = new Vector3f(getCameraX(), getCameraY(), getCameraZ());
+    private RaycastHit raycastSolidBlock(final double reach, final double step) {
+        final Vector3f direction = getViewDirection();
+        final Vector3f start = new Vector3f(getCameraX(), getCameraY(), getCameraZ());
 
         int candidateX = 0;
         int candidateY = 0;
@@ -242,12 +242,12 @@ public class Player extends Mob {
         boolean hasCandidate = false;
 
         for (double dist = 0; dist <= reach; dist += step) {
-            Vector3f point = start.add(direction.mul((float) dist));
-            int blockX = toBlockCoordinate(point.getX());
-            int blockY = toBlockCoordinate(point.getY());
-            int blockZ = toBlockCoordinate(point.getZ());
+            final Vector3f point = start.add(direction.mul((float) dist));
+            final int blockX = toBlockCoordinate(point.getX());
+            final int blockY = toBlockCoordinate(point.getY());
+            final int blockZ = toBlockCoordinate(point.getZ());
 
-            Block block = world.getBlock(blockX, blockY, blockZ);
+            final Block block = world.getBlock(blockX, blockY, blockZ);
             if (block != null && block.isSolid()) {
                 return new RaycastHit(blockX, blockY, blockZ, candidateX, candidateY, candidateZ, hasCandidate);
             }
@@ -262,8 +262,8 @@ public class Player extends Mob {
     }
 
     private Vector3f getViewDirection() {
-        double yawRad = Math.toRadians(getYaw());
-        double pitchRad = Math.toRadians(getPitch());
+        final double yawRad = Math.toRadians(getYaw());
+        final double pitchRad = Math.toRadians(getPitch());
         return new Vector3f(
                 -Math.sin(yawRad) * Math.cos(pitchRad),
                 Math.sin(pitchRad),
@@ -301,7 +301,7 @@ public class Player extends Mob {
         return hotbarBlocks.length;
     }
 
-    public BlockType getHotbarBlock(int slotIndex) {
+    public BlockType getHotbarBlock(final int slotIndex) {
         if (slotIndex < 0 || slotIndex >= hotbarBlocks.length) {
             return BlockType.DIRT;
         }
@@ -340,7 +340,7 @@ public class Player extends Mob {
         return getHotbarBlock(selectedHotbarSlot);
     }
 
-    private static int clampStat(int value) {
+    private static int clampStat(final int value) {
         return Math.max(0, Math.min(20, value));
     }
 

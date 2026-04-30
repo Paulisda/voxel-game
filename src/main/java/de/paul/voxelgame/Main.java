@@ -5,6 +5,7 @@ import de.paul.voxelgame.engine.InputState;
 import de.paul.voxelgame.map.World;
 import de.paul.voxelgame.math.Vector3f;
 import de.paul.voxelgame.mob.Player;
+import de.paul.voxelgame.renderer.HudRenderer;
 import de.paul.voxelgame.renderer.WorldRenderer;
 import org.lwjgl.opengl.GL;
 
@@ -90,6 +91,7 @@ public class Main {
         player.captureMouse();
 
         WorldRenderer worldRenderer = new WorldRenderer(world);
+        HudRenderer hudRenderer = new HudRenderer(player);
 
         double lastFrameTime = glfwGetTime();
         int[] frameWidth = new int[1];
@@ -119,12 +121,14 @@ public class Main {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             worldRenderer.render(player, width, height);
+            hudRenderer.render(width, height);
             drawCrosshair(width, height);
 
             glfwSwapBuffers(window);
         }
 
         worldRenderer.destroy();
+        hudRenderer.destroy();
         glfwDestroyWindow(window);
         glfwTerminate();
     }
