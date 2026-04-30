@@ -13,9 +13,9 @@ public enum BlockType {
                     "grass_side"
             },
             new String[]{"grass_block_top", "grass_top", "grass"},
-            new String[]{"dirt", "dirt0", "dirt1", "dirt2", "dirt3", "dirt4"}
+            new String[]{"dirt4", "dirt3", "dirt2", "dirt1", "dirt0", "dirt"}
     ),
-    DIRT(true, "dirt", "dirt0", "dirt1", "dirt2", "dirt3", "dirt4"),
+    DIRT(true, "dirt4", "dirt3", "dirt2", "dirt1", "dirt0", "dirt"),
     STONE(true, "stone", "stone0", "stone1", "stone2", "stone3"),
     BEDROCK(true, "bedrock"),
     WATER(false, "water_still", "water"),

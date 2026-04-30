@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COMPILE;
@@ -67,10 +69,11 @@ public class WorldRenderer {
             "grass_side_overlay"
     };
     private static final Color DEFAULT_GRASS_TINT = new Color(0x7F, 0xB2, 0x38);
+    private static final int MATERIAL_VARIANT_BUCKETS = Math.max(1, Integer.getInteger("voxel.texture.variants", 16));
 
     private final World world;
     private final ResourcePackLoader resourcePackLoader = new ResourcePackLoader();
-    private final Map<BlockType, BlockTextures> blockTextures = new EnumMap<>(BlockType.class);
+    private final Map<BlockType, BlockTextures[]> blockTextureVariants = new EnumMap<>(BlockType.class);
     private final Map<Integer, Integer> fallbackTextureCache = new HashMap<>();
 
     private int displayListId;
@@ -105,12 +108,26 @@ public class WorldRenderer {
             glDeleteLists(displayListId, 1);
             displayListId = 0;
         }
-        for (BlockTextures textures : blockTextures.values()) {
-            glDeleteTextures(textures.side());
-            glDeleteTextures(textures.top());
-            glDeleteTextures(textures.bottom());
+        final Set<Integer> textureIds = new HashSet<>();
+        for (final BlockTextures[] variants : blockTextureVariants.values()) {
+            if (variants == null) {
+                continue;
+            }
+            for (final BlockTextures textures : variants) {
+                if (textures == null) {
+                    continue;
+                }
+                textureIds.add(textures.side());
+                textureIds.add(textures.top());
+                textureIds.add(textures.bottom());
+            }
         }
-        blockTextures.clear();
+        for (final Integer textureId : textureIds) {
+            if (textureId != null && textureId > 0) {
+                glDeleteTextures(textureId);
+            }
+        }
+        blockTextureVariants.clear();
         fallbackTextureCache.clear();
     }
 
@@ -166,7 +183,12 @@ public class WorldRenderer {
         final float maxY = minY + size;
         final float maxZ = minZ + size;
 
-        final BlockTextures textures = blockTextures.getOrDefault(block.getType(), blockTextures.get(BlockType.DIRT));
+        final BlockTextures[] variants = blockTextureVariants.getOrDefault(block.getType(), blockTextureVariants.get(BlockType.DIRT));
+        if (variants == null || variants.length == 0) {
+            return;
+        }
+        final int variantIndex = computeMaterialVariant(block.getType(), x, y, z, variants.length);
+        final BlockTextures textures = variants[variantIndex];
 
         if (isFaceVisible(x, y, z + 1)) {
             drawFace(textures.side(), 0.88f, minX, minY, maxZ, maxX, minY, maxZ, maxX, maxY, maxZ, minX, maxY, maxZ);
@@ -218,35 +240,97 @@ public class WorldRenderer {
     private void initializeTextures() {
         final Color grassTint = resolveGrassTint();
         for (final BlockType type : BlockType.values()) {
-            BufferedImage side = loadBlockImage(type.getSideTextureCandidates());
-            BufferedImage top = loadBlockImage(type.getTopTextureCandidates());
-            BufferedImage bottom = loadBlockImage(type.getBottomTextureCandidates());
+            final int variantCount = resolveVariantCount(type);
+            final BlockTextures[] variants = new BlockTextures[variantCount];
+            for (int variant = 0; variant < variantCount; variant++) {
+                BufferedImage side = loadBlockImageForVariant(type.getSideTextureCandidates(), variant);
+                BufferedImage top = loadBlockImageForVariant(type.getTopTextureCandidates(), variant);
+                BufferedImage bottom = loadBlockImageForVariant(type.getBottomTextureCandidates(), variant);
 
-            if (type == BlockType.GRASS) {
-                if (top != null) {
-                    top = multiplyTint(top, grassTint);
-                }
+                if (type == BlockType.GRASS) {
+                    if (top != null) {
+                        top = multiplyTint(top, grassTint);
+                    }
 
-                final BufferedImage sideOverlay = loadBlockImage(GRASS_SIDE_OVERLAY_CANDIDATES);
-                if (side != null) {
-                    if (sideOverlay != null) {
-                        side = alphaOverlay(side, multiplyTint(sideOverlay, grassTint));
-                    } else {
-                        side = multiplyTint(side, grassTint);
+                    final BufferedImage sideOverlay = loadBlockImageForVariant(GRASS_SIDE_OVERLAY_CANDIDATES, variant);
+                    if (side != null) {
+                        if (sideOverlay != null) {
+                            side = alphaOverlay(side, multiplyTint(sideOverlay, grassTint));
+                        } else {
+                            side = multiplyTint(side, grassTint);
+                        }
                     }
                 }
-            }
 
-            final int sideId = createTextureFromImageOrFallback(side, fallbackColor(type, Face.SIDE));
-            final int topId = createTextureFromImageOrFallback(top, fallbackColor(type, Face.TOP));
-            final int bottomId = createTextureFromImageOrFallback(bottom, fallbackColor(type, Face.BOTTOM));
-            blockTextures.put(type, new BlockTextures(sideId, topId, bottomId));
+                final int sideId = createTextureFromImageOrFallback(side, fallbackColor(type, Face.SIDE));
+                final int topId = createTextureFromImageOrFallback(top, fallbackColor(type, Face.TOP));
+                final int bottomId = createTextureFromImageOrFallback(bottom, fallbackColor(type, Face.BOTTOM));
+                variants[variant] = new BlockTextures(sideId, topId, bottomId);
+            }
+            blockTextureVariants.put(type, variants);
         }
     }
 
-    private BufferedImage loadBlockImage(final String... candidates) {
-        final byte[] data = resourcePackLoader.loadBlockTexture(candidates);
+    private BufferedImage loadBlockImageForVariant(final String[] candidates, final int variant) {
+        final String[] ordered = rotateCandidates(candidates, variant);
+        final byte[] data = resourcePackLoader.loadBlockTexture(ordered);
         return decodeImage(data);
+    }
+
+    private String[] rotateCandidates(final String[] candidates, final int variant) {
+        if (candidates == null || candidates.length == 0 || candidates.length == 1 || !hasIndexedVariantCandidate(candidates)) {
+            return candidates;
+        }
+        final int start = Math.floorMod(variant, candidates.length);
+        final String[] ordered = new String[candidates.length];
+        for (int i = 0; i < candidates.length; i++) {
+            ordered[i] = candidates[(start + i) % candidates.length];
+        }
+        return ordered;
+    }
+
+    private boolean hasIndexedVariantCandidate(final String[] candidates) {
+        if (candidates == null || candidates.length == 0) {
+            return false;
+        }
+        for (final String candidate : candidates) {
+            if (candidate == null || candidate.isBlank()) {
+                continue;
+            }
+            final char last = candidate.charAt(candidate.length() - 1);
+            if (last >= '0' && last <= '9') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private int resolveVariantCount(final BlockType type) {
+        int max = 1;
+        if (hasIndexedVariantCandidate(type.getSideTextureCandidates())) {
+            max = Math.max(max, type.getSideTextureCandidates().length);
+        }
+        if (hasIndexedVariantCandidate(type.getTopTextureCandidates())) {
+            max = Math.max(max, type.getTopTextureCandidates().length);
+        }
+        if (hasIndexedVariantCandidate(type.getBottomTextureCandidates())) {
+            max = Math.max(max, type.getBottomTextureCandidates().length);
+        }
+        if (type == BlockType.GRASS && hasIndexedVariantCandidate(GRASS_SIDE_OVERLAY_CANDIDATES)) {
+            max = Math.max(max, GRASS_SIDE_OVERLAY_CANDIDATES.length);
+        }
+        return Math.max(1, Math.min(max, MATERIAL_VARIANT_BUCKETS));
+    }
+
+    private int computeMaterialVariant(final BlockType type, final int worldX, final int worldY, final int worldZ, final int variantCount) {
+        int hash = 17;
+        hash = 31 * hash + type.ordinal();
+        hash = 31 * hash + worldX;
+        hash = 31 * hash + (worldY * 7);
+        hash = 31 * hash + worldZ;
+        hash ^= (worldX << 11);
+        hash ^= (worldZ >>> 3);
+        return Math.floorMod(hash, Math.max(1, variantCount));
     }
 
     private Color resolveGrassTint() {
