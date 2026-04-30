@@ -30,14 +30,14 @@ public final class GameDebug {
         }
 
         try {
-            Path logDir = Paths.get(System.getProperty("user.dir"), "logs");
+            final Path logDir = Paths.get(System.getProperty("user.dir"), "logs");
             Files.createDirectories(logDir);
             logFilePath = logDir.resolve("voxel-debug.log");
 
             LOGGER.setUseParentHandlers(false);
             LOGGER.setLevel(Level.INFO);
 
-            for (Handler oldHandler : LOGGER.getHandlers()) {
+            for (final Handler oldHandler : LOGGER.getHandlers()) {
                 LOGGER.removeHandler(oldHandler);
                 try {
                     oldHandler.close();
@@ -45,20 +45,20 @@ public final class GameDebug {
                 }
             }
 
-            Formatter formatter = new Formatter() {
+            final Formatter formatter = new Formatter() {
                 @Override
-                public String format(LogRecord record) {
-                    String timestamp = LocalDateTime.now().format(TS_FORMAT);
+                public String format(final LogRecord record) {
+                    final String timestamp = LocalDateTime.now().format(TS_FORMAT);
                     return String.format("%s [%s] %s%n", timestamp, record.getLevel().getName(), record.getMessage());
                 }
             };
 
-            FileHandler fileHandler = new FileHandler(logFilePath.toString(), true);
+            final FileHandler fileHandler = new FileHandler(logFilePath.toString(), true);
             fileHandler.setLevel(Level.INFO);
             fileHandler.setFormatter(formatter);
             LOGGER.addHandler(fileHandler);
 
-            ConsoleHandler consoleHandler = new ConsoleHandler();
+            final ConsoleHandler consoleHandler = new ConsoleHandler();
             consoleHandler.setLevel(Level.INFO);
             consoleHandler.setFormatter(formatter);
             LOGGER.addHandler(consoleHandler);
@@ -75,7 +75,7 @@ public final class GameDebug {
         return ENABLED;
     }
 
-    public static void info(String message) {
+    public static void info(final String message) {
         if (!ENABLED) {
             return;
         }

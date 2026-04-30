@@ -67,7 +67,7 @@ public class Player extends Mob {
     private double lastMouseX;
     private double lastMouseY;
 
-    public Player(long window, World world) {
+    public Player(final long window, final World world) {
         super(world);
         this.window = window;
 
@@ -86,7 +86,7 @@ public class Player extends Mob {
         setLocation(-halfWidth, 0, -halfWidth);
     }
 
-    public void update(InputState input, double deltaSeconds) {
+    public void update(final InputState input, final double deltaSeconds) {
         handleHotbarSelectionInput(input);
         handleMouseCapture(input);
         if (mouseCaptured) {
@@ -316,11 +316,11 @@ public class Player extends Mob {
         return hungerPoints;
     }
 
-    public void setHealthPoints(int healthPoints) {
+    public void setHealthPoints(final int healthPoints) {
         this.healthPoints = clampStat(healthPoints);
     }
 
-    public void setHungerPoints(int hungerPoints) {
+    public void setHungerPoints(final int hungerPoints) {
         this.hungerPoints = clampStat(hungerPoints);
     }
 
@@ -353,7 +353,7 @@ public class Player extends Mob {
         private final int placeZ;
         private final boolean hasPlacementCandidate;
 
-        private RaycastHit(int hitX, int hitY, int hitZ, int placeX, int placeY, int placeZ, boolean hasPlacementCandidate) {
+        private RaycastHit(final int hitX, final int hitY, final int hitZ, final int placeX, final int placeY, final int placeZ, final boolean hasPlacementCandidate) {
             this.hitX = hitX;
             this.hitY = hitY;
             this.hitZ = hitZ;

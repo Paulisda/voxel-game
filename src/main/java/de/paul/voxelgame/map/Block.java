@@ -6,7 +6,7 @@ public class Block {
     private final int worldZ;
     private final BlockType type;
 
-    public Block(int worldX, int worldY, int worldZ, BlockType type) {
+    public Block(final int worldX, final int worldY, final int worldZ, final BlockType type) {
         this.worldX = worldX;
         this.worldY = worldY;
         this.worldZ = worldZ;

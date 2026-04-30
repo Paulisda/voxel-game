@@ -16,7 +16,7 @@ public class InputState {
     private final boolean[] currentMouseButtons = new boolean[MOUSE_BUTTON_COUNT];
     private final boolean[] previousMouseButtons = new boolean[MOUSE_BUTTON_COUNT];
 
-    public InputState(long window) {
+    public InputState(final long window) {
         this.window = window;
         update();
     }
@@ -34,28 +34,28 @@ public class InputState {
         }
     }
 
-    public boolean isKeyDown(int key) {
+    public boolean isKeyDown(final int key) {
         if (key < 0 || key >= KEY_COUNT) {
             return false;
         }
         return currentKeys[key];
     }
 
-    public boolean isKeyPressed(int key) {
+    public boolean isKeyPressed(final int key) {
         if (key < 0 || key >= KEY_COUNT) {
             return false;
         }
         return currentKeys[key] && !previousKeys[key];
     }
 
-    public boolean isMouseDown(int button) {
+    public boolean isMouseDown(final int button) {
         if (button < 0 || button >= MOUSE_BUTTON_COUNT) {
             return false;
         }
         return currentMouseButtons[button];
     }
 
-    public boolean isMousePressed(int button) {
+    public boolean isMousePressed(final int button) {
         if (button < 0 || button >= MOUSE_BUTTON_COUNT) {
             return false;
         }

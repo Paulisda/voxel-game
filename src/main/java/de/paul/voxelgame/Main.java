@@ -55,7 +55,7 @@ import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         GameDebug.init();
 
         if (!glfwInit()) {
@@ -68,7 +68,7 @@ public class Main {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
 
-        long window = glfwCreateWindow(GameConfig.WIDTH, GameConfig.HEIGHT, "Voxel Game", NULL, NULL);
+        final long window = glfwCreateWindow(GameConfig.WIDTH, GameConfig.HEIGHT, "Voxel Game", NULL, NULL);
         if (window == NULL) {
             glfwTerminate();
             throw new RuntimeException("Fenster konnte nicht erstellt werden");
@@ -81,21 +81,21 @@ public class Main {
 
         glEnable(GL_DEPTH_TEST);
 
-        World world = new World();
+        final World world = new World();
         world.generateWorld(false);
 
-        InputState inputState = new InputState(window);
-        Player player = new Player(window, world);
-        Vector3f spawnPoint = world.getSpawnPoint();
+        final InputState inputState = new InputState(window);
+        final Player player = new Player(window, world);
+        final Vector3f spawnPoint = world.getSpawnPoint();
         player.teleport(spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ(), -8.0, 225.0);
         player.captureMouse();
 
-        WorldRenderer worldRenderer = new WorldRenderer(world);
-        HudRenderer hudRenderer = new HudRenderer(player);
+        final WorldRenderer worldRenderer = new WorldRenderer(world);
+        final HudRenderer hudRenderer = new HudRenderer(player);
 
         double lastFrameTime = glfwGetTime();
-        int[] frameWidth = new int[1];
-        int[] frameHeight = new int[1];
+        final int[] frameWidth = new int[1];
+        final int[] frameHeight = new int[1];
 
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
@@ -105,7 +105,7 @@ public class Main {
                 glfwSetWindowShouldClose(window, true);
             }
 
-            double now = glfwGetTime();
+            final double now = glfwGetTime();
             double deltaSeconds = now - lastFrameTime;
             lastFrameTime = now;
             deltaSeconds = Math.max(1.0 / 240.0, Math.min(0.05, deltaSeconds));
@@ -113,8 +113,8 @@ public class Main {
             player.update(inputState, deltaSeconds);
 
             glfwGetFramebufferSize(window, frameWidth, frameHeight);
-            int width = Math.max(1, frameWidth[0]);
-            int height = Math.max(1, frameHeight[0]);
+            final int width = Math.max(1, frameWidth[0]);
+            final int height = Math.max(1, frameHeight[0]);
 
             glViewport(0, 0, width, height);
             glClearColor(0.53f, 0.77f, 1.0f, 1.0f);
@@ -133,10 +133,10 @@ public class Main {
         glfwTerminate();
     }
 
-    private static void drawCrosshair(int width, int height) {
-        float centerX = width * 0.5f;
-        float centerY = height * 0.5f;
-        float size = 8.0f;
+    private static void drawCrosshair(final int width, final int height) {
+        final float centerX = width * 0.5f;
+        final float centerY = height * 0.5f;
+        final float size = 8.0f;
 
         glDisable(GL_DEPTH_TEST);
 

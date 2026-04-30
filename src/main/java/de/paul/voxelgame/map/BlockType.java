@@ -26,11 +26,11 @@ public enum BlockType {
     private final String[] topTextureCandidates;
     private final String[] bottomTextureCandidates;
 
-    BlockType(boolean solid, String... textureCandidates) {
+    BlockType(final boolean solid, final String... textureCandidates) {
         this(solid, textureCandidates, textureCandidates, textureCandidates);
     }
 
-    BlockType(boolean solid, String[] sideTextureCandidates, String[] topTextureCandidates, String[] bottomTextureCandidates) {
+    BlockType(final boolean solid, final String[] sideTextureCandidates, final String[] topTextureCandidates, final String[] bottomTextureCandidates) {
         this.solid = solid;
         this.sideTextureCandidates = sideTextureCandidates;
         this.topTextureCandidates = topTextureCandidates;

@@ -76,12 +76,12 @@ public class WorldRenderer {
     private int displayListId;
     private long builtRevision = -1;
 
-    public WorldRenderer(World world) {
+    public WorldRenderer(final World world) {
         this.world = world;
         initializeTextures();
     }
 
-    public void render(Player player, int width, int height) {
+    public void render(final Player player, final int width, final int height) {
         if (width <= 0 || height <= 0) {
             return;
         }
@@ -114,10 +114,10 @@ public class WorldRenderer {
         fallbackTextureCache.clear();
     }
 
-    private void setupProjection(double fovDeg, int width, int height, double nearClip, double farClip) {
-        double aspect = Math.max(0.0001, (double) width / (double) height);
-        double top = nearClip * Math.tan(Math.toRadians(fovDeg * 0.5));
-        double right = top * aspect;
+    private void setupProjection(final double fovDeg, final int width, final int height, final double nearClip, final double farClip) {
+        final double aspect = Math.max(0.0001, (double) width / (double) height);
+        final double top = nearClip * Math.tan(Math.toRadians(fovDeg * 0.5));
+        final double right = top * aspect;
 
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -125,7 +125,7 @@ public class WorldRenderer {
         glMatrixMode(GL_MODELVIEW);
     }
 
-    private void setupCamera(Player player) {
+    private void setupCamera(final Player player) {
         glLoadIdentity();
         glRotatef((float) -player.getPitchDegrees(), 1.0f, 0.0f, 0.0f);
         glRotatef((float) -player.getYawDegrees(), 0.0f, 1.0f, 0.0f);
@@ -149,24 +149,24 @@ public class WorldRenderer {
         builtRevision = world.getRevision();
     }
 
-    private void renderBlock(Block block) {
+    private void renderBlock(final Block block) {
         if (block == null || !block.isSolid()) {
             return;
         }
 
-        int x = block.getWorldX();
-        int y = block.getWorldY();
-        int z = block.getWorldZ();
-        float size = GameConfig.BLOCK_SIZE;
+        final int x = block.getWorldX();
+        final int y = block.getWorldY();
+        final int z = block.getWorldZ();
+        final float size = GameConfig.BLOCK_SIZE;
 
-        float minX = x * size;
-        float minY = y * size;
-        float minZ = z * size;
-        float maxX = minX + size;
-        float maxY = minY + size;
-        float maxZ = minZ + size;
+        final float minX = x * size;
+        final float minY = y * size;
+        final float minZ = z * size;
+        final float maxX = minX + size;
+        final float maxY = minY + size;
+        final float maxZ = minZ + size;
 
-        BlockTextures textures = blockTextures.getOrDefault(block.getType(), blockTextures.get(BlockType.DIRT));
+        final BlockTextures textures = blockTextures.getOrDefault(block.getType(), blockTextures.get(BlockType.DIRT));
 
         if (isFaceVisible(x, y, z + 1)) {
             drawFace(textures.side(), 0.88f, minX, minY, maxZ, maxX, minY, maxZ, maxX, maxY, maxZ, minX, maxY, maxZ);
@@ -189,12 +189,12 @@ public class WorldRenderer {
     }
 
     private void drawFace(
-            int textureId,
-            float shade,
-            float x1, float y1, float z1,
-            float x2, float y2, float z2,
-            float x3, float y3, float z3,
-            float x4, float y4, float z4
+            final int textureId,
+            final float shade,
+            final float x1, final float y1, final float z1,
+            final float x2, final float y2, final float z2,
+            final float x3, final float y3, final float z3,
+            final float x4, final float y4, final float z4
     ) {
         glBindTexture(GL_TEXTURE_2D, textureId);
         setShade(shade);
@@ -210,14 +210,14 @@ public class WorldRenderer {
         glEnd();
     }
 
-    private boolean isFaceVisible(int neighborX, int neighborY, int neighborZ) {
-        Block neighbor = world.getBlock(neighborX, neighborY, neighborZ);
+    private boolean isFaceVisible(final int neighborX, final int neighborY, final int neighborZ) {
+        final Block neighbor = world.getBlock(neighborX, neighborY, neighborZ);
         return neighbor == null || !neighbor.isSolid();
     }
 
     private void initializeTextures() {
-        Color grassTint = resolveGrassTint();
-        for (BlockType type : BlockType.values()) {
+        final Color grassTint = resolveGrassTint();
+        for (final BlockType type : BlockType.values()) {
             BufferedImage side = loadBlockImage(type.getSideTextureCandidates());
             BufferedImage top = loadBlockImage(type.getTopTextureCandidates());
             BufferedImage bottom = loadBlockImage(type.getBottomTextureCandidates());
@@ -227,7 +227,7 @@ public class WorldRenderer {
                     top = multiplyTint(top, grassTint);
                 }
 
-                BufferedImage sideOverlay = loadBlockImage(GRASS_SIDE_OVERLAY_CANDIDATES);
+                final BufferedImage sideOverlay = loadBlockImage(GRASS_SIDE_OVERLAY_CANDIDATES);
                 if (side != null) {
                     if (sideOverlay != null) {
                         side = alphaOverlay(side, multiplyTint(sideOverlay, grassTint));
@@ -237,64 +237,64 @@ public class WorldRenderer {
                 }
             }
 
-            int sideId = createTextureFromImageOrFallback(side, fallbackColor(type, Face.SIDE));
-            int topId = createTextureFromImageOrFallback(top, fallbackColor(type, Face.TOP));
-            int bottomId = createTextureFromImageOrFallback(bottom, fallbackColor(type, Face.BOTTOM));
+            final int sideId = createTextureFromImageOrFallback(side, fallbackColor(type, Face.SIDE));
+            final int topId = createTextureFromImageOrFallback(top, fallbackColor(type, Face.TOP));
+            final int bottomId = createTextureFromImageOrFallback(bottom, fallbackColor(type, Face.BOTTOM));
             blockTextures.put(type, new BlockTextures(sideId, topId, bottomId));
         }
     }
 
-    private BufferedImage loadBlockImage(String... candidates) {
-        byte[] data = resourcePackLoader.loadBlockTexture(candidates);
+    private BufferedImage loadBlockImage(final String... candidates) {
+        final byte[] data = resourcePackLoader.loadBlockTexture(candidates);
         return decodeImage(data);
     }
 
     private Color resolveGrassTint() {
-        byte[] colorMapData = resourcePackLoader.loadColorMapTexture("grass");
-        BufferedImage colorMap = decodeImage(colorMapData);
+        final byte[] colorMapData = resourcePackLoader.loadColorMapTexture("grass");
+        final BufferedImage colorMap = decodeImage(colorMapData);
         if (colorMap == null) {
             return DEFAULT_GRASS_TINT;
         }
 
-        double temperature = 0.8;
+        final double temperature = 0.8;
         double rainfall = 0.4;
         rainfall *= temperature;
 
-        int colorX = clampInt((int) ((1.0 - temperature) * 255.0), 0, 255);
-        int colorY = clampInt((int) ((1.0 - rainfall) * 255.0), 0, 255);
+        final int colorX = clampInt((int) ((1.0 - temperature) * 255.0), 0, 255);
+        final int colorY = clampInt((int) ((1.0 - rainfall) * 255.0), 0, 255);
 
-        int sampleX = clampInt((int) Math.round((colorX / 255.0) * (colorMap.getWidth() - 1)), 0, colorMap.getWidth() - 1);
-        int sampleY = clampInt((int) Math.round((colorY / 255.0) * (colorMap.getHeight() - 1)), 0, colorMap.getHeight() - 1);
+        final int sampleX = clampInt((int) Math.round((colorX / 255.0) * (colorMap.getWidth() - 1)), 0, colorMap.getWidth() - 1);
+        final int sampleY = clampInt((int) Math.round((colorY / 255.0) * (colorMap.getHeight() - 1)), 0, colorMap.getHeight() - 1);
 
         return new Color(colorMap.getRGB(sampleX, sampleY), true);
     }
 
-    private int createTextureFromImageOrFallback(BufferedImage image, int fallbackRgba) {
+    private int createTextureFromImageOrFallback(final BufferedImage image, final int fallbackRgba) {
         if (image == null) {
             return fallbackTexture(fallbackRgba);
         }
         return uploadTexture(image);
     }
 
-    private int fallbackTexture(int rgba) {
-        Integer cached = fallbackTextureCache.get(rgba);
+    private int fallbackTexture(final int rgba) {
+        final Integer cached = fallbackTextureCache.get(rgba);
         if (cached != null) {
             return cached;
         }
 
-        ByteBuffer buffer = BufferUtils.createByteBuffer(4);
+        final ByteBuffer buffer = BufferUtils.createByteBuffer(4);
         buffer.put((byte) ((rgba >>> 24) & 0xff));
         buffer.put((byte) ((rgba >>> 16) & 0xff));
         buffer.put((byte) ((rgba >>> 8) & 0xff));
         buffer.put((byte) (rgba & 0xff));
         buffer.flip();
 
-        int textureId = uploadTexture(1, 1, buffer);
+        final int textureId = uploadTexture(1, 1, buffer);
         fallbackTextureCache.put(rgba, textureId);
         return textureId;
     }
 
-    private BufferedImage decodeImage(byte[] data) {
+    private BufferedImage decodeImage(final byte[] data) {
         if (data == null || data.length == 0) {
             return null;
         }
@@ -305,67 +305,67 @@ public class WorldRenderer {
         }
     }
 
-    private BufferedImage multiplyTint(BufferedImage source, Color tint) {
-        BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        float tr = tint.getRed() / 255.0f;
-        float tg = tint.getGreen() / 255.0f;
-        float tb = tint.getBlue() / 255.0f;
+    private BufferedImage multiplyTint(final BufferedImage source, final Color tint) {
+        final BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        final float tr = tint.getRed() / 255.0f;
+        final float tg = tint.getGreen() / 255.0f;
+        final float tb = tint.getBlue() / 255.0f;
 
         for (int y = 0; y < source.getHeight(); y++) {
             for (int x = 0; x < source.getWidth(); x++) {
-                int argb = source.getRGB(x, y);
-                int a = (argb >>> 24) & 0xff;
-                int r = (argb >>> 16) & 0xff;
-                int g = (argb >>> 8) & 0xff;
-                int b = argb & 0xff;
+                final int argb = source.getRGB(x, y);
+                final int a = (argb >>> 24) & 0xff;
+                final int r = (argb >>> 16) & 0xff;
+                final int g = (argb >>> 8) & 0xff;
+                final int b = argb & 0xff;
 
-                int rr = clampInt(Math.round(r * tr), 0, 255);
-                int gg = clampInt(Math.round(g * tg), 0, 255);
-                int bb = clampInt(Math.round(b * tb), 0, 255);
+                final int rr = clampInt(Math.round(r * tr), 0, 255);
+                final int gg = clampInt(Math.round(g * tg), 0, 255);
+                final int bb = clampInt(Math.round(b * tb), 0, 255);
                 out.setRGB(x, y, (a << 24) | (rr << 16) | (gg << 8) | bb);
             }
         }
         return out;
     }
 
-    private BufferedImage alphaOverlay(BufferedImage base, BufferedImage overlay) {
-        int width = Math.min(base.getWidth(), overlay.getWidth());
-        int height = Math.min(base.getHeight(), overlay.getHeight());
-        BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    private BufferedImage alphaOverlay(final BufferedImage base, final BufferedImage overlay) {
+        final int width = Math.min(base.getWidth(), overlay.getWidth());
+        final int height = Math.min(base.getHeight(), overlay.getHeight());
+        final BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                int bArgb = base.getRGB(x, y);
-                int oArgb = overlay.getRGB(x, y);
+                final int bArgb = base.getRGB(x, y);
+                final int oArgb = overlay.getRGB(x, y);
 
-                float br = ((bArgb >>> 16) & 0xff) / 255.0f;
-                float bg = ((bArgb >>> 8) & 0xff) / 255.0f;
-                float bb = (bArgb & 0xff) / 255.0f;
+                final float br = ((bArgb >>> 16) & 0xff) / 255.0f;
+                final float bg = ((bArgb >>> 8) & 0xff) / 255.0f;
+                final float bb = (bArgb & 0xff) / 255.0f;
 
-                float or = ((oArgb >>> 16) & 0xff) / 255.0f;
-                float og = ((oArgb >>> 8) & 0xff) / 255.0f;
-                float ob = (oArgb & 0xff) / 255.0f;
-                float oa = ((oArgb >>> 24) & 0xff) / 255.0f;
+                final float or = ((oArgb >>> 16) & 0xff) / 255.0f;
+                final float og = ((oArgb >>> 8) & 0xff) / 255.0f;
+                final float ob = (oArgb & 0xff) / 255.0f;
+                final float oa = ((oArgb >>> 24) & 0xff) / 255.0f;
 
-                int rr = clampInt(Math.round((br * (1.0f - oa) + or * oa) * 255.0f), 0, 255);
-                int gg = clampInt(Math.round((bg * (1.0f - oa) + og * oa) * 255.0f), 0, 255);
-                int bbOut = clampInt(Math.round((bb * (1.0f - oa) + ob * oa) * 255.0f), 0, 255);
+                final int rr = clampInt(Math.round((br * (1.0f - oa) + or * oa) * 255.0f), 0, 255);
+                final int gg = clampInt(Math.round((bg * (1.0f - oa) + og * oa) * 255.0f), 0, 255);
+                final int bbOut = clampInt(Math.round((bb * (1.0f - oa) + ob * oa) * 255.0f), 0, 255);
                 out.setRGB(x, y, (0xff << 24) | (rr << 16) | (gg << 8) | bbOut);
             }
         }
         return out;
     }
 
-    private int uploadTexture(BufferedImage image) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int[] argb = new int[width * height];
+    private int uploadTexture(final BufferedImage image) {
+        final int width = image.getWidth();
+        final int height = image.getHeight();
+        final int[] argb = new int[width * height];
         image.getRGB(0, 0, width, height, argb, 0, width);
 
-        ByteBuffer rgba = BufferUtils.createByteBuffer(width * height * 4);
+        final ByteBuffer rgba = BufferUtils.createByteBuffer(width * height * 4);
         for (int y = height - 1; y >= 0; y--) {
             for (int x = 0; x < width; x++) {
-                int pixel = argb[y * width + x];
+                final int pixel = argb[y * width + x];
                 rgba.put((byte) ((pixel >>> 16) & 0xff));
                 rgba.put((byte) ((pixel >>> 8) & 0xff));
                 rgba.put((byte) (pixel & 0xff));
@@ -377,8 +377,8 @@ public class WorldRenderer {
         return uploadTexture(width, height, rgba);
     }
 
-    private int uploadTexture(int width, int height, ByteBuffer pixels) {
-        int textureId = glGenTextures();
+    private int uploadTexture(final int width, final int height, final ByteBuffer pixels) {
+        final int textureId = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureId);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -386,7 +386,7 @@ public class WorldRenderer {
         return textureId;
     }
 
-    private int fallbackColor(BlockType type, Face face) {
+    private int fallbackColor(final BlockType type, final Face face) {
         return switch (type) {
             case GRASS -> switch (face) {
                 case SIDE -> rgba(110, 157, 74, 255);
@@ -401,20 +401,20 @@ public class WorldRenderer {
         };
     }
 
-    private int rgba(int r, int g, int b, int a) {
+    private int rgba(final int r, final int g, final int b, final int a) {
         return ((r & 0xff) << 24) | ((g & 0xff) << 16) | ((b & 0xff) << 8) | (a & 0xff);
     }
 
-    private void setShade(float shade) {
-        float s = clampFloat(shade, 0.0f, 1.0f);
+    private void setShade(final float shade) {
+        final float s = clampFloat(shade, 0.0f, 1.0f);
         glColor3f(s, s, s);
     }
 
-    private float clampFloat(float value, float min, float max) {
+    private float clampFloat(final float value, final float min, final float max) {
         return Math.max(min, Math.min(max, value));
     }
 
-    private int clampInt(int value, int min, int max) {
+    private int clampInt(final int value, final int min, final int max) {
         return Math.max(min, Math.min(max, value));
     }
 

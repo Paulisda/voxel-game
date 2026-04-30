@@ -12,7 +12,7 @@ public class Chunk {
     private final int height;
     private final int depth;
 
-    public Chunk(int chunkX, int chunkZ, int width, int height, int depth) {
+    public Chunk(final int chunkX, final int chunkZ, final int width, final int height, final int depth) {
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
         this.width = width;
@@ -25,28 +25,28 @@ public class Chunk {
     private void generateChunk() {
         for (int localX = 0; localX < width; localX++) {
             for (int localZ = 0; localZ < depth; localZ++) {
-                int worldX = chunkX * width + localX;
-                int worldZ = chunkZ * depth + localZ;
-                int surfaceY = getSurfaceHeight(worldX, worldZ);
+                final int worldX = chunkX * width + localX;
+                final int worldZ = chunkZ * depth + localZ;
+                final int surfaceY = getSurfaceHeight(worldX, worldZ);
 
                 for (int y = 0; y <= surfaceY; y++) {
-                    BlockType type = getBlockType(y, surfaceY);
+                    final BlockType type = getBlockType(y, surfaceY);
                     blocks[localX][y][localZ] = new Block(worldX, y, worldZ, type);
                 }
             }
         }
     }
 
-    private int getSurfaceHeight(int worldX, int worldZ) {
-        double terrainNoise = Math.sin(worldX * 0.28) * 1.8
+    private int getSurfaceHeight(final int worldX, final int worldZ) {
+        final double terrainNoise = Math.sin(worldX * 0.28) * 1.8
                 + Math.cos(worldZ * 0.22) * 1.6
                 + Math.sin((worldX + worldZ) * 0.1) * 1.3;
-        int baseHeight = (int) (GameConfig.CHUNK_HEIGHT * 0.35);
-        int surface = baseHeight + (int) Math.round(terrainNoise);
+        final int baseHeight = (int) (GameConfig.CHUNK_HEIGHT * 0.35);
+        final int surface = baseHeight + (int) Math.round(terrainNoise);
         return Math.max(3, Math.min(height - 2, surface));
     }
 
-    private BlockType getBlockType(int y, int surfaceY) {
+    private BlockType getBlockType(final int y, final int surfaceY) {
         if (y == 0) {
             return BlockType.BEDROCK;
         }
@@ -59,25 +59,25 @@ public class Chunk {
         return BlockType.STONE;
     }
 
-    public Block getBlock(int localX, int localY, int localZ) {
+    public Block getBlock(final int localX, final int localY, final int localZ) {
         if (!isInside(localX, localY, localZ)) {
             return null;
         }
         return blocks[localX][localY][localZ];
     }
 
-    public void setBlock(int localX, int localY, int localZ, Block block) {
+    public void setBlock(final int localX, final int localY, final int localZ, final Block block) {
         if (!isInside(localX, localY, localZ)) {
             return;
         }
         blocks[localX][localY][localZ] = block;
     }
 
-    public void forEachBlock(Consumer<Block> consumer) {
+    public void forEachBlock(final Consumer<Block> consumer) {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 for (int z = 0; z < depth; z++) {
-                    Block block = blocks[x][y][z];
+                    final Block block = blocks[x][y][z];
                     if (block != null) {
                         consumer.accept(block);
                     }
@@ -86,7 +86,7 @@ public class Chunk {
         }
     }
 
-    private boolean isInside(int localX, int localY, int localZ) {
+    private boolean isInside(final int localX, final int localY, final int localZ) {
         return localX >= 0 && localX < width
                 && localY >= 0 && localY < height
                 && localZ >= 0 && localZ < depth;

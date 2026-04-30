@@ -91,18 +91,18 @@ public class HudRenderer {
     private int hungerHalfTexture;
     private int hungerFullTexture;
 
-    public HudRenderer(Player player) {
+    public HudRenderer(final Player player) {
         this.player = player;
         loadHudTextures();
         loadHotbarItemIcons();
     }
 
-    public void render(int width, int height) {
+    public void render(final int width, final int height) {
         if (width <= 0 || height <= 0) {
             return;
         }
 
-        boolean cullWasEnabled = glIsEnabled(GL_CULL_FACE);
+        final boolean cullWasEnabled = glIsEnabled(GL_CULL_FACE);
 
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_CULL_FACE);
@@ -120,32 +120,32 @@ public class HudRenderer {
         glPushMatrix();
         glLoadIdentity();
 
-        float hotbarWidth = HOTBAR_W * HUD_SCALE;
-        float hotbarHeight = HOTBAR_H * HUD_SCALE;
-        float hotbarX = (width - hotbarWidth) * 0.5f;
-        float hotbarY = height - hotbarHeight - (12.0f * HUD_SCALE);
+        final float hotbarWidth = HOTBAR_W * HUD_SCALE;
+        final float hotbarHeight = HOTBAR_H * HUD_SCALE;
+        final float hotbarX = (width - hotbarWidth) * 0.5f;
+        final float hotbarY = height - hotbarHeight - (12.0f * HUD_SCALE);
 
         drawTexturedQuad(hotbarBackgroundTexture, hotbarX, hotbarY, hotbarWidth, hotbarHeight);
 
-        int selected = player.getSelectedHotbarSlot();
-        float selectorX = hotbarX + ((selected * 20.0f) - 1.0f) * HUD_SCALE;
-        float selectorY = hotbarY - HUD_SCALE;
+        final int selected = player.getSelectedHotbarSlot();
+        final float selectorX = hotbarX + ((selected * 20.0f) - 1.0f) * HUD_SCALE;
+        final float selectorY = hotbarY - HUD_SCALE;
         drawTexturedQuad(hotbarSelectorTexture, selectorX, selectorY, SLOT_SELECTOR_W * HUD_SCALE, SLOT_SELECTOR_H * HUD_SCALE);
 
-        float iconSize = 16.0f * HUD_SCALE;
+        final float iconSize = 16.0f * HUD_SCALE;
         for (int i = 0; i < HUD_SLOT_COUNT; i++) {
-            BlockType type = player.getHotbarBlock(i);
-            int iconTexture = blockIcons.getOrDefault(type, blockIcons.get(BlockType.DIRT));
-            float iconX = hotbarX + (3 + i * 20) * HUD_SCALE;
-            float iconY = hotbarY + 3.0f * HUD_SCALE;
+            final BlockType type = player.getHotbarBlock(i);
+            final int iconTexture = blockIcons.getOrDefault(type, blockIcons.get(BlockType.DIRT));
+            final float iconX = hotbarX + (3 + i * 20) * HUD_SCALE;
+            final float iconY = hotbarY + 3.0f * HUD_SCALE;
             drawTexturedQuad(iconTexture, iconX, iconY, iconSize, iconSize);
         }
 
-        float pipSize = ICON_W * HUD_SCALE;
-        float pipStep = 8.0f * HUD_SCALE;
-        float statsY = hotbarY - pipSize - (4.0f * HUD_SCALE);
-        float heartsX = hotbarX;
-        float hungerX = hotbarX + hotbarWidth - (pipSize + pipStep * (STAT_PIP_COUNT - 1));
+        final float pipSize = ICON_W * HUD_SCALE;
+        final float pipStep = 8.0f * HUD_SCALE;
+        final float statsY = hotbarY - pipSize - (4.0f * HUD_SCALE);
+        final float heartsX = hotbarX;
+        final float hungerX = hotbarX + hotbarWidth - (pipSize + pipStep * (STAT_PIP_COUNT - 1));
 
         drawStatsRow(player.getHealthPoints(), heartsX, statsY, pipStep, pipSize, heartEmptyTexture, heartHalfTexture, heartFullTexture);
         drawStatsRow(player.getHungerPoints(), hungerX, statsY, pipStep, pipSize, hungerEmptyTexture, hungerHalfTexture, hungerFullTexture);
@@ -164,7 +164,7 @@ public class HudRenderer {
     }
 
     public void destroy() {
-        Set<Integer> textureIds = new HashSet<>();
+        final Set<Integer> textureIds = new HashSet<>();
         textureIds.add(hotbarBackgroundTexture);
         textureIds.add(hotbarSelectorTexture);
         textureIds.add(heartEmptyTexture);
@@ -175,7 +175,7 @@ public class HudRenderer {
         textureIds.add(hungerFullTexture);
         textureIds.addAll(blockIcons.values());
 
-        for (Integer textureId : textureIds) {
+        for (final Integer textureId : textureIds) {
             if (textureId != null && textureId > 0) {
                 glDeleteTextures(textureId);
             }
@@ -183,15 +183,15 @@ public class HudRenderer {
         blockIcons.clear();
     }
 
-    private void drawStatsRow(int value, float startX, float y, float step, float size, int empty, int half, int full) {
+    private void drawStatsRow(final int value, final float startX, final float y, final float step, final float size, final int empty, final int half, final int full) {
         for (int i = 0; i < STAT_PIP_COUNT; i++) {
-            int required = (i + 1) * 2;
-            int texture = value >= required ? full : (value == required - 1 ? half : empty);
+            final int required = (i + 1) * 2;
+            final int texture = value >= required ? full : (value == required - 1 ? half : empty);
             drawTexturedQuad(texture, startX + i * step, y, size, size);
         }
     }
 
-    private void drawTexturedQuad(int textureId, float x, float y, float width, float height) {
+    private void drawTexturedQuad(final int textureId, final float x, final float y, final float width, final float height) {
         glBindTexture(GL_TEXTURE_2D, textureId);
         glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f);
@@ -206,8 +206,8 @@ public class HudRenderer {
     }
 
     private void loadHudTextures() {
-        BufferedImage widgetsAtlas = decodeImage(resourcePackLoader.loadGuiTexture("widgets"));
-        BufferedImage iconsAtlas = decodeImage(resourcePackLoader.loadGuiTexture("icons"));
+        final BufferedImage widgetsAtlas = decodeImage(resourcePackLoader.loadGuiTexture("widgets"));
+        final BufferedImage iconsAtlas = decodeImage(resourcePackLoader.loadGuiTexture("icons"));
 
         hotbarBackgroundTexture = loadGuiSprite(
                 widgetsAtlas, HOTBAR_U, HOTBAR_V, HOTBAR_W, HOTBAR_H,
@@ -227,16 +227,16 @@ public class HudRenderer {
         hungerFullTexture = loadGuiSprite(iconsAtlas, HUNGER_FULL_U, HUNGER_V, ICON_W, ICON_H, new Color(245, 163, 61, 245));
     }
 
-    private int loadGuiSprite(BufferedImage atlas, int u, int v, int w, int h, Color fallbackColor) {
+    private int loadGuiSprite(final BufferedImage atlas, final int u, final int v, final int w, final int h, final Color fallbackColor) {
         if (atlas == null) {
             return uploadTexture(createSolidImage(w, h, fallbackColor));
         }
 
-        double scaleX = atlas.getWidth() / 256.0;
-        double scaleY = atlas.getHeight() / 256.0;
+        final double scaleX = atlas.getWidth() / 256.0;
+        final double scaleY = atlas.getHeight() / 256.0;
 
-        int sx = clampInt((int) Math.round(u * scaleX), 0, Math.max(0, atlas.getWidth() - 1));
-        int sy = clampInt((int) Math.round(v * scaleY), 0, Math.max(0, atlas.getHeight() - 1));
+        final int sx = clampInt((int) Math.round(u * scaleX), 0, Math.max(0, atlas.getWidth() - 1));
+        final int sy = clampInt((int) Math.round(v * scaleY), 0, Math.max(0, atlas.getHeight() - 1));
         int sw = Math.max(1, (int) Math.round(w * scaleX));
         int sh = Math.max(1, (int) Math.round(h * scaleY));
 
@@ -247,13 +247,13 @@ public class HudRenderer {
             sh = Math.max(1, atlas.getHeight() - sy);
         }
 
-        BufferedImage cropped = copyRegion(atlas, sx, sy, sw, sh);
+        final BufferedImage cropped = copyRegion(atlas, sx, sy, sw, sh);
         return uploadTexture(cropped);
     }
 
     private void loadHotbarItemIcons() {
-        Color grassTint = resolveGrassTint();
-        for (BlockType type : BlockType.values()) {
+        final Color grassTint = resolveGrassTint();
+        for (final BlockType type : BlockType.values()) {
             BufferedImage icon = decodeImage(resourcePackLoader.loadBlockTexture(type.getTopTextureCandidates()));
             if (icon == null) {
                 icon = decodeImage(resourcePackLoader.loadBlockTexture(type.getSideTextureCandidates()));
@@ -267,7 +267,7 @@ public class HudRenderer {
         }
     }
 
-    private BufferedImage decodeImage(byte[] data) {
+    private BufferedImage decodeImage(final byte[] data) {
         if (data == null || data.length == 0) {
             return null;
         }
@@ -278,8 +278,8 @@ public class HudRenderer {
         }
     }
 
-    private BufferedImage copyRegion(BufferedImage image, int x, int y, int width, int height) {
-        BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    private BufferedImage copyRegion(final BufferedImage image, final int x, final int y, final int width, final int height) {
+        final BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for (int iy = 0; iy < height; iy++) {
             for (int ix = 0; ix < width; ix++) {
                 out.setRGB(ix, iy, image.getRGB(x + ix, y + iy));
@@ -288,9 +288,9 @@ public class HudRenderer {
         return out;
     }
 
-    private BufferedImage createSolidImage(int width, int height, Color color) {
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        int argb = color.getRGB();
+    private BufferedImage createSolidImage(final int width, final int height, final Color color) {
+        final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        final int argb = color.getRGB();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 image.setRGB(x, y, argb);
@@ -299,23 +299,23 @@ public class HudRenderer {
         return image;
     }
 
-    private BufferedImage multiplyTint(BufferedImage source, Color tint) {
-        BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        float tr = tint.getRed() / 255.0f;
-        float tg = tint.getGreen() / 255.0f;
-        float tb = tint.getBlue() / 255.0f;
+    private BufferedImage multiplyTint(final BufferedImage source, final Color tint) {
+        final BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        final float tr = tint.getRed() / 255.0f;
+        final float tg = tint.getGreen() / 255.0f;
+        final float tb = tint.getBlue() / 255.0f;
 
         for (int y = 0; y < source.getHeight(); y++) {
             for (int x = 0; x < source.getWidth(); x++) {
-                int argb = source.getRGB(x, y);
-                int a = (argb >>> 24) & 0xff;
-                int r = (argb >>> 16) & 0xff;
-                int g = (argb >>> 8) & 0xff;
-                int b = argb & 0xff;
+                final int argb = source.getRGB(x, y);
+                final int a = (argb >>> 24) & 0xff;
+                final int r = (argb >>> 16) & 0xff;
+                final int g = (argb >>> 8) & 0xff;
+                final int b = argb & 0xff;
 
-                int rr = clampInt(Math.round(r * tr), 0, 255);
-                int gg = clampInt(Math.round(g * tg), 0, 255);
-                int bb = clampInt(Math.round(b * tb), 0, 255);
+                final int rr = clampInt(Math.round(r * tr), 0, 255);
+                final int gg = clampInt(Math.round(g * tg), 0, 255);
+                final int bb = clampInt(Math.round(b * tb), 0, 255);
                 out.setRGB(x, y, (a << 24) | (rr << 16) | (gg << 8) | bb);
             }
         }
@@ -323,24 +323,24 @@ public class HudRenderer {
     }
 
     private Color resolveGrassTint() {
-        BufferedImage colorMap = decodeImage(resourcePackLoader.loadColorMapTexture("grass"));
+        final BufferedImage colorMap = decodeImage(resourcePackLoader.loadColorMapTexture("grass"));
         if (colorMap == null) {
             return DEFAULT_GRASS_TINT;
         }
 
-        double temperature = 0.8;
+        final double temperature = 0.8;
         double rainfall = 0.4;
         rainfall *= temperature;
 
-        int colorX = clampInt((int) ((1.0 - temperature) * 255.0), 0, 255);
-        int colorY = clampInt((int) ((1.0 - rainfall) * 255.0), 0, 255);
+        final int colorX = clampInt((int) ((1.0 - temperature) * 255.0), 0, 255);
+        final int colorY = clampInt((int) ((1.0 - rainfall) * 255.0), 0, 255);
 
-        int sampleX = clampInt((int) Math.round((colorX / 255.0) * (colorMap.getWidth() - 1)), 0, colorMap.getWidth() - 1);
-        int sampleY = clampInt((int) Math.round((colorY / 255.0) * (colorMap.getHeight() - 1)), 0, colorMap.getHeight() - 1);
+        final int sampleX = clampInt((int) Math.round((colorX / 255.0) * (colorMap.getWidth() - 1)), 0, colorMap.getWidth() - 1);
+        final int sampleY = clampInt((int) Math.round((colorY / 255.0) * (colorMap.getHeight() - 1)), 0, colorMap.getHeight() - 1);
         return new Color(colorMap.getRGB(sampleX, sampleY), true);
     }
 
-    private Color fallbackColor(BlockType type) {
+    private Color fallbackColor(final BlockType type) {
         return switch (type) {
             case GRASS -> new Color(118, 190, 74, 255);
             case DIRT -> new Color(138, 90, 51, 255);
@@ -351,16 +351,16 @@ public class HudRenderer {
         };
     }
 
-    private int uploadTexture(BufferedImage image) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int[] argb = new int[width * height];
+    private int uploadTexture(final BufferedImage image) {
+        final int width = image.getWidth();
+        final int height = image.getHeight();
+        final int[] argb = new int[width * height];
         image.getRGB(0, 0, width, height, argb, 0, width);
 
-        ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+        final ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
         for (int y = height - 1; y >= 0; y--) {
             for (int x = 0; x < width; x++) {
-                int pixel = argb[y * width + x];
+                final int pixel = argb[y * width + x];
                 buffer.put((byte) ((pixel >>> 16) & 0xff));
                 buffer.put((byte) ((pixel >>> 8) & 0xff));
                 buffer.put((byte) (pixel & 0xff));
@@ -369,7 +369,7 @@ public class HudRenderer {
         }
         buffer.flip();
 
-        int textureId = glGenTextures();
+        final int textureId = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureId);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -377,7 +377,7 @@ public class HudRenderer {
         return textureId;
     }
 
-    private int clampInt(int value, int min, int max) {
+    private int clampInt(final int value, final int min, final int max) {
         return Math.max(min, Math.min(max, value));
     }
 }

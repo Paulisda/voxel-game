@@ -26,24 +26,24 @@ public class ResourcePackLoader {
         this.packFiles = discoverPacks();
     }
 
-    public byte[] loadBlockTexture(String... textureCandidates) {
+    public byte[] loadBlockTexture(final String... textureCandidates) {
         return loadTextureWithPrefix(BLOCK_TEXTURE_PREFIX, textureCandidates);
     }
 
-    public byte[] loadColorMapTexture(String... textureCandidates) {
+    public byte[] loadColorMapTexture(final String... textureCandidates) {
         return loadTextureWithPrefix(COLORMAP_TEXTURE_PREFIX, textureCandidates);
     }
 
-    public byte[] loadGuiTexture(String... textureCandidates) {
+    public byte[] loadGuiTexture(final String... textureCandidates) {
         return loadTextureWithPrefix(GUI_TEXTURE_PREFIX, textureCandidates);
     }
 
-    private byte[] loadTextureWithPrefix(String prefix, String... textureCandidates) {
+    private byte[] loadTextureWithPrefix(final String prefix, final String... textureCandidates) {
         if (textureCandidates == null || textureCandidates.length == 0) {
             return null;
         }
-        for (Path pack : packFiles) {
-            byte[] data = tryLoadTextureFromPack(pack, prefix, textureCandidates);
+        for (final Path pack : packFiles) {
+            final byte[] data = tryLoadTextureFromPack(pack, prefix, textureCandidates);
             if (data != null) {
                 return data;
             }
@@ -52,9 +52,9 @@ public class ResourcePackLoader {
     }
 
     private List<Path> discoverPacks() {
-        List<Path> result = new ArrayList<>();
-        for (String directory : RESOURCE_PACK_DIRECTORIES) {
-            Path packDir = Paths.get(directory);
+        final List<Path> result = new ArrayList<>();
+        for (final String directory : RESOURCE_PACK_DIRECTORIES) {
+            final Path packDir = Paths.get(directory);
             if (!Files.isDirectory(packDir)) {
                 continue;
             }
@@ -68,7 +68,7 @@ public class ResourcePackLoader {
         return result;
     }
 
-    private long safeLastModified(Path path) {
+    private long safeLastModified(final Path path) {
         try {
             return Files.getLastModifiedTime(path).toMillis();
         } catch (IOException e) {
@@ -76,18 +76,18 @@ public class ResourcePackLoader {
         }
     }
 
-    private byte[] tryLoadTextureFromPack(Path packFile, String prefix, String... textureCandidates) {
-        try (ZipFile zipFile = new ZipFile(packFile.toFile())) {
-            for (String candidate : textureCandidates) {
+    private byte[] tryLoadTextureFromPack(final Path packFile, final String prefix, final String... textureCandidates) {
+        try (final ZipFile zipFile = new ZipFile(packFile.toFile())) {
+            for (final String candidate : textureCandidates) {
                 if (candidate == null || candidate.isBlank()) {
                     continue;
                 }
-                String entryName = prefix + candidate + ".png";
-                ZipEntry entry = zipFile.getEntry(entryName);
+                final String entryName = prefix + candidate + ".png";
+                final ZipEntry entry = zipFile.getEntry(entryName);
                 if (entry == null) {
                     continue;
                 }
-                try (InputStream input = zipFile.getInputStream(entry)) {
+                try (final InputStream input = zipFile.getInputStream(entry)) {
                     return input.readAllBytes();
                 }
             }

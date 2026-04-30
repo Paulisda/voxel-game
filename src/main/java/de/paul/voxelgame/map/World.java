@@ -12,7 +12,7 @@ public class World {
     private final Map<Long, Chunk> chunks = new HashMap<>();
     private long revision;
 
-    public void generateWorld(boolean debugCollision) {
+    public void generateWorld(final boolean debugCollision) {
         chunks.clear();
 
         for (int chunkX = -GameConfig.WORLD_CHUNK_RADIUS; chunkX <= GameConfig.WORLD_CHUNK_RADIUS; chunkX++) {
@@ -24,14 +24,14 @@ public class World {
         revision++;
     }
 
-    private void addChunk(int chunkX, int chunkZ) {
-        long key = chunkKey(chunkX, chunkZ);
+    private void addChunk(final int chunkX, final int chunkZ) {
+        final long key = chunkKey(chunkX, chunkZ);
         if (!chunks.containsKey(key)) {
             chunks.put(key, new Chunk(chunkX, chunkZ, GameConfig.CHUNK_WIDTH, GameConfig.CHUNK_HEIGHT, GameConfig.CHUNK_DEPTH));
         }
     }
 
-    public Chunk getChunk(int chunkX, int chunkZ) {
+    public Chunk getChunk(final int chunkX, final int chunkZ) {
         return chunks.get(chunkKey(chunkX, chunkZ));
     }
 
@@ -39,30 +39,30 @@ public class World {
         return chunks.values();
     }
 
-    public Block getBlock(int blockX, int blockY, int blockZ) {
+    public Block getBlock(final int blockX, final int blockY, final int blockZ) {
         if (blockY < 0 || blockY >= GameConfig.CHUNK_HEIGHT) {
             return null;
         }
 
-        int chunkX = Math.floorDiv(blockX, GameConfig.CHUNK_WIDTH);
-        int chunkZ = Math.floorDiv(blockZ, GameConfig.CHUNK_DEPTH);
+        final int chunkX = Math.floorDiv(blockX, GameConfig.CHUNK_WIDTH);
+        final int chunkZ = Math.floorDiv(blockZ, GameConfig.CHUNK_DEPTH);
         Chunk chunk = getChunk(chunkX, chunkZ);
         if (chunk == null) {
             return null;
         }
 
-        int localX = Math.floorMod(blockX, GameConfig.CHUNK_WIDTH);
-        int localZ = Math.floorMod(blockZ, GameConfig.CHUNK_DEPTH);
+        final int localX = Math.floorMod(blockX, GameConfig.CHUNK_WIDTH);
+        final int localZ = Math.floorMod(blockZ, GameConfig.CHUNK_DEPTH);
         return chunk.getBlock(localX, blockY, localZ);
     }
 
-    public void setBlock(int blockX, int blockY, int blockZ, Block block) {
+    public void setBlock(final int blockX, final int blockY, final int blockZ, final Block block) {
         if (blockY < 0 || blockY >= GameConfig.CHUNK_HEIGHT) {
             return;
         }
 
-        int chunkX = Math.floorDiv(blockX, GameConfig.CHUNK_WIDTH);
-        int chunkZ = Math.floorDiv(blockZ, GameConfig.CHUNK_DEPTH);
+        final int chunkX = Math.floorDiv(blockX, GameConfig.CHUNK_WIDTH);
+        final int chunkZ = Math.floorDiv(blockZ, GameConfig.CHUNK_DEPTH);
         Chunk chunk = getChunk(chunkX, chunkZ);
         if (chunk == null) {
             if (block == null) {
@@ -75,14 +75,14 @@ public class World {
             }
         }
 
-        int localX = Math.floorMod(blockX, GameConfig.CHUNK_WIDTH);
-        int localZ = Math.floorMod(blockZ, GameConfig.CHUNK_DEPTH);
+        final int localX = Math.floorMod(blockX, GameConfig.CHUNK_WIDTH);
+        final int localZ = Math.floorMod(blockZ, GameConfig.CHUNK_DEPTH);
         chunk.setBlock(localX, blockY, localZ, block);
         revision++;
     }
 
-    public boolean removeBlock(int blockX, int blockY, int blockZ) {
-        Block existing = getBlock(blockX, blockY, blockZ);
+    public boolean removeBlock(final int blockX, final int blockY, final int blockZ) {
+        final Block existing = getBlock(blockX, blockY, blockZ);
         if (existing == null || existing.getType() == BlockType.BEDROCK) {
             return false;
         }
@@ -90,7 +90,7 @@ public class World {
         return true;
     }
 
-    public boolean placeBlock(int blockX, int blockY, int blockZ, BlockType type) {
+    public boolean placeBlock(final int blockX, final int blockY, final int blockZ, final BlockType type) {
         if (type == null || blockY < 0 || blockY >= GameConfig.CHUNK_HEIGHT) {
             return false;
         }
@@ -101,9 +101,9 @@ public class World {
         return true;
     }
 
-    public int getSurfaceY(int blockX, int blockZ) {
+    public int getSurfaceY(final int blockX, final int blockZ) {
         for (int y = GameConfig.CHUNK_HEIGHT - 1; y >= 0; y--) {
-            Block block = getBlock(blockX, y, blockZ);
+            final Block block = getBlock(blockX, y, blockZ);
             if (block != null && block.isSolid()) {
                 return y;
             }
@@ -127,8 +127,8 @@ public class World {
             }
         }
 
-        int surfaceY = highestY >= 0 ? highestY : getSurfaceY(0, 0);
-        double blockSize = GameConfig.BLOCK_SIZE;
+        final int surfaceY = highestY >= 0 ? highestY : getSurfaceY(0, 0);
+        final double blockSize = GameConfig.BLOCK_SIZE;
         return new Vector3f(
                 (spawnX + 0.5) * blockSize,
                 (surfaceY + 1.05) * blockSize,
@@ -136,8 +136,8 @@ public class World {
         );
     }
 
-    public void forEachBlock(Consumer<Block> consumer) {
-        for (Chunk chunk : chunks.values()) {
+    public void forEachBlock(final Consumer<Block> consumer) {
+        for (final Chunk chunk : chunks.values()) {
             chunk.forEachBlock(consumer);
         }
     }
@@ -146,7 +146,7 @@ public class World {
         return revision;
     }
 
-    private long chunkKey(int x, int z) {
+    private long chunkKey(final int x, final int z) {
         return ((long) x << 32) ^ (z & 0xffffffffL);
     }
 }

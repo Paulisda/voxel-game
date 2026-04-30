@@ -31,41 +31,41 @@ public abstract class Mob {
     private double cameraY;
     private double cameraZ;
 
-    protected Mob(World world) {
+    protected Mob(final World world) {
         this.world = world;
     }
 
-    public Vector3f move(Vector3f velocity) {
+    public Vector3f move(final Vector3f velocity) {
         if (velocity.lengthSquared() <= 0.0f) {
             return Vector3f.ZERO;
         }
 
         isOnGround = false;
 
-        int steps = computeCollisionSubsteps(velocity);
-        Vector3f stepVelocity = velocity.mul(1.0f / steps);
+        final int steps = computeCollisionSubsteps(velocity);
+        final Vector3f stepVelocity = velocity.mul(1.0f / steps);
         Vector3f appliedTotal = Vector3f.ZERO;
 
         for (int i = 0; i < steps; i++) {
-            Vector3f appliedStep = moveSingleStep(stepVelocity);
+            final Vector3f appliedStep = moveSingleStep(stepVelocity);
             appliedTotal = appliedTotal.add(appliedStep);
         }
 
         return appliedTotal;
     }
 
-    private Vector3f moveSingleStep(Vector3f velocity) {
+    private Vector3f moveSingleStep(final Vector3f velocity) {
         if (velocity.lengthSquared() <= 0.0f) {
             return Vector3f.ZERO;
         }
 
-        double moveX = clipMoveX(velocity.getX());
+        final double moveX = clipMoveX(velocity.getX());
         if (Math.abs(moveX) > COLLISION_EPSILON) {
             setLocation(hitBox.getMin().getX() + moveX, hitBox.getMin().getY(), hitBox.getMin().getZ());
         }
 
-        double requestedY = velocity.getY();
-        double moveY = clipMoveY(requestedY);
+        final double requestedY = velocity.getY();
+        final double moveY = clipMoveY(requestedY);
         if (Math.abs(moveY) > COLLISION_EPSILON) {
             setLocation(hitBox.getMin().getX(), hitBox.getMin().getY() + moveY, hitBox.getMin().getZ());
         }
@@ -78,7 +78,7 @@ public abstract class Mob {
             fallVelocity = 0;
         }
 
-        double moveZ = clipMoveZ(velocity.getZ());
+        final double moveZ = clipMoveZ(velocity.getZ());
         if (Math.abs(moveZ) > COLLISION_EPSILON) {
             setLocation(hitBox.getMin().getX(), hitBox.getMin().getY(), hitBox.getMin().getZ() + moveZ);
         }
@@ -86,35 +86,35 @@ public abstract class Mob {
         return new Vector3f(moveX, moveY, moveZ);
     }
 
-    private int computeCollisionSubsteps(Vector3f velocity) {
-        double maxDelta = Math.max(
+    private int computeCollisionSubsteps(final Vector3f velocity) {
+        final double maxDelta = Math.max(
                 Math.abs(velocity.getX()),
                 Math.max(Math.abs(velocity.getY()), Math.abs(velocity.getZ()))
         );
         if (maxDelta <= MAX_COLLISION_STEP) {
             return 1;
         }
-        int steps = (int) Math.ceil(maxDelta / MAX_COLLISION_STEP);
+        final int steps = (int) Math.ceil(maxDelta / MAX_COLLISION_STEP);
         return Math.max(1, Math.min(12, steps));
     }
 
-    private double clipMoveX(double requestedMove) {
+    private double clipMoveX(final double requestedMove) {
         if (Math.abs(requestedMove) <= COLLISION_EPSILON) {
             return 0;
         }
 
-        double blockSize = GameConfig.BLOCK_SIZE;
+        final double blockSize = GameConfig.BLOCK_SIZE;
         double move = requestedMove;
 
-        double nextMinX = hitBox.getMin().getX() + move;
-        double nextMaxX = hitBox.getMax().getX() + move;
+        final double nextMinX = hitBox.getMin().getX() + move;
+        final double nextMaxX = hitBox.getMax().getX() + move;
 
-        int minBX = toBlockCoordinate(nextMinX + COLLISION_EPSILON);
-        int maxBX = toBlockCoordinate(nextMaxX - COLLISION_EPSILON);
-        int minBY = toBlockCoordinate(hitBox.getMin().getY() + COLLISION_EPSILON);
-        int maxBY = toBlockCoordinate(hitBox.getMax().getY() - COLLISION_EPSILON);
-        int minBZ = toBlockCoordinate(hitBox.getMin().getZ() + COLLISION_EPSILON);
-        int maxBZ = toBlockCoordinate(hitBox.getMax().getZ() - COLLISION_EPSILON);
+        final int minBX = toBlockCoordinate(nextMinX + COLLISION_EPSILON);
+        final int maxBX = toBlockCoordinate(nextMaxX - COLLISION_EPSILON);
+        final int minBY = toBlockCoordinate(hitBox.getMin().getY() + COLLISION_EPSILON);
+        final int maxBY = toBlockCoordinate(hitBox.getMax().getY() - COLLISION_EPSILON);
+        final int minBZ = toBlockCoordinate(hitBox.getMin().getZ() + COLLISION_EPSILON);
+        final int maxBZ = toBlockCoordinate(hitBox.getMax().getZ() - COLLISION_EPSILON);
 
         for (int bx = minBX; bx <= maxBX; bx++) {
             for (int by = minBY; by <= maxBY; by++) {
@@ -123,14 +123,14 @@ public abstract class Mob {
                         continue;
                     }
                     if (move > 0) {
-                        double blockMinX = bx * blockSize;
-                        double allowed = blockMinX - hitBox.getMax().getX() - COLLISION_EPSILON;
+                        final double blockMinX = bx * blockSize;
+                        final double allowed = blockMinX - hitBox.getMax().getX() - COLLISION_EPSILON;
                         if (allowed < move) {
                             move = allowed;
                         }
                     } else {
-                        double blockMaxX = (bx + 1) * blockSize;
-                        double allowed = blockMaxX - hitBox.getMin().getX() + COLLISION_EPSILON;
+                        final double blockMaxX = (bx + 1) * blockSize;
+                        final double allowed = blockMaxX - hitBox.getMin().getX() + COLLISION_EPSILON;
                         if (allowed > move) {
                             move = allowed;
                         }
@@ -142,23 +142,23 @@ public abstract class Mob {
         return move;
     }
 
-    private double clipMoveY(double requestedMove) {
+    private double clipMoveY(final double requestedMove) {
         if (Math.abs(requestedMove) <= COLLISION_EPSILON) {
             return 0;
         }
 
-        double blockSize = GameConfig.BLOCK_SIZE;
+        final double blockSize = GameConfig.BLOCK_SIZE;
         double move = requestedMove;
 
-        double nextMinY = hitBox.getMin().getY() + move;
-        double nextMaxY = hitBox.getMax().getY() + move;
+        final double nextMinY = hitBox.getMin().getY() + move;
+        final double nextMaxY = hitBox.getMax().getY() + move;
 
-        int minBX = toBlockCoordinate(hitBox.getMin().getX() + COLLISION_EPSILON);
-        int maxBX = toBlockCoordinate(hitBox.getMax().getX() - COLLISION_EPSILON);
-        int minBY = toBlockCoordinate(nextMinY + COLLISION_EPSILON);
-        int maxBY = toBlockCoordinate(nextMaxY - COLLISION_EPSILON);
-        int minBZ = toBlockCoordinate(hitBox.getMin().getZ() + COLLISION_EPSILON);
-        int maxBZ = toBlockCoordinate(hitBox.getMax().getZ() - COLLISION_EPSILON);
+        final int minBX = toBlockCoordinate(hitBox.getMin().getX() + COLLISION_EPSILON);
+        final int maxBX = toBlockCoordinate(hitBox.getMax().getX() - COLLISION_EPSILON);
+        final int minBY = toBlockCoordinate(nextMinY + COLLISION_EPSILON);
+        final int maxBY = toBlockCoordinate(nextMaxY - COLLISION_EPSILON);
+        final int minBZ = toBlockCoordinate(hitBox.getMin().getZ() + COLLISION_EPSILON);
+        final int maxBZ = toBlockCoordinate(hitBox.getMax().getZ() - COLLISION_EPSILON);
 
         for (int bx = minBX; bx <= maxBX; bx++) {
             for (int by = minBY; by <= maxBY; by++) {
@@ -167,14 +167,14 @@ public abstract class Mob {
                         continue;
                     }
                     if (move > 0) {
-                        double blockMinY = by * blockSize;
-                        double allowed = blockMinY - hitBox.getMax().getY() - COLLISION_EPSILON;
+                        final double blockMinY = by * blockSize;
+                        final double allowed = blockMinY - hitBox.getMax().getY() - COLLISION_EPSILON;
                         if (allowed < move) {
                             move = allowed;
                         }
                     } else {
-                        double blockMaxY = (by + 1) * blockSize;
-                        double allowed = blockMaxY - hitBox.getMin().getY() + COLLISION_EPSILON;
+                        final double blockMaxY = (by + 1) * blockSize;
+                        final double allowed = blockMaxY - hitBox.getMin().getY() + COLLISION_EPSILON;
                         if (allowed > move) {
                             move = allowed;
                         }
@@ -186,23 +186,23 @@ public abstract class Mob {
         return move;
     }
 
-    private double clipMoveZ(double requestedMove) {
+    private double clipMoveZ(final double requestedMove) {
         if (Math.abs(requestedMove) <= COLLISION_EPSILON) {
             return 0;
         }
 
-        double blockSize = GameConfig.BLOCK_SIZE;
+        final double blockSize = GameConfig.BLOCK_SIZE;
         double move = requestedMove;
 
-        double nextMinZ = hitBox.getMin().getZ() + move;
-        double nextMaxZ = hitBox.getMax().getZ() + move;
+        final double nextMinZ = hitBox.getMin().getZ() + move;
+        final double nextMaxZ = hitBox.getMax().getZ() + move;
 
-        int minBX = toBlockCoordinate(hitBox.getMin().getX() + COLLISION_EPSILON);
-        int maxBX = toBlockCoordinate(hitBox.getMax().getX() - COLLISION_EPSILON);
-        int minBY = toBlockCoordinate(hitBox.getMin().getY() + COLLISION_EPSILON);
-        int maxBY = toBlockCoordinate(hitBox.getMax().getY() - COLLISION_EPSILON);
-        int minBZ = toBlockCoordinate(nextMinZ + COLLISION_EPSILON);
-        int maxBZ = toBlockCoordinate(nextMaxZ - COLLISION_EPSILON);
+        final int minBX = toBlockCoordinate(hitBox.getMin().getX() + COLLISION_EPSILON);
+        final int maxBX = toBlockCoordinate(hitBox.getMax().getX() - COLLISION_EPSILON);
+        final int minBY = toBlockCoordinate(hitBox.getMin().getY() + COLLISION_EPSILON);
+        final int maxBY = toBlockCoordinate(hitBox.getMax().getY() - COLLISION_EPSILON);
+        final int minBZ = toBlockCoordinate(nextMinZ + COLLISION_EPSILON);
+        final int maxBZ = toBlockCoordinate(nextMaxZ - COLLISION_EPSILON);
 
         for (int bx = minBX; bx <= maxBX; bx++) {
             for (int by = minBY; by <= maxBY; by++) {
@@ -211,14 +211,14 @@ public abstract class Mob {
                         continue;
                     }
                     if (move > 0) {
-                        double blockMinZ = bz * blockSize;
-                        double allowed = blockMinZ - hitBox.getMax().getZ() - COLLISION_EPSILON;
+                        final double blockMinZ = bz * blockSize;
+                        final double allowed = blockMinZ - hitBox.getMax().getZ() - COLLISION_EPSILON;
                         if (allowed < move) {
                             move = allowed;
                         }
                     } else {
-                        double blockMaxZ = (bz + 1) * blockSize;
-                        double allowed = blockMaxZ - hitBox.getMin().getZ() + COLLISION_EPSILON;
+                        final double blockMaxZ = (bz + 1) * blockSize;
+                        final double allowed = blockMaxZ - hitBox.getMin().getZ() + COLLISION_EPSILON;
                         if (allowed > move) {
                             move = allowed;
                         }
@@ -230,25 +230,25 @@ public abstract class Mob {
         return move;
     }
 
-    private boolean isSolidBlockAt(int blockX, int blockY, int blockZ) {
-        Block block = world.getBlock(blockX, blockY, blockZ);
+    private boolean isSolidBlockAt(final int blockX, final int blockY, final int blockZ) {
+        final Block block = world.getBlock(blockX, blockY, blockZ);
         return block != null && block.isSolid();
     }
 
-    protected int toBlockCoordinate(double worldCoordinate) {
+    protected int toBlockCoordinate(final double worldCoordinate) {
         return (int) Math.floor(worldCoordinate / GameConfig.BLOCK_SIZE);
     }
 
     // x/y/z are the minimum corner of the hitbox.
-    protected void setLocation(double x, double y, double z) {
-        Vector3f size = hitBox.size();
+    protected void setLocation(final double x, final double y, final double z) {
+        final Vector3f size = hitBox.size();
         cameraX = x + size.getX() * 0.5;
         cameraY = y + eyeHeight;
         cameraZ = z + size.getZ() * 0.5;
         hitBox.move(new Vector3f(x, y, z));
     }
 
-    protected double normalizeAngle(double angle) {
+    protected double normalizeAngle(final double angle) {
         double normalized = angle % 360.0;
         if (normalized < 0) {
             normalized += 360.0;
@@ -256,11 +256,11 @@ public abstract class Mob {
         return normalized;
     }
 
-    protected void setYaw(double angle) {
+    protected void setYaw(final double angle) {
         yaw = normalizeAngle(angle);
     }
 
-    protected void setPitch(double angle) {
+    protected void setPitch(final double angle) {
         pitch = Math.max(-89.0, Math.min(89.0, angle));
     }
 
@@ -301,7 +301,7 @@ public abstract class Mob {
     }
 
     // x/y/z are the feet center of the player.
-    public void teleport(double x, double y, double z, double pitch, double yaw) {
+    public void teleport(final double x, final double y, final double z, final double pitch, final double yaw) {
         setLocation(x - halfWidth, y, z - halfWidth);
         setPitch(pitch);
         setYaw(yaw);
