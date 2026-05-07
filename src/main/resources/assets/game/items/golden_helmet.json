@@ -1,17 +1,17 @@
 {
-    "id":  "game:golden_helmet",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "durability":  {
-                                          "max":  32
-                                      },
-                       "model":  {
-                                     "texture":  "golden_helmet",
-                                     "fallback":  {
-                                                      "default":  "#f2c94c"
-                                                  }
-                                 }
-                   }
+  "id": "game:golden_helmet",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "durability": {
+      "max": 32
+    },
+    "model": {
+      "texture": "golden_helmet",
+      "fallback": {
+        "default": "#f2c94c"
+      }
+    }
+  }
 }

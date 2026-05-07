@@ -1,14 +1,14 @@
 {
-    "id":  "game:ghast_tear",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "ghast_tear",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:ghast_tear",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "ghast_tear",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

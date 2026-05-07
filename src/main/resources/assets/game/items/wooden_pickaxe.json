@@ -1,17 +1,17 @@
 {
-    "id":  "game:wooden_pickaxe",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "durability":  {
-                                          "max":  59
-                                      },
-                       "model":  {
-                                     "texture":  "wooden_pickaxe",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:wooden_pickaxe",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "durability": {
+      "max": 59
+    },
+    "model": {
+      "texture": "wooden_pickaxe",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

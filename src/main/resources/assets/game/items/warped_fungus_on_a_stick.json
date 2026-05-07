@@ -1,14 +1,14 @@
 {
-    "id":  "game:warped_fungus_on_a_stick",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "model":  {
-                                     "texture":  "warped_fungus_on_a_stick",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:warped_fungus_on_a_stick",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "model": {
+      "texture": "warped_fungus_on_a_stick",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

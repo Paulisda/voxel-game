@@ -1,14 +1,14 @@
 {
-    "id":  "game:carpet_orange",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "carpet_orange",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:carpet_orange",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "carpet_orange",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

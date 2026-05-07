@@ -1,14 +1,14 @@
 {
-    "id":  "game:pumpkin_seeds",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "pumpkin_seeds",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:pumpkin_seeds",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "pumpkin_seeds",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

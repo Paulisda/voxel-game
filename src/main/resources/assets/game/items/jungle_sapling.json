@@ -1,14 +1,14 @@
 {
-    "id":  "game:jungle_sapling",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "jungle_sapling",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:jungle_sapling",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "jungle_sapling",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

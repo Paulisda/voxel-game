@@ -1,14 +1,14 @@
 {
-    "id":  "game:milk_bucket",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "model":  {
-                                     "texture":  "milk_bucket",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:milk_bucket",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "model": {
+      "texture": "milk_bucket",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

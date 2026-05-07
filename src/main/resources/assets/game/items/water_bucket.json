@@ -1,14 +1,14 @@
 {
-    "id":  "game:water_bucket",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "model":  {
-                                     "texture":  "water_bucket",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:water_bucket",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "model": {
+      "texture": "water_bucket",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

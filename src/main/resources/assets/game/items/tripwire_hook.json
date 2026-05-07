@@ -1,14 +1,14 @@
 {
-    "id":  "game:tripwire_hook",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "tripwire_hook",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:tripwire_hook",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "tripwire_hook",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

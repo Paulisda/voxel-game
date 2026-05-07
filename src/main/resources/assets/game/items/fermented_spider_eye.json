@@ -1,14 +1,14 @@
 {
-    "id":  "game:fermented_spider_eye",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "fermented_spider_eye",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:fermented_spider_eye",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "fermented_spider_eye",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

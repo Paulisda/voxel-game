@@ -1,14 +1,14 @@
 {
-    "id":  "game:white_dye",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "white_dye",
-                                     "fallback":  {
-                                                      "default":  "#e8edf0"
-                                                  }
-                                 }
-                   }
+  "id": "game:white_dye",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "white_dye",
+      "fallback": {
+        "default": "#e8edf0"
+      }
+    }
+  }
 }

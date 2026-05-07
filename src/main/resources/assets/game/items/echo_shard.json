@@ -1,14 +1,14 @@
 {
-    "id":  "game:echo_shard",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "echo_shard",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:echo_shard",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "echo_shard",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

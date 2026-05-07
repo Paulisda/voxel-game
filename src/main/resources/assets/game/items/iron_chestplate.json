@@ -1,17 +1,17 @@
 {
-    "id":  "game:iron_chestplate",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "durability":  {
-                                          "max":  250
-                                      },
-                       "model":  {
-                                     "texture":  "iron_chestplate",
-                                     "fallback":  {
-                                                      "default":  "#c7cdd1"
-                                                  }
-                                 }
-                   }
+  "id": "game:iron_chestplate",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "durability": {
+      "max": 250
+    },
+    "model": {
+      "texture": "iron_chestplate",
+      "fallback": {
+        "default": "#c7cdd1"
+      }
+    }
+  }
 }

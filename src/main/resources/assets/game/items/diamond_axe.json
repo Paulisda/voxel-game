@@ -1,21 +1,21 @@
 {
-    "id":  "game:diamond_axe",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "weapon":  {
-                                      "damage":  9,
-                                      "attackSpeed":  1.6
-                                  },
-                       "durability":  {
-                                          "max":  1561
-                                      },
-                       "model":  {
-                                     "texture":  "diamond_axe",
-                                     "fallback":  {
-                                                      "default":  "#47c6d9"
-                                                  }
-                                 }
-                   }
+  "id": "game:diamond_axe",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "weapon": {
+      "damage": 9,
+      "attackSpeed": 1.6
+    },
+    "durability": {
+      "max": 1561
+    },
+    "model": {
+      "texture": "diamond_axe",
+      "fallback": {
+        "default": "#47c6d9"
+      }
+    }
+  }
 }

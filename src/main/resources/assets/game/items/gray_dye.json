@@ -1,14 +1,14 @@
 {
-    "id":  "game:gray_dye",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "gray_dye",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:gray_dye",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "gray_dye",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

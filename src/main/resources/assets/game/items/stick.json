@@ -1,14 +1,14 @@
 {
-    "id":  "game:stick",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "stick",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:stick",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "stick",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

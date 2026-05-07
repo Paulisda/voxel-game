@@ -1,14 +1,14 @@
 {
-    "id":  "game:pitcher_pod",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "pitcher_pod",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:pitcher_pod",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "pitcher_pod",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

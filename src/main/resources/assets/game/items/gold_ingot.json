@@ -1,14 +1,14 @@
 {
-    "id":  "game:gold_ingot",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "gold_ingot",
-                                     "fallback":  {
-                                                      "default":  "#f2c94c"
-                                                  }
-                                 }
-                   }
+  "id": "game:gold_ingot",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "gold_ingot",
+      "fallback": {
+        "default": "#f2c94c"
+      }
+    }
+  }
 }

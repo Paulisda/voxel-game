@@ -1,14 +1,14 @@
 {
-    "id":  "game:name_tag",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "name_tag",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:name_tag",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "name_tag",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

@@ -1,17 +1,17 @@
 {
-    "id":  "game:netherite_hoe",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "durability":  {
-                                          "max":  2031
-                                      },
-                       "model":  {
-                                     "texture":  "netherite_hoe",
-                                     "fallback":  {
-                                                      "default":  "#4a4148"
-                                                  }
-                                 }
-                   }
+  "id": "game:netherite_hoe",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "durability": {
+      "max": 2031
+    },
+    "model": {
+      "texture": "netherite_hoe",
+      "fallback": {
+        "default": "#4a4148"
+      }
+    }
+  }
 }

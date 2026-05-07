@@ -1,14 +1,14 @@
 {
-    "id":  "game:carpet_lime",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "carpet_lime",
-                                     "fallback":  {
-                                                      "default":  "#4fc26b"
-                                                  }
-                                 }
-                   }
+  "id": "game:carpet_lime",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "carpet_lime",
+      "fallback": {
+        "default": "#4fc26b"
+      }
+    }
+  }
 }

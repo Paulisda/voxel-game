@@ -1,14 +1,14 @@
 {
-    "id":  "game:pink_petals",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "pink_petals",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:pink_petals",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "pink_petals",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

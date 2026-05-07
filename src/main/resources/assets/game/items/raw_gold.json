@@ -1,14 +1,14 @@
 {
-    "id":  "game:raw_gold",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "raw_gold",
-                                     "fallback":  {
-                                                      "default":  "#f2c94c"
-                                                  }
-                                 }
-                   }
+  "id": "game:raw_gold",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "raw_gold",
+      "fallback": {
+        "default": "#f2c94c"
+      }
+    }
+  }
 }

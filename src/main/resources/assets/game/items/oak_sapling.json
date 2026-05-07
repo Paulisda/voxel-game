@@ -1,14 +1,14 @@
 {
-    "id":  "game:oak_sapling",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "oak_sapling",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:oak_sapling",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "oak_sapling",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

@@ -1,14 +1,14 @@
 {
-    "id":  "game:oak_chest_boat",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "model":  {
-                                     "texture":  "oak_chest_boat",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:oak_chest_boat",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "model": {
+      "texture": "oak_chest_boat",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

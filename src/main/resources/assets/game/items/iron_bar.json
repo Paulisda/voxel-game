@@ -1,17 +1,17 @@
 {
-    "id":  "game:iron_bar",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "durability":  {
-                                          "max":  250
-                                      },
-                       "model":  {
-                                     "texture":  "iron_bar",
-                                     "fallback":  {
-                                                      "default":  "#c7cdd1"
-                                                  }
-                                 }
-                   }
+  "id": "game:iron_bar",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "durability": {
+      "max": 250
+    },
+    "model": {
+      "texture": "iron_bar",
+      "fallback": {
+        "default": "#c7cdd1"
+      }
+    }
+  }
 }

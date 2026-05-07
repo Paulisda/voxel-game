@@ -1,14 +1,14 @@
 {
-    "id":  "game:flower_banner_pattern",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "flower_banner_pattern",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:flower_banner_pattern",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "flower_banner_pattern",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

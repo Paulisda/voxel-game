@@ -1,14 +1,14 @@
 {
-    "id":  "game:spectral_arrow",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "spectral_arrow",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:spectral_arrow",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "spectral_arrow",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

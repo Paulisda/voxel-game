@@ -1,18 +1,18 @@
 {
-    "id":  "game:sweet_berries",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "food":  {
-                                    "hunger":  2,
-                                    "saturation":  0.4
-                                },
-                       "model":  {
-                                     "texture":  "sweet_berries",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:sweet_berries",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "food": {
+      "hunger": 2,
+      "saturation": 0.4
+    },
+    "model": {
+      "texture": "sweet_berries",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

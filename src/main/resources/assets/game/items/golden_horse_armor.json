@@ -1,17 +1,17 @@
 {
-    "id":  "game:golden_horse_armor",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "durability":  {
-                                          "max":  32
-                                      },
-                       "model":  {
-                                     "texture":  "golden_horse_armor",
-                                     "fallback":  {
-                                                      "default":  "#f2c94c"
-                                                  }
-                                 }
-                   }
+  "id": "game:golden_horse_armor",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "durability": {
+      "max": 32
+    },
+    "model": {
+      "texture": "golden_horse_armor",
+      "fallback": {
+        "default": "#f2c94c"
+      }
+    }
+  }
 }

@@ -1,14 +1,14 @@
 {
-    "id":  "game:charcoal",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "charcoal",
-                                     "fallback":  {
-                                                      "default":  "#2b2f36"
-                                                  }
-                                 }
-                   }
+  "id": "game:charcoal",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "charcoal",
+      "fallback": {
+        "default": "#2b2f36"
+      }
+    }
+  }
 }

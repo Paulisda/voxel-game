@@ -1,17 +1,17 @@
 {
-    "id":  "game:golden_shovel",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "durability":  {
-                                          "max":  32
-                                      },
-                       "model":  {
-                                     "texture":  "golden_shovel",
-                                     "fallback":  {
-                                                      "default":  "#f2c94c"
-                                                  }
-                                 }
-                   }
+  "id": "game:golden_shovel",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "durability": {
+      "max": 32
+    },
+    "model": {
+      "texture": "golden_shovel",
+      "fallback": {
+        "default": "#f2c94c"
+      }
+    }
+  }
 }

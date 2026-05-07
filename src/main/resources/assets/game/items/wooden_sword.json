@@ -1,21 +1,21 @@
 {
-    "id":  "game:wooden_sword",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "weapon":  {
-                                      "damage":  4,
-                                      "attackSpeed":  1.6
-                                  },
-                       "durability":  {
-                                          "max":  59
-                                      },
-                       "model":  {
-                                     "texture":  "wooden_sword",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:wooden_sword",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "weapon": {
+      "damage": 4,
+      "attackSpeed": 1.6
+    },
+    "durability": {
+      "max": 59
+    },
+    "model": {
+      "texture": "wooden_sword",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

@@ -1,14 +1,14 @@
 {
-    "id":  "game:fire_charge",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "fire_charge",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:fire_charge",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "fire_charge",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

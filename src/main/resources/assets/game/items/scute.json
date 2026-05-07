@@ -1,14 +1,14 @@
 {
-    "id":  "game:scute",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "scute",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:scute",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "scute",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

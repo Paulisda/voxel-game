@@ -1,14 +1,14 @@
 {
-    "id":  "game:leather_helmet",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "model":  {
-                                     "texture":  "leather_helmet",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:leather_helmet",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "model": {
+      "texture": "leather_helmet",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

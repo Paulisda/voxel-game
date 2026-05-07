@@ -1,14 +1,14 @@
 {
-    "id":  "game:cocoa_beans",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "cocoa_beans",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:cocoa_beans",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "cocoa_beans",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

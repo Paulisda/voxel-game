@@ -1,21 +1,21 @@
 {
-    "id":  "game:iron_axe",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "weapon":  {
-                                      "damage":  9,
-                                      "attackSpeed":  1.6
-                                  },
-                       "durability":  {
-                                          "max":  250
-                                      },
-                       "model":  {
-                                     "texture":  "iron_axe",
-                                     "fallback":  {
-                                                      "default":  "#c7cdd1"
-                                                  }
-                                 }
-                   }
+  "id": "game:iron_axe",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "weapon": {
+      "damage": 9,
+      "attackSpeed": 1.6
+    },
+    "durability": {
+      "max": 250
+    },
+    "model": {
+      "texture": "iron_axe",
+      "fallback": {
+        "default": "#c7cdd1"
+      }
+    }
+  }
 }

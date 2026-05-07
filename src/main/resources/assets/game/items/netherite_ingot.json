@@ -1,17 +1,17 @@
 {
-    "id":  "game:netherite_ingot",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "durability":  {
-                                          "max":  2031
-                                      },
-                       "model":  {
-                                     "texture":  "netherite_ingot",
-                                     "fallback":  {
-                                                      "default":  "#4a4148"
-                                                  }
-                                 }
-                   }
+  "id": "game:netherite_ingot",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "durability": {
+      "max": 2031
+    },
+    "model": {
+      "texture": "netherite_ingot",
+      "fallback": {
+        "default": "#4a4148"
+      }
+    }
+  }
 }

@@ -1,14 +1,14 @@
 {
-    "id":  "game:glow_item_frame",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "glow_item_frame",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:glow_item_frame",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "glow_item_frame",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

@@ -1,14 +1,14 @@
 {
-    "id":  "game:magenta_dye",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "magenta_dye",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:magenta_dye",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "magenta_dye",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

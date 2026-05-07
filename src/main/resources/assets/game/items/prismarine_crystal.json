@@ -1,14 +1,14 @@
 {
-    "id":  "game:prismarine_crystal",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "prismarine_crystal",
-                                     "fallback":  {
-                                                      "default":  "#47c6d9"
-                                                  }
-                                 }
-                   }
+  "id": "game:prismarine_crystal",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "prismarine_crystal",
+      "fallback": {
+        "default": "#47c6d9"
+      }
+    }
+  }
 }

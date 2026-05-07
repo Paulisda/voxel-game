@@ -1,14 +1,14 @@
 {
-    "id":  "game:sugar_cane",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "sugar_cane",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:sugar_cane",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "sugar_cane",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

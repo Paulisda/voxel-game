@@ -1,14 +1,14 @@
 {
-    "id":  "game:redstone",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "redstone",
-                                     "fallback":  {
-                                                      "default":  "#d9534f"
-                                                  }
-                                 }
-                   }
+  "id": "game:redstone",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "redstone",
+      "fallback": {
+        "default": "#d9534f"
+      }
+    }
+  }
 }

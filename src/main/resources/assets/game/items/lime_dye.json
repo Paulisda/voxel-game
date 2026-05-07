@@ -1,14 +1,14 @@
 {
-    "id":  "game:lime_dye",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "lime_dye",
-                                     "fallback":  {
-                                                      "default":  "#4fc26b"
-                                                  }
-                                 }
-                   }
+  "id": "game:lime_dye",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "lime_dye",
+      "fallback": {
+        "default": "#4fc26b"
+      }
+    }
+  }
 }

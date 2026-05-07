@@ -1,21 +1,21 @@
 {
-    "id":  "game:stone_sword",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "weapon":  {
-                                      "damage":  5,
-                                      "attackSpeed":  1.6
-                                  },
-                       "durability":  {
-                                          "max":  131
-                                      },
-                       "model":  {
-                                     "texture":  "stone_sword",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:stone_sword",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "weapon": {
+      "damage": 5,
+      "attackSpeed": 1.6
+    },
+    "durability": {
+      "max": 131
+    },
+    "model": {
+      "texture": "stone_sword",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

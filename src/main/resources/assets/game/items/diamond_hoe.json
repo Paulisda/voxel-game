@@ -1,17 +1,17 @@
 {
-    "id":  "game:diamond_hoe",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "durability":  {
-                                          "max":  1561
-                                      },
-                       "model":  {
-                                     "texture":  "diamond_hoe",
-                                     "fallback":  {
-                                                      "default":  "#47c6d9"
-                                                  }
-                                 }
-                   }
+  "id": "game:diamond_hoe",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "durability": {
+      "max": 1561
+    },
+    "model": {
+      "texture": "diamond_hoe",
+      "fallback": {
+        "default": "#47c6d9"
+      }
+    }
+  }
 }

@@ -1,14 +1,14 @@
 {
-    "id":  "game:light_blue_dye",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "light_blue_dye",
-                                     "fallback":  {
-                                                      "default":  "#3b7ddd"
-                                                  }
-                                 }
-                   }
+  "id": "game:light_blue_dye",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "light_blue_dye",
+      "fallback": {
+        "default": "#3b7ddd"
+      }
+    }
+  }
 }

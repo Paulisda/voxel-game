@@ -1,14 +1,14 @@
 {
-    "id":  "game:music_disc_wait",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "music_disc_wait",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:music_disc_wait",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "music_disc_wait",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

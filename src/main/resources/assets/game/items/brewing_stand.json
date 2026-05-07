@@ -1,14 +1,14 @@
 {
-    "id":  "game:brewing_stand",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "brewing_stand",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:brewing_stand",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "brewing_stand",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

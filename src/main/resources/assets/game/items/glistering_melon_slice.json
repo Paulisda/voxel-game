@@ -1,14 +1,14 @@
 {
-    "id":  "game:glistering_melon_slice",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "glistering_melon_slice",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:glistering_melon_slice",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "glistering_melon_slice",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

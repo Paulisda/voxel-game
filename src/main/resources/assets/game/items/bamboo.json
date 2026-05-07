@@ -1,14 +1,14 @@
 {
-    "id":  "game:bamboo",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "bamboo",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:bamboo",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "bamboo",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

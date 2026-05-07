@@ -1,14 +1,14 @@
 {
-    "id":  "game:flint",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "flint",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:flint",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "flint",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

@@ -1,14 +1,14 @@
 {
-    "id":  "game:red_dye",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "red_dye",
-                                     "fallback":  {
-                                                      "default":  "#d9534f"
-                                                  }
-                                 }
-                   }
+  "id": "game:red_dye",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "red_dye",
+      "fallback": {
+        "default": "#d9534f"
+      }
+    }
+  }
 }

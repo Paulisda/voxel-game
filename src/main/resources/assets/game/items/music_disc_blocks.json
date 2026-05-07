@@ -1,14 +1,14 @@
 {
-    "id":  "game:music_disc_blocks",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "music_disc_blocks",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:music_disc_blocks",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "music_disc_blocks",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

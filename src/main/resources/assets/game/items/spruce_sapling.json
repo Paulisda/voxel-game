@@ -1,14 +1,14 @@
 {
-    "id":  "game:spruce_sapling",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "spruce_sapling",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:spruce_sapling",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "spruce_sapling",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

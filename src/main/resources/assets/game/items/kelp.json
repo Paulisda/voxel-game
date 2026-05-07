@@ -1,14 +1,14 @@
 {
-    "id":  "game:kelp",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "kelp",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:kelp",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "kelp",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

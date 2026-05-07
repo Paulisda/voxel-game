@@ -1,17 +1,17 @@
 {
-    "id":  "game:bow",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "durability":  {
-                                          "max":  384
-                                      },
-                       "model":  {
-                                     "texture":  "bow",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:bow",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "durability": {
+      "max": 384
+    },
+    "model": {
+      "texture": "bow",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

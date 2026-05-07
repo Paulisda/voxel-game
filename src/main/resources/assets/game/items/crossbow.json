@@ -1,17 +1,17 @@
 {
-    "id":  "game:crossbow",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "durability":  {
-                                          "max":  465
-                                      },
-                       "model":  {
-                                     "texture":  "crossbow_standby",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:crossbow",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "durability": {
+      "max": 465
+    },
+    "model": {
+      "texture": "crossbow_standby",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

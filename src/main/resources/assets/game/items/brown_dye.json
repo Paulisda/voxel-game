@@ -1,14 +1,14 @@
 {
-    "id":  "game:brown_dye",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "brown_dye",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:brown_dye",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "brown_dye",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

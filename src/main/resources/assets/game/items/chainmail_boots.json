@@ -1,14 +1,14 @@
 {
-    "id":  "game:chainmail_boots",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "model":  {
-                                     "texture":  "chainmail_boots",
-                                     "fallback":  {
-                                                      "default":  "#c7cdd1"
-                                                  }
-                                 }
-                   }
+  "id": "game:chainmail_boots",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "model": {
+      "texture": "chainmail_boots",
+      "fallback": {
+        "default": "#c7cdd1"
+      }
+    }
+  }
 }

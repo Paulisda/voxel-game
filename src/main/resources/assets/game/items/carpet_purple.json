@@ -1,14 +1,14 @@
 {
-    "id":  "game:carpet_purple",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "carpet_purple",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:carpet_purple",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "carpet_purple",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

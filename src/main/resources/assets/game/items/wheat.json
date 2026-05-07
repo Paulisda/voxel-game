@@ -1,14 +1,14 @@
 {
-    "id":  "game:wheat",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "wheat",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:wheat",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "wheat",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

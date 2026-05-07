@@ -1,21 +1,21 @@
 {
-    "id":  "game:netherite_sword",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "weapon":  {
-                                      "damage":  8,
-                                      "attackSpeed":  1.6
-                                  },
-                       "durability":  {
-                                          "max":  2031
-                                      },
-                       "model":  {
-                                     "texture":  "netherite_sword",
-                                     "fallback":  {
-                                                      "default":  "#4a4148"
-                                                  }
-                                 }
-                   }
+  "id": "game:netherite_sword",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "weapon": {
+      "damage": 8,
+      "attackSpeed": 1.6
+    },
+    "durability": {
+      "max": 2031
+    },
+    "model": {
+      "texture": "netherite_sword",
+      "fallback": {
+        "default": "#4a4148"
+      }
+    }
+  }
 }

@@ -1,14 +1,14 @@
 {
-    "id":  "game:gunpowder",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "gunpowder",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:gunpowder",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "gunpowder",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

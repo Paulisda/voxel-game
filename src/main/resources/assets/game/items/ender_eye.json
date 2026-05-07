@@ -1,14 +1,14 @@
 {
-    "id":  "game:ender_eye",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "ender_eye",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:ender_eye",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "ender_eye",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

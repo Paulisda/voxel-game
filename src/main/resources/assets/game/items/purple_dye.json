@@ -1,14 +1,14 @@
 {
-    "id":  "game:purple_dye",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "purple_dye",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:purple_dye",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "purple_dye",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

@@ -1,14 +1,14 @@
 {
-    "id":  "game:map",
-    "components":  {
-                       "stack":  {
-                                     "max":  1
-                                 },
-                       "model":  {
-                                     "texture":  "map",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:map",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "model": {
+      "texture": "map",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }

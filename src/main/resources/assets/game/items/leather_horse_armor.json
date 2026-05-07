@@ -1,14 +1,14 @@
 {
-    "id":  "game:leather_horse_armor",
-    "components":  {
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  "leather_horse_armor",
-                                     "fallback":  {
-                                                      "default":  "#b66ad7"
-                                                  }
-                                 }
-                   }
+  "id": "game:leather_horse_armor",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "leather_horse_armor",
+      "fallback": {
+        "default": "#b66ad7"
+      }
+    }
+  }
 }
