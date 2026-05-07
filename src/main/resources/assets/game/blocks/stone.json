@@ -1,0 +1,20 @@
+{
+  "id": "game:stone",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6.0,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": ["stone", "stone0", "stone1", "stone2", "stone3"],
+      "fallback": {
+        "default": "#7b7b7b"
+      }
+    }
+  }
+}

@@ -2,6 +2,10 @@ package de.paul.voxelgame.map;
 
 import de.paul.voxelgame.GameConfig;
 import de.paul.voxelgame.math.Vector3f;
+import de.paul.voxelgame.objects.BlockComponent;
+import de.paul.voxelgame.objects.GameObject;
+import de.paul.voxelgame.objects.ObjectKind;
+import de.paul.voxelgame.objects.RegistryManager;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,7 +14,12 @@ import java.util.function.Consumer;
 
 public class World {
     private final Map<Long, Chunk> chunks = new HashMap<>();
+    private final RegistryManager registries;
     private long revision;
+
+    public World(final RegistryManager registries) {
+        this.registries = registries;
+    }
 
     public void generateWorld(final boolean debugCollision) {
         chunks.clear();
@@ -27,7 +36,7 @@ public class World {
     private void addChunk(final int chunkX, final int chunkZ) {
         final long key = chunkKey(chunkX, chunkZ);
         if (!chunks.containsKey(key)) {
-            chunks.put(key, new Chunk(chunkX, chunkZ, GameConfig.CHUNK_WIDTH, GameConfig.CHUNK_HEIGHT, GameConfig.CHUNK_DEPTH));
+            chunks.put(key, new Chunk(chunkX, chunkZ, GameConfig.CHUNK_WIDTH, GameConfig.CHUNK_HEIGHT, GameConfig.CHUNK_DEPTH, registries));
         }
     }
 
@@ -83,15 +92,15 @@ public class World {
 
     public boolean removeBlock(final int blockX, final int blockY, final int blockZ) {
         final Block existing = getBlock(blockX, blockY, blockZ);
-        if (existing == null || existing.getType() == BlockType.BEDROCK) {
+        if (existing == null || !isBreakable(existing)) {
             return false;
         }
         setBlock(blockX, blockY, blockZ, null);
         return true;
     }
 
-    public boolean placeBlock(final int blockX, final int blockY, final int blockZ, final BlockType type) {
-        if (type == null || blockY < 0 || blockY >= GameConfig.CHUNK_HEIGHT) {
+    public boolean placeBlock(final int blockX, final int blockY, final int blockZ, final GameObject type) {
+        if (!isPlaceableBlock(type) || blockY < 0 || blockY >= GameConfig.CHUNK_HEIGHT) {
             return false;
         }
         if (getBlock(blockX, blockY, blockZ) != null) {
@@ -99,6 +108,15 @@ public class World {
         }
         setBlock(blockX, blockY, blockZ, new Block(blockX, blockY, blockZ, type));
         return true;
+    }
+
+    private boolean isPlaceableBlock(final GameObject type) {
+        return type != null && type.kind() == ObjectKind.BLOCK && type.has(BlockComponent.class);
+    }
+
+    private boolean isBreakable(final Block block) {
+        final GameObject type = block.getType();
+        return type != null && type.has(BlockComponent.class) && type.get(BlockComponent.class).breakable();
     }
 
     public int getSurfaceY(final int blockX, final int blockZ) {

@@ -1,0 +1,20 @@
+{
+  "id": "game:wood",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 2.0,
+      "resistance": 3.0,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": ["oak_planks", "planks_oak", "planks"],
+      "fallback": {
+        "default": "#7a4a1a"
+      }
+    }
+  }
+}

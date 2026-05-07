@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameLoop {
-    private final List<GameObject> gameObjects = new ArrayList<>();
+    private final List<Tickable> tickables = new ArrayList<>();
     private double fps;
     private long lastFrameNs = -1L;
     private long fpsWindowStartNs = -1L;
     private int fpsFrames;
 
-    public void addGameObject(final GameObject gameObject) {
-        if (gameObject != null) {
-            gameObjects.add(gameObject);
+    public void addTickable(final Tickable tickable) {
+        if (tickable != null) {
+            tickables.add(tickable);
         }
     }
 
@@ -27,8 +27,8 @@ public class GameLoop {
         deltaSeconds = Math.max(1.0 / 240.0, Math.min(0.05, deltaSeconds));
         lastFrameNs = nowNs;
 
-        for (final GameObject gameObject : gameObjects) {
-            gameObject.update(deltaSeconds);
+        for (final Tickable tickable : tickables) {
+            tickable.update(deltaSeconds);
         }
 
         fpsFrames++;

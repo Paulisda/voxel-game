@@ -2,21 +2,24 @@ package de.paul.voxelgame.renderer;
 
 import de.paul.voxelgame.GameConfig;
 import de.paul.voxelgame.assets.ResourcePackLoader;
+import de.paul.voxelgame.core.TextureLoader;
 import de.paul.voxelgame.map.Block;
-import de.paul.voxelgame.map.BlockType;
 import de.paul.voxelgame.map.World;
 import de.paul.voxelgame.mob.Player;
-import org.lwjgl.BufferUtils;
+import de.paul.voxelgame.objects.BlockComponent;
+import de.paul.voxelgame.objects.GameObject;
+import de.paul.voxelgame.objects.ModelComponent;
+import de.paul.voxelgame.objects.RegistryManager;
+import de.paul.voxelgame.objects.ResourceId;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,41 +27,33 @@ import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COMPILE;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glCallList;
 import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glDeleteLists;
-import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glEndList;
 import static org.lwjgl.opengl.GL11.glFrustum;
 import static org.lwjgl.opengl.GL11.glGenLists;
-import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glNewList;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glTexImage2D;
-import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 
 public class WorldRenderer {
+    private static final ResourceId DIRT_ID = ResourceId.of("game:dirt");
     private static final String[] GRASS_SIDE_OVERLAY_CANDIDATES = {
             "grass_block_side_overlay",
             "grass_block_side_overlay0",
@@ -72,15 +67,19 @@ public class WorldRenderer {
     private static final int MATERIAL_VARIANT_BUCKETS = Math.max(1, Integer.getInteger("voxel.texture.variants", 16));
 
     private final World world;
+    private final RegistryManager registries;
     private final ResourcePackLoader resourcePackLoader = new ResourcePackLoader();
-    private final Map<BlockType, BlockTextures[]> blockTextureVariants = new EnumMap<>(BlockType.class);
+    private final TextureLoader textureLoader = new TextureLoader();
+    private final Map<ResourceId, BlockTextures[]> blockTextureVariants = new LinkedHashMap<>();
     private final Map<Integer, Integer> fallbackTextureCache = new HashMap<>();
+    private BlockTextures[] fallbackBlockTextures;
 
     private int displayListId;
     private long builtRevision = -1;
 
-    public WorldRenderer(final World world) {
+    public WorldRenderer(final World world, final RegistryManager registries) {
         this.world = world;
+        this.registries = registries;
         initializeTextures();
     }
 
@@ -123,9 +122,7 @@ public class WorldRenderer {
             }
         }
         for (final Integer textureId : textureIds) {
-            if (textureId != null && textureId > 0) {
-                glDeleteTextures(textureId);
-            }
+            textureLoader.deleteTexture(textureId == null ? 0 : textureId);
         }
         blockTextureVariants.clear();
         fallbackTextureCache.clear();
@@ -167,7 +164,7 @@ public class WorldRenderer {
     }
 
     private void renderBlock(final Block block) {
-        if (block == null || !block.isSolid()) {
+        if (block == null) {
             return;
         }
 
@@ -183,11 +180,11 @@ public class WorldRenderer {
         final float maxY = minY + size;
         final float maxZ = minZ + size;
 
-        final BlockTextures[] variants = blockTextureVariants.getOrDefault(block.getType(), blockTextureVariants.get(BlockType.DIRT));
+        final BlockTextures[] variants = blockTextureVariants.getOrDefault(block.getTypeId(), fallbackBlockTextures);
         if (variants == null || variants.length == 0) {
             return;
         }
-        final int variantIndex = computeMaterialVariant(block.getType(), x, y, z, variants.length);
+        final int variantIndex = computeMaterialVariant(block.getTypeId(), x, y, z, variants.length);
         final BlockTextures textures = variants[variantIndex];
 
         if (isFaceVisible(x, y, z + 1)) {
@@ -239,15 +236,22 @@ public class WorldRenderer {
 
     private void initializeTextures() {
         final Color grassTint = resolveGrassTint();
-        for (final BlockType type : BlockType.values()) {
-            final int variantCount = resolveVariantCount(type);
+        for (final GameObject type : registries.blocks().values()) {
+            if (!type.has(BlockComponent.class)) {
+                continue;
+            }
+
+            final ModelComponent model = type.has(ModelComponent.class)
+                    ? type.get(ModelComponent.class)
+                    : new ModelComponent(type.id().path());
+            final int variantCount = resolveVariantCount(model);
             final BlockTextures[] variants = new BlockTextures[variantCount];
             for (int variant = 0; variant < variantCount; variant++) {
-                BufferedImage side = loadBlockImageForVariant(type.getSideTextureCandidates(), variant);
-                BufferedImage top = loadBlockImageForVariant(type.getTopTextureCandidates(), variant);
-                BufferedImage bottom = loadBlockImageForVariant(type.getBottomTextureCandidates(), variant);
+                BufferedImage side = loadBlockImageForVariant(model.sideCandidates(), variant);
+                BufferedImage top = loadBlockImageForVariant(model.topCandidates(), variant);
+                BufferedImage bottom = loadBlockImageForVariant(model.bottomCandidates(), variant);
 
-                if (type == BlockType.GRASS) {
+                if (model.hasTint("grass")) {
                     if (top != null) {
                         top = multiplyTint(top, grassTint);
                     }
@@ -262,12 +266,15 @@ public class WorldRenderer {
                     }
                 }
 
-                final int sideId = createTextureFromImageOrFallback(side, fallbackColor(type, Face.SIDE));
-                final int topId = createTextureFromImageOrFallback(top, fallbackColor(type, Face.TOP));
-                final int bottomId = createTextureFromImageOrFallback(bottom, fallbackColor(type, Face.BOTTOM));
+                final int sideId = createTextureFromImageOrFallback(side, fallbackColor(type, model, Face.SIDE));
+                final int topId = createTextureFromImageOrFallback(top, fallbackColor(type, model, Face.TOP));
+                final int bottomId = createTextureFromImageOrFallback(bottom, fallbackColor(type, model, Face.BOTTOM));
                 variants[variant] = new BlockTextures(sideId, topId, bottomId);
             }
-            blockTextureVariants.put(type, variants);
+            blockTextureVariants.put(type.id(), variants);
+            if (fallbackBlockTextures == null || DIRT_ID.equals(type.id())) {
+                fallbackBlockTextures = variants;
+            }
         }
     }
 
@@ -305,26 +312,26 @@ public class WorldRenderer {
         return false;
     }
 
-    private int resolveVariantCount(final BlockType type) {
+    private int resolveVariantCount(final ModelComponent model) {
         int max = 1;
-        if (hasIndexedVariantCandidate(type.getSideTextureCandidates())) {
-            max = Math.max(max, type.getSideTextureCandidates().length);
+        if (hasIndexedVariantCandidate(model.sideCandidates())) {
+            max = Math.max(max, model.sideCandidates().length);
         }
-        if (hasIndexedVariantCandidate(type.getTopTextureCandidates())) {
-            max = Math.max(max, type.getTopTextureCandidates().length);
+        if (hasIndexedVariantCandidate(model.topCandidates())) {
+            max = Math.max(max, model.topCandidates().length);
         }
-        if (hasIndexedVariantCandidate(type.getBottomTextureCandidates())) {
-            max = Math.max(max, type.getBottomTextureCandidates().length);
+        if (hasIndexedVariantCandidate(model.bottomCandidates())) {
+            max = Math.max(max, model.bottomCandidates().length);
         }
-        if (type == BlockType.GRASS && hasIndexedVariantCandidate(GRASS_SIDE_OVERLAY_CANDIDATES)) {
+        if (model.hasTint("grass") && hasIndexedVariantCandidate(GRASS_SIDE_OVERLAY_CANDIDATES)) {
             max = Math.max(max, GRASS_SIDE_OVERLAY_CANDIDATES.length);
         }
         return Math.max(1, Math.min(max, MATERIAL_VARIANT_BUCKETS));
     }
 
-    private int computeMaterialVariant(final BlockType type, final int worldX, final int worldY, final int worldZ, final int variantCount) {
+    private int computeMaterialVariant(final ResourceId typeId, final int worldX, final int worldY, final int worldZ, final int variantCount) {
         int hash = 17;
-        hash = 31 * hash + type.ordinal();
+        hash = 31 * hash + typeId.hashCode();
         hash = 31 * hash + worldX;
         hash = 31 * hash + (worldY * 7);
         hash = 31 * hash + worldZ;
@@ -366,14 +373,7 @@ public class WorldRenderer {
             return cached;
         }
 
-        final ByteBuffer buffer = BufferUtils.createByteBuffer(4);
-        buffer.put((byte) ((rgba >>> 24) & 0xff));
-        buffer.put((byte) ((rgba >>> 16) & 0xff));
-        buffer.put((byte) ((rgba >>> 8) & 0xff));
-        buffer.put((byte) (rgba & 0xff));
-        buffer.flip();
-
-        final int textureId = uploadTexture(1, 1, buffer);
+        final int textureId = textureLoader.loadSolidTexture(rgba);
         fallbackTextureCache.put(rgba, textureId);
         return textureId;
     }
@@ -441,48 +441,24 @@ public class WorldRenderer {
     }
 
     private int uploadTexture(final BufferedImage image) {
-        final int width = image.getWidth();
-        final int height = image.getHeight();
-        final int[] argb = new int[width * height];
-        image.getRGB(0, 0, width, height, argb, 0, width);
-
-        final ByteBuffer rgba = BufferUtils.createByteBuffer(width * height * 4);
-        for (int y = height - 1; y >= 0; y--) {
-            for (int x = 0; x < width; x++) {
-                final int pixel = argb[y * width + x];
-                rgba.put((byte) ((pixel >>> 16) & 0xff));
-                rgba.put((byte) ((pixel >>> 8) & 0xff));
-                rgba.put((byte) (pixel & 0xff));
-                rgba.put((byte) ((pixel >>> 24) & 0xff));
-            }
-        }
-        rgba.flip();
-
-        return uploadTexture(width, height, rgba);
+        return textureLoader.uploadTexture(image);
     }
 
-    private int uploadTexture(final int width, final int height, final ByteBuffer pixels) {
-        final int textureId = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, textureId);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-        return textureId;
-    }
-
-    private int fallbackColor(final BlockType type, final Face face) {
-        return switch (type) {
-            case GRASS -> switch (face) {
+    private int fallbackColor(final GameObject type, final ModelComponent model, final Face face) {
+        final int defaultColor = switch (type.id().path()) {
+            case "grass" -> switch (face) {
                 case SIDE -> rgba(110, 157, 74, 255);
                 case TOP -> rgba(99, 178, 67, 255);
                 case BOTTOM -> rgba(138, 90, 51, 255);
             };
-            case DIRT -> rgba(138, 90, 51, 255);
-            case STONE -> rgba(123, 123, 123, 255);
-            case BEDROCK -> rgba(61, 61, 61, 255);
-            case WATER -> rgba(62, 128, 216, 200);
-            case WOOD -> rgba(122, 74, 26, 255);
+            case "dirt" -> rgba(138, 90, 51, 255);
+            case "stone" -> rgba(123, 123, 123, 255);
+            case "bedrock" -> rgba(61, 61, 61, 255);
+            case "water" -> rgba(62, 128, 216, 200);
+            case "wood" -> rgba(122, 74, 26, 255);
+            default -> rgba(185, 82, 124, 255);
         };
+        return model.fallbackColor(face.key, defaultColor);
     }
 
     private int rgba(final int r, final int g, final int b, final int a) {
@@ -503,9 +479,15 @@ public class WorldRenderer {
     }
 
     private enum Face {
-        SIDE,
-        TOP,
-        BOTTOM
+        SIDE("side"),
+        TOP("top"),
+        BOTTOM("bottom");
+
+        private final String key;
+
+        Face(final String key) {
+            this.key = key;
+        }
     }
 
     private record BlockTextures(int side, int top, int bottom) {

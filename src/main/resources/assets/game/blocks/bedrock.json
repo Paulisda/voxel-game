@@ -1,0 +1,17 @@
+{
+  "id": "game:bedrock",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": -1.0,
+      "resistance": 3600000.0,
+      "breakable": false
+    },
+    "model": {
+      "texture": "bedrock",
+      "fallback": {
+        "default": "#3d3d3d"
+      }
+    }
+  }
+}

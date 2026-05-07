@@ -1,18 +1,20 @@
 package de.paul.voxelgame.renderer;
 
 import de.paul.voxelgame.assets.ResourcePackLoader;
-import de.paul.voxelgame.map.BlockType;
+import de.paul.voxelgame.core.TextureLoader;
 import de.paul.voxelgame.mob.Player;
-import org.lwjgl.BufferUtils;
+import de.paul.voxelgame.objects.GameObject;
+import de.paul.voxelgame.objects.ModelComponent;
+import de.paul.voxelgame.objects.RegistryManager;
+import de.paul.voxelgame.objects.ResourceId;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,25 +22,18 @@ import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glIsEnabled;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
@@ -46,11 +41,10 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glTexImage2D;
-import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
 public class HudRenderer {
+    private static final ResourceId DIRT_ID = ResourceId.of("game:dirt");
     private static final int HUD_SLOT_COUNT = 9;
     private static final int STAT_PIP_COUNT = 10;
     private static final float HUD_SCALE = 2.0f;
@@ -79,8 +73,11 @@ public class HudRenderer {
     private static final Color DEFAULT_GRASS_TINT = new Color(0x7F, 0xB2, 0x38);
 
     private final Player player;
+    private final RegistryManager registries;
     private final ResourcePackLoader resourcePackLoader = new ResourcePackLoader();
-    private final Map<BlockType, Integer> blockIcons = new EnumMap<>(BlockType.class);
+    private final TextureLoader textureLoader = new TextureLoader();
+    private final Map<ResourceId, Integer> blockIcons = new LinkedHashMap<>();
+    private int fallbackBlockIcon;
 
     private int hotbarBackgroundTexture;
     private int hotbarSelectorTexture;
@@ -91,8 +88,9 @@ public class HudRenderer {
     private int hungerHalfTexture;
     private int hungerFullTexture;
 
-    public HudRenderer(final Player player) {
+    public HudRenderer(final Player player, final RegistryManager registries) {
         this.player = player;
+        this.registries = registries;
         loadHudTextures();
         loadHotbarItemIcons();
     }
@@ -134,8 +132,8 @@ public class HudRenderer {
 
         final float iconSize = 16.0f * HUD_SCALE;
         for (int i = 0; i < HUD_SLOT_COUNT; i++) {
-            final BlockType type = player.getHotbarBlock(i);
-            final int iconTexture = blockIcons.getOrDefault(type, blockIcons.get(BlockType.DIRT));
+            final GameObject type = player.getHotbarBlock(i);
+            final int iconTexture = iconFor(type);
             final float iconX = hotbarX + (3 + i * 20) * HUD_SCALE;
             final float iconY = hotbarY + 3.0f * HUD_SCALE;
             drawTexturedQuad(iconTexture, iconX, iconY, iconSize, iconSize);
@@ -176,9 +174,7 @@ public class HudRenderer {
         textureIds.addAll(blockIcons.values());
 
         for (final Integer textureId : textureIds) {
-            if (textureId != null && textureId > 0) {
-                glDeleteTextures(textureId);
-            }
+            textureLoader.deleteTexture(textureId == null ? 0 : textureId);
         }
         blockIcons.clear();
     }
@@ -253,18 +249,33 @@ public class HudRenderer {
 
     private void loadHotbarItemIcons() {
         final Color grassTint = resolveGrassTint();
-        for (final BlockType type : BlockType.values()) {
-            BufferedImage icon = decodeImage(resourcePackLoader.loadBlockTexture(type.getTopTextureCandidates()));
+        for (final GameObject type : registries.blocks().values()) {
+            final ModelComponent model = type.has(ModelComponent.class)
+                    ? type.get(ModelComponent.class)
+                    : new ModelComponent(type.id().path());
+
+            BufferedImage icon = decodeImage(resourcePackLoader.loadBlockTexture(model.topCandidates()));
             if (icon == null) {
-                icon = decodeImage(resourcePackLoader.loadBlockTexture(type.getSideTextureCandidates()));
+                icon = decodeImage(resourcePackLoader.loadBlockTexture(model.sideCandidates()));
             }
             if (icon == null) {
-                icon = createSolidImage(16, 16, fallbackColor(type));
-            } else if (type == BlockType.GRASS) {
+                icon = createSolidImage(16, 16, fallbackColor(type, model));
+            } else if (model.hasTint("grass")) {
                 icon = multiplyTint(icon, grassTint);
             }
-            blockIcons.put(type, uploadTexture(icon));
+            final int textureId = uploadTexture(icon);
+            blockIcons.put(type.id(), textureId);
+            if (fallbackBlockIcon == 0 || DIRT_ID.equals(type.id())) {
+                fallbackBlockIcon = textureId;
+            }
         }
+    }
+
+    private int iconFor(final GameObject type) {
+        if (type == null) {
+            return fallbackBlockIcon;
+        }
+        return blockIcons.getOrDefault(type.id(), fallbackBlockIcon);
     }
 
     private BufferedImage decodeImage(final byte[] data) {
@@ -340,41 +351,31 @@ public class HudRenderer {
         return new Color(colorMap.getRGB(sampleX, sampleY), true);
     }
 
-    private Color fallbackColor(final BlockType type) {
-        return switch (type) {
-            case GRASS -> new Color(118, 190, 74, 255);
-            case DIRT -> new Color(138, 90, 51, 255);
-            case STONE -> new Color(123, 123, 123, 255);
-            case BEDROCK -> new Color(65, 65, 65, 255);
-            case WATER -> new Color(62, 128, 216, 220);
-            case WOOD -> new Color(122, 74, 26, 255);
+    private Color fallbackColor(final GameObject type, final ModelComponent model) {
+        final int defaultRgba = switch (type.id().path()) {
+            case "grass" -> rgba(118, 190, 74, 255);
+            case "dirt" -> rgba(138, 90, 51, 255);
+            case "stone" -> rgba(123, 123, 123, 255);
+            case "bedrock" -> rgba(65, 65, 65, 255);
+            case "water" -> rgba(62, 128, 216, 220);
+            case "wood" -> rgba(122, 74, 26, 255);
+            default -> rgba(185, 82, 124, 255);
         };
+        final int rgba = model.fallbackColor("top", model.fallbackColor("default", defaultRgba));
+        return new Color(
+                (rgba >>> 24) & 0xff,
+                (rgba >>> 16) & 0xff,
+                (rgba >>> 8) & 0xff,
+                rgba & 0xff
+        );
+    }
+
+    private int rgba(final int r, final int g, final int b, final int a) {
+        return ((r & 0xff) << 24) | ((g & 0xff) << 16) | ((b & 0xff) << 8) | (a & 0xff);
     }
 
     private int uploadTexture(final BufferedImage image) {
-        final int width = image.getWidth();
-        final int height = image.getHeight();
-        final int[] argb = new int[width * height];
-        image.getRGB(0, 0, width, height, argb, 0, width);
-
-        final ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
-        for (int y = height - 1; y >= 0; y--) {
-            for (int x = 0; x < width; x++) {
-                final int pixel = argb[y * width + x];
-                buffer.put((byte) ((pixel >>> 16) & 0xff));
-                buffer.put((byte) ((pixel >>> 8) & 0xff));
-                buffer.put((byte) (pixel & 0xff));
-                buffer.put((byte) ((pixel >>> 24) & 0xff));
-            }
-        }
-        buffer.flip();
-
-        final int textureId = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, textureId);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-        return textureId;
+        return textureLoader.uploadTexture(image);
     }
 
     private int clampInt(final int value, final int min, final int max) {

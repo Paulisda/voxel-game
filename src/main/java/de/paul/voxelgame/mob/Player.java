@@ -3,10 +3,12 @@ package de.paul.voxelgame.mob;
 import de.paul.voxelgame.GameConfig;
 import de.paul.voxelgame.engine.InputState;
 import de.paul.voxelgame.map.Block;
-import de.paul.voxelgame.map.BlockType;
 import de.paul.voxelgame.map.World;
 import de.paul.voxelgame.math.HitBox;
 import de.paul.voxelgame.math.Vector3f;
+import de.paul.voxelgame.objects.BlockComponent;
+import de.paul.voxelgame.objects.GameObject;
+import de.paul.voxelgame.objects.ObjectKind;
 
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
@@ -50,14 +52,8 @@ public class Player extends Mob {
             GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3, GLFW_KEY_4, GLFW_KEY_5,
             GLFW_KEY_6, GLFW_KEY_7, GLFW_KEY_8, GLFW_KEY_9
     };
-    private static final BlockType[] DEFAULT_HOTBAR = {
-            BlockType.DIRT, BlockType.STONE, BlockType.WOOD,
-            BlockType.GRASS, BlockType.DIRT, BlockType.STONE,
-            BlockType.WOOD, BlockType.DIRT, BlockType.STONE
-    };
-
     private final long window;
-    private final BlockType[] hotbarBlocks = DEFAULT_HOTBAR.clone();
+    private final GameObject[] hotbarBlocks;
     private int selectedHotbarSlot;
     private int healthPoints = 20;
     private int hungerPoints = 20;
@@ -67,9 +63,10 @@ public class Player extends Mob {
     private double lastMouseX;
     private double lastMouseY;
 
-    public Player(final long window, final World world) {
+    public Player(final long window, final World world, final GameObject[] hotbarBlocks) {
         super(world);
         this.window = window;
+        this.hotbarBlocks = hotbarBlocks == null ? new GameObject[HOTBAR_KEYS.length] : hotbarBlocks.clone();
 
         movementSpeed = SURVIVAL_SPEED;
         gravityOn = GameConfig.GAMEMODE == 0;
@@ -214,9 +211,9 @@ public class Player extends Mob {
         }
     }
 
-    public void placeBlockInView(final BlockType type) {
+    public void placeBlockInView(final GameObject type) {
         final RaycastHit hit = raycastSolidBlock(BREAK_REACH, RAYCAST_STEP);
-        if (hit == null || !hit.hasPlacementCandidate) {
+        if (hit == null || !hit.hasPlacementCandidate || !isPlaceableBlock(type)) {
             return;
         }
 
@@ -230,6 +227,10 @@ public class Player extends Mob {
         }
 
         world.placeBlock(hit.placeX, hit.placeY, hit.placeZ, type);
+    }
+
+    private boolean isPlaceableBlock(final GameObject type) {
+        return type != null && type.kind() == ObjectKind.BLOCK && type.has(BlockComponent.class);
     }
 
     private RaycastHit raycastSolidBlock(final double reach, final double step) {
@@ -301,11 +302,12 @@ public class Player extends Mob {
         return hotbarBlocks.length;
     }
 
-    public BlockType getHotbarBlock(final int slotIndex) {
+    public GameObject getHotbarBlock(final int slotIndex) {
         if (slotIndex < 0 || slotIndex >= hotbarBlocks.length) {
-            return BlockType.DIRT;
+            return firstHotbarBlock();
         }
-        return hotbarBlocks[slotIndex];
+        final GameObject type = hotbarBlocks[slotIndex];
+        return type == null ? firstHotbarBlock() : type;
     }
 
     public int getHealthPoints() {
@@ -336,8 +338,17 @@ public class Player extends Mob {
         return getPitch();
     }
 
-    private BlockType getSelectedHotbarBlock() {
+    private GameObject getSelectedHotbarBlock() {
         return getHotbarBlock(selectedHotbarSlot);
+    }
+
+    private GameObject firstHotbarBlock() {
+        for (final GameObject block : hotbarBlocks) {
+            if (block != null) {
+                return block;
+            }
+        }
+        return null;
     }
 
     private static int clampStat(final int value) {

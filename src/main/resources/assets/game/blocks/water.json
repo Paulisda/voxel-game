@@ -1,0 +1,17 @@
+{
+  "id": "game:water",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 100.0,
+      "resistance": 100.0,
+      "breakable": true
+    },
+    "model": {
+      "texture": ["water_still", "water"],
+      "fallback": {
+        "default": "#3e80d8cc"
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "game:diamond_sword",
+  "components": {
+    "stack": {
+      "max": 1
+    },
+    "weapon": {
+      "damage": 7.0,
+      "attackSpeed": 1.6
+    },
+    "durability": {
+      "max": 1561
+    },
+    "model": {
+      "texture": "diamond_sword",
+      "fallback": {
+        "default": "#47c6d9"
+      }
+    }
+  }
+}

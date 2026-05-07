@@ -1,12 +1,16 @@
 package de.paul.voxelgame.map;
 
+import de.paul.voxelgame.objects.BlockComponent;
+import de.paul.voxelgame.objects.GameObject;
+import de.paul.voxelgame.objects.ResourceId;
+
 public class Block {
     private final int worldX;
     private final int worldY;
     private final int worldZ;
-    private final BlockType type;
+    private final GameObject type;
 
-    public Block(final int worldX, final int worldY, final int worldZ, final BlockType type) {
+    public Block(final int worldX, final int worldY, final int worldZ, final GameObject type) {
         this.worldX = worldX;
         this.worldY = worldY;
         this.worldZ = worldZ;
@@ -14,11 +18,15 @@ public class Block {
     }
 
     public boolean isSolid() {
-        return type.isSolid();
+        return type != null && type.has(BlockComponent.class) && type.get(BlockComponent.class).solid();
     }
 
-    public BlockType getType() {
+    public GameObject getType() {
         return type;
+    }
+
+    public ResourceId getTypeId() {
+        return type.id();
     }
 
     public int getWorldX() {

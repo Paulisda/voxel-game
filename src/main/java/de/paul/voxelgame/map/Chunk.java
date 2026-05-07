@@ -1,23 +1,36 @@
 package de.paul.voxelgame.map;
 
 import de.paul.voxelgame.GameConfig;
+import de.paul.voxelgame.objects.GameObject;
+import de.paul.voxelgame.objects.RegistryManager;
+import de.paul.voxelgame.objects.ResourceId;
 
 import java.util.function.Consumer;
 
 public class Chunk {
     private final Block[][][] blocks;
+    private final RegistryManager registries;
     private final int chunkX;
     private final int chunkZ;
     private final int width;
     private final int height;
     private final int depth;
+    private final GameObject bedrock;
+    private final GameObject grass;
+    private final GameObject dirt;
+    private final GameObject stone;
 
-    public Chunk(final int chunkX, final int chunkZ, final int width, final int height, final int depth) {
+    public Chunk(final int chunkX, final int chunkZ, final int width, final int height, final int depth, final RegistryManager registries) {
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
         this.width = width;
         this.height = height;
         this.depth = depth;
+        this.registries = registries;
+        this.bedrock = block("game:bedrock");
+        this.grass = block("game:grass");
+        this.dirt = block("game:dirt");
+        this.stone = block("game:stone");
         this.blocks = new Block[width][height][depth];
         generateChunk();
     }
@@ -30,7 +43,7 @@ public class Chunk {
                 final int surfaceY = getSurfaceHeight(worldX, worldZ);
 
                 for (int y = 0; y <= surfaceY; y++) {
-                    final BlockType type = getBlockType(y, surfaceY);
+                    final GameObject type = getTerrainBlock(y, surfaceY);
                     blocks[localX][y][localZ] = new Block(worldX, y, worldZ, type);
                 }
             }
@@ -46,17 +59,21 @@ public class Chunk {
         return Math.max(3, Math.min(height - 2, surface));
     }
 
-    private BlockType getBlockType(final int y, final int surfaceY) {
+    private GameObject getTerrainBlock(final int y, final int surfaceY) {
         if (y == 0) {
-            return BlockType.BEDROCK;
+            return bedrock;
         }
         if (y == surfaceY) {
-            return BlockType.GRASS;
+            return grass;
         }
         if (y >= surfaceY - 2) {
-            return BlockType.DIRT;
+            return dirt;
         }
-        return BlockType.STONE;
+        return stone;
+    }
+
+    private GameObject block(final String id) {
+        return registries.blocks().get(ResourceId.of(id));
     }
 
     public Block getBlock(final int localX, final int localY, final int localZ) {
