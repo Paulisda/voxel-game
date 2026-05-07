@@ -19,6 +19,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F11;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_ANY_PROFILE;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
@@ -71,6 +72,7 @@ public class Game {
     private final InventorySystem inventorySystem;
     private final LocalizationManager localization;
     private final MenuSystem menuSystem;
+    private final DisplayManager displayManager;
     private final MusicManager musicManager;
     private final SoundEffectManager soundEffectManager;
     private final WorldSystem worldSystem;
@@ -91,6 +93,7 @@ public class Game {
         this.inventorySystem = new InventorySystem(registries);
         this.localization = new LocalizationManager(resources);
         this.menuSystem = new MenuSystem();
+        this.displayManager = new DisplayManager();
         this.musicManager = new MusicManager(resources);
         this.soundEffectManager = new SoundEffectManager(resources);
         this.worldSystem = new WorldSystem(registries);
@@ -119,8 +122,9 @@ public class Game {
             final int width = Math.max(1, frameWidth[0]);
             final int height = Math.max(1, frameHeight[0]);
 
-            handleEscapeInput();
-            handleInventoryInput();
+            final boolean consumedEscapeInput = handleEscapeInput();
+            final boolean consumedInventoryInput = handleInventoryInput();
+            final boolean consumedDisplayInput = handleDisplayInput();
             final boolean consumedMenuClick = handleMenuClick(width, height);
             final boolean consumedInventoryClick = handleInventoryClick(width, height);
             handleHotbarScroll();
@@ -130,7 +134,13 @@ public class Game {
             lastFrameTime = now;
             deltaSeconds = Math.max(1.0 / 240.0, Math.min(0.05, deltaSeconds));
 
-            if (!menuSystem.isOpen() && !inventorySystem.isOpen() && !consumedMenuClick && !consumedInventoryClick) {
+            if (!menuSystem.isOpen()
+                    && !inventorySystem.isOpen()
+                    && !consumedEscapeInput
+                    && !consumedInventoryInput
+                    && !consumedDisplayInput
+                    && !consumedMenuClick
+                    && !consumedInventoryClick) {
                 player.update(inputState, deltaSeconds);
             }
 
@@ -148,15 +158,15 @@ public class Game {
         }
     }
 
-    private void handleEscapeInput() {
+    private boolean handleEscapeInput() {
         if (!inputState.isKeyPressed(GLFW_KEY_ESCAPE)) {
-            return;
+            return false;
         }
 
         if (inventorySystem.isOpen()) {
             inventorySystem.close();
             player.captureMouse();
-            return;
+            return true;
         }
 
         if (menuSystem.isOpen()) {
@@ -166,16 +176,17 @@ public class Game {
                 menuSystem.close();
                 player.captureMouse();
             }
-            return;
+            return true;
         }
 
         menuSystem.openPause();
         player.releaseMouse();
+        return true;
     }
 
-    private void handleInventoryInput() {
+    private boolean handleInventoryInput() {
         if (menuSystem.isOpen() || !inputState.isKeyPressed(GLFW_KEY_E)) {
-            return;
+            return false;
         }
 
         inventorySystem.toggle();
@@ -184,6 +195,19 @@ public class Game {
         } else {
             player.captureMouse();
         }
+        return true;
+    }
+
+    private boolean handleDisplayInput() {
+        if (!inputState.isKeyPressed(GLFW_KEY_F11)) {
+            return false;
+        }
+
+        displayManager.toggleFullscreen(window);
+        if (!menuSystem.isOpen() && !inventorySystem.isOpen()) {
+            player.captureMouse();
+        }
+        return true;
     }
 
     private boolean handleMenuClick(final int width, final int height) {
@@ -244,6 +268,21 @@ public class Game {
                 soundEffectManager.adjustVolume(0.05f);
                 return true;
             }
+            case FULLSCREEN_TOGGLE -> {
+                soundEffectManager.play(UI_TAP_EFFECT);
+                displayManager.toggleFullscreen(window);
+                return true;
+            }
+            case RESOLUTION_PREVIOUS -> {
+                soundEffectManager.play(UI_TAP_EFFECT);
+                displayManager.previousResolution(window);
+                return true;
+            }
+            case RESOLUTION_NEXT -> {
+                soundEffectManager.play(UI_TAP_EFFECT);
+                displayManager.nextResolution(window);
+                return true;
+            }
             case LANGUAGE_TOGGLE -> {
                 soundEffectManager.play(UI_TAP_EFFECT);
                 localization.toggleLanguage();
@@ -297,7 +336,7 @@ public class Game {
         player.captureMouse();
 
         worldRenderer = new WorldRenderer(world, registries);
-        hudRenderer = new HudRenderer(player, registries, inventorySystem, menuSystem, localization, musicManager, soundEffectManager);
+        hudRenderer = new HudRenderer(player, registries, inventorySystem, menuSystem, localization, displayManager, musicManager, soundEffectManager);
 
         lastFrameTime = glfwGetTime();
         frameWidth = new int[1];
@@ -320,6 +359,7 @@ public class Game {
             glfwTerminate();
             throw new RuntimeException("Fenster konnte nicht erstellt werden");
         }
+        displayManager.centerWindow(window);
     }
 
     private void destroy() {
@@ -341,9 +381,10 @@ public class Game {
     }
 
     private static void drawCrosshair(final int width, final int height) {
+        final float scale = overlayScale(width, height);
         final float centerX = width * 0.5f;
         final float centerY = height * 0.5f;
-        final float size = 8.0f;
+        final float size = 8.0f * scale;
 
         glDisable(GL_DEPTH_TEST);
 
@@ -356,7 +397,7 @@ public class Game {
         glPushMatrix();
         glLoadIdentity();
 
-        glLineWidth(2.0f);
+        glLineWidth(2.0f * scale);
         glColor3f(1.0f, 1.0f, 1.0f);
         glBegin(GL_LINES);
         glVertex2f(centerX - size, centerY);
@@ -371,5 +412,11 @@ public class Game {
         glMatrixMode(GL_MODELVIEW);
 
         glEnable(GL_DEPTH_TEST);
+    }
+
+    private static float overlayScale(final int width, final int height) {
+        final float scaleByWidth = width / 1920.0f;
+        final float scaleByHeight = height / 1080.0f;
+        return Math.max(1.0f, Math.min(2.0f, Math.min(scaleByWidth, scaleByHeight)));
     }
 }

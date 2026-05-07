@@ -9,6 +9,7 @@
     },
     "model": {
       "texture": ["water_still", "water"],
+      "tint": "water",
       "fallback": {
         "default": "#3e80d8cc"
       }

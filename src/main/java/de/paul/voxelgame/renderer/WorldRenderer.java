@@ -64,6 +64,7 @@ public class WorldRenderer {
             "grass_side_overlay"
     };
     private static final Color DEFAULT_GRASS_TINT = new Color(0x7F, 0xB2, 0x38);
+    private static final Color DEFAULT_WATER_TINT = new Color(62, 128, 216, 200);
     private static final int MATERIAL_VARIANT_BUCKETS = Math.max(1, Integer.getInteger("voxel.texture.variants", 16));
 
     private final World world;
@@ -236,6 +237,7 @@ public class WorldRenderer {
 
     private void initializeTextures() {
         final Color grassTint = resolveGrassTint();
+        final Color waterTint = DEFAULT_WATER_TINT;
         for (final GameObject type : registries.blocks().values()) {
             if (!type.has(BlockComponent.class)) {
                 continue;
@@ -264,6 +266,11 @@ public class WorldRenderer {
                             side = multiplyTint(side, grassTint);
                         }
                     }
+                }
+                if (model.hasTint("water")) {
+                    side = tintOrSolid(side, waterTint);
+                    top = tintOrSolid(top, waterTint);
+                    bottom = tintOrSolid(bottom, waterTint);
                 }
 
                 final int sideId = createTextureFromImageOrFallback(side, fallbackColor(type, model, Face.SIDE));
@@ -410,6 +417,24 @@ public class WorldRenderer {
             }
         }
         return out;
+    }
+
+    private BufferedImage tintOrSolid(final BufferedImage source, final Color tint) {
+        if (source == null) {
+            return createSolidImage(16, 16, tint);
+        }
+        return multiplyTint(source, tint);
+    }
+
+    private BufferedImage createSolidImage(final int width, final int height, final Color color) {
+        final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        final int argb = color.getRGB();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                image.setRGB(x, y, argb);
+            }
+        }
+        return image;
     }
 
     private BufferedImage alphaOverlay(final BufferedImage base, final BufferedImage overlay) {

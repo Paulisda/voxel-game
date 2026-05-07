@@ -3,6 +3,7 @@ package de.paul.voxelgame.renderer;
 import de.paul.voxelgame.assets.ResourcePackLoader;
 import de.paul.voxelgame.audio.MusicManager;
 import de.paul.voxelgame.audio.SoundEffectManager;
+import de.paul.voxelgame.core.DisplayManager;
 import de.paul.voxelgame.core.InventorySystem;
 import de.paul.voxelgame.core.LocalizationManager;
 import de.paul.voxelgame.core.MenuAction;
@@ -57,6 +58,8 @@ public class HudRenderer {
     private static final int HUD_SLOT_COUNT = 9;
     private static final int STAT_PIP_COUNT = 10;
     private static final float HUD_SCALE = 2.0f;
+    private static final float MIN_UI_SCALE = 1.0f;
+    private static final float MAX_UI_SCALE = 2.0f;
 
     private static final int HOTBAR_U = 0;
     private static final int HOTBAR_V = 0;
@@ -94,6 +97,7 @@ public class HudRenderer {
     private final InventorySystem inventorySystem;
     private final MenuSystem menuSystem;
     private final LocalizationManager localization;
+    private final DisplayManager displayManager;
     private final MusicManager musicManager;
     private final SoundEffectManager soundEffectManager;
     private final ResourcePackLoader resourcePackLoader = new ResourcePackLoader();
@@ -117,6 +121,7 @@ public class HudRenderer {
             final InventorySystem inventorySystem,
             final MenuSystem menuSystem,
             final LocalizationManager localization,
+            final DisplayManager displayManager,
             final MusicManager musicManager,
             final SoundEffectManager soundEffectManager
     ) {
@@ -125,6 +130,7 @@ public class HudRenderer {
         this.inventorySystem = inventorySystem;
         this.menuSystem = menuSystem;
         this.localization = localization;
+        this.displayManager = displayManager;
         this.musicManager = musicManager;
         this.soundEffectManager = soundEffectManager;
         loadHudTextures();
@@ -154,34 +160,36 @@ public class HudRenderer {
         glPushMatrix();
         glLoadIdentity();
 
-        final float hotbarWidth = HOTBAR_W * HUD_SCALE;
-        final float hotbarHeight = HOTBAR_H * HUD_SCALE;
+        final float scale = uiScale(width, height);
+        final float hudScale = HUD_SCALE * scale;
+        final float hotbarWidth = HOTBAR_W * hudScale;
+        final float hotbarHeight = HOTBAR_H * hudScale;
         final float hotbarX = (width - hotbarWidth) * 0.5f;
-        final float hotbarY = height - hotbarHeight - (12.0f * HUD_SCALE);
+        final float hotbarY = height - hotbarHeight - (12.0f * hudScale);
 
         drawTexturedQuad(hotbarBackgroundTexture, hotbarX, hotbarY, hotbarWidth, hotbarHeight);
 
         final int selected = player.getSelectedHotbarSlot();
-        final float selectorX = hotbarX + ((selected * 20.0f) - 1.0f) * HUD_SCALE;
-        final float selectorY = hotbarY - HUD_SCALE;
-        drawTexturedQuad(hotbarSelectorTexture, selectorX, selectorY, SLOT_SELECTOR_W * HUD_SCALE, SLOT_SELECTOR_H * HUD_SCALE);
+        final float selectorX = hotbarX + ((selected * 20.0f) - 1.0f) * hudScale;
+        final float selectorY = hotbarY - hudScale;
+        drawTexturedQuad(hotbarSelectorTexture, selectorX, selectorY, SLOT_SELECTOR_W * hudScale, SLOT_SELECTOR_H * hudScale);
 
-        final float iconSize = 16.0f * HUD_SCALE;
+        final float iconSize = 16.0f * hudScale;
         for (int i = 0; i < HUD_SLOT_COUNT; i++) {
             final GameObject item = player.getHotbarItem(i);
             final int iconTexture = iconFor(item);
-            final float iconX = hotbarX + (3 + i * 20) * HUD_SCALE;
-            final float iconY = hotbarY + 3.0f * HUD_SCALE;
+            final float iconX = hotbarX + (3 + i * 20) * hudScale;
+            final float iconY = hotbarY + 3.0f * hudScale;
             drawTexturedQuad(iconTexture, iconX, iconY, iconSize, iconSize);
         }
 
         final GameObject selectedItem = player.getHotbarItem(selected);
         final String selectedName = localization.translate("ui.hotbar.selected") + ": " + localization.objectName(selectedItem);
-        textRenderer.drawCenteredText(selectedName, width * 0.5f, hotbarY - 42.0f, 14, TEXT_COLOR);
+        textRenderer.drawCenteredText(selectedName, width * 0.5f, hotbarY - s(42.0f, scale), font(14, scale), TEXT_COLOR);
 
-        final float pipSize = ICON_W * HUD_SCALE;
-        final float pipStep = 8.0f * HUD_SCALE;
-        final float statsY = hotbarY - pipSize - (4.0f * HUD_SCALE);
+        final float pipSize = ICON_W * hudScale;
+        final float pipStep = 8.0f * hudScale;
+        final float statsY = hotbarY - pipSize - (4.0f * hudScale);
         final float heartsX = hotbarX;
         final float hungerX = hotbarX + hotbarWidth - (pipSize + pipStep * (STAT_PIP_COUNT - 1));
 
@@ -237,10 +245,10 @@ public class HudRenderer {
         for (int i = 0; i < entries.size(); i++) {
             final int column = i % layout.columns();
             final int row = i / layout.columns();
-            final float slotX = layout.slotStartX() + column * (INVENTORY_SLOT_SIZE + INVENTORY_SLOT_GAP);
-            final float slotY = layout.slotStartY() + row * (INVENTORY_SLOT_SIZE + INVENTORY_SLOT_GAP);
-            if (mouseX >= slotX && mouseX <= slotX + INVENTORY_SLOT_SIZE
-                    && mouseY >= slotY && mouseY <= slotY + INVENTORY_SLOT_SIZE) {
+            final float slotX = layout.slotStartX() + column * (layout.slotSize() + layout.slotGap());
+            final float slotY = layout.slotStartY() + row * (layout.slotSize() + layout.slotGap());
+            if (mouseX >= slotX && mouseX <= slotX + layout.slotSize()
+                    && mouseY >= slotY && mouseY <= slotY + layout.slotSize()) {
                 return entries.get(i);
             }
         }
@@ -265,96 +273,118 @@ public class HudRenderer {
         final InventoryLayout layout = inventoryLayout(entries.size(), width, height);
 
         drawColoredQuad(0, 0, width, height, 0.03f, 0.035f, 0.04f, 0.42f);
-        drawColoredQuad(layout.panelX() - 5.0f, layout.panelY() - 5.0f, layout.panelWidth() + 10.0f, layout.panelHeight() + 10.0f, 0.06f, 0.065f, 0.075f, 0.94f);
+        drawColoredQuad(layout.panelX() - s(5.0f, layout.scale()), layout.panelY() - s(5.0f, layout.scale()),
+                layout.panelWidth() + s(10.0f, layout.scale()), layout.panelHeight() + s(10.0f, layout.scale()), 0.06f, 0.065f, 0.075f, 0.94f);
         drawColoredQuad(layout.panelX(), layout.panelY(), layout.panelWidth(), layout.panelHeight(), 0.16f, 0.17f, 0.18f, 0.96f);
-        textRenderer.drawBoldText(localization.translate("ui.inventory.title"), layout.panelX() + INVENTORY_PADDING, layout.panelY() + 8.0f, 18, TEXT_COLOR);
+        textRenderer.drawBoldText(localization.translate("ui.inventory.title"), layout.panelX() + layout.padding(), layout.panelY() + s(8.0f, layout.scale()), font(18, layout.scale()), TEXT_COLOR);
 
         for (int i = 0; i < entries.size(); i++) {
             final int column = i % layout.columns();
             final int row = i / layout.columns();
-            final float slotX = layout.slotStartX() + column * (INVENTORY_SLOT_SIZE + INVENTORY_SLOT_GAP);
-            final float slotY = layout.slotStartY() + row * (INVENTORY_SLOT_SIZE + INVENTORY_SLOT_GAP);
+            final float slotX = layout.slotStartX() + column * (layout.slotSize() + layout.slotGap());
+            final float slotY = layout.slotStartY() + row * (layout.slotSize() + layout.slotGap());
             final GameObject entry = entries.get(i);
 
             final boolean block = entry.has(BlockItemComponent.class);
-            drawColoredQuad(slotX, slotY, INVENTORY_SLOT_SIZE, INVENTORY_SLOT_SIZE, 0.055f, 0.06f, 0.067f, 1.0f);
-            drawColoredQuad(slotX + 2.0f, slotY + 2.0f, INVENTORY_SLOT_SIZE - 4.0f, INVENTORY_SLOT_SIZE - 4.0f,
+            drawColoredQuad(slotX, slotY, layout.slotSize(), layout.slotSize(), 0.055f, 0.06f, 0.067f, 1.0f);
+            drawColoredQuad(slotX + s(2.0f, layout.scale()), slotY + s(2.0f, layout.scale()),
+                    layout.slotSize() - s(4.0f, layout.scale()), layout.slotSize() - s(4.0f, layout.scale()),
                     block ? 0.20f : 0.17f,
                     block ? 0.22f : 0.18f,
                     block ? 0.20f : 0.23f,
                     1.0f);
 
-            final float iconX = slotX + (INVENTORY_SLOT_SIZE - INVENTORY_ICON_SIZE) * 0.5f;
-            final float iconY = slotY + (INVENTORY_SLOT_SIZE - INVENTORY_ICON_SIZE) * 0.5f;
-            drawTexturedQuad(iconFor(entry), iconX, iconY, INVENTORY_ICON_SIZE, INVENTORY_ICON_SIZE);
-            textRenderer.drawCenteredText(shortName(localization.objectName(entry), 12), slotX + INVENTORY_SLOT_SIZE * 0.5f, slotY + 41.0f, 10, TEXT_COLOR);
+            final float iconX = slotX + (layout.slotSize() - layout.iconSize()) * 0.5f;
+            final float iconY = slotY + s(9.0f, layout.scale());
+            drawTexturedQuad(iconFor(entry), iconX, iconY, layout.iconSize(), layout.iconSize());
+            textRenderer.drawCenteredText(shortName(localization.objectName(entry), 12), slotX + layout.slotSize() * 0.5f, slotY + s(42.0f, layout.scale()), font(10, layout.scale()), TEXT_COLOR);
         }
     }
 
     private InventoryLayout inventoryLayout(final int entryCount, final int width, final int height) {
+        final float scale = uiScale(width, height);
+        final float slotSize = s(INVENTORY_SLOT_SIZE, scale);
+        final float slotGap = s(INVENTORY_SLOT_GAP, scale);
+        final float padding = s(INVENTORY_PADDING, scale);
+        final float iconSize = s(INVENTORY_ICON_SIZE, scale);
+        final float titleHeight = s(INVENTORY_TITLE_HEIGHT, scale);
         final int columns = Math.max(1, Math.min(INVENTORY_COLUMNS, Math.max(1, entryCount)));
         final int rows = Math.max(1, (int) Math.ceil(entryCount / (double) columns));
-        final float panelWidth = INVENTORY_PADDING * 2.0f
-                + columns * INVENTORY_SLOT_SIZE
-                + (columns - 1) * INVENTORY_SLOT_GAP;
-        final float panelHeight = INVENTORY_PADDING * 2.0f
-                + INVENTORY_TITLE_HEIGHT
-                + rows * INVENTORY_SLOT_SIZE
-                + (rows - 1) * INVENTORY_SLOT_GAP;
-        final float panelX = Math.max(12.0f, (width - panelWidth) * 0.5f);
-        final float panelY = Math.max(18.0f, (height - panelHeight) * 0.42f);
+        final float panelWidth = padding * 2.0f
+                + columns * slotSize
+                + (columns - 1) * slotGap;
+        final float panelHeight = padding * 2.0f
+                + titleHeight
+                + rows * slotSize
+                + (rows - 1) * slotGap;
+        final float panelX = Math.max(s(12.0f, scale), (width - panelWidth) * 0.5f);
+        final float panelY = Math.max(s(18.0f, scale), (height - panelHeight) * 0.42f);
         return new InventoryLayout(
                 columns,
                 panelX,
                 panelY,
                 panelWidth,
                 panelHeight,
-                panelX + INVENTORY_PADDING,
-                panelY + INVENTORY_PADDING + INVENTORY_TITLE_HEIGHT
+                panelX + padding,
+                panelY + padding + titleHeight,
+                slotSize,
+                slotGap,
+                padding,
+                iconSize,
+                scale
         );
     }
 
     private void renderMenu(final int width, final int height) {
         drawColoredQuad(0, 0, width, height, 0.02f, 0.025f, 0.03f, 0.58f);
-        final float panelWidth = menuSystem.isOptions() ? 460.0f : 360.0f;
-        final float panelHeight = menuSystem.isOptions() ? 430.0f : 260.0f;
+        final float scale = uiScale(width, height);
+        final float panelWidth = s(menuSystem.isOptions() ? 520.0f : 360.0f, scale);
+        final float panelHeight = s(menuSystem.isOptions() ? 560.0f : 260.0f, scale);
         final float panelX = (width - panelWidth) * 0.5f;
         final float panelY = (height - panelHeight) * 0.44f;
-        drawColoredQuad(panelX - 5.0f, panelY - 5.0f, panelWidth + 10.0f, panelHeight + 10.0f, 0.05f, 0.055f, 0.065f, 0.96f);
+        drawColoredQuad(panelX - s(5.0f, scale), panelY - s(5.0f, scale),
+                panelWidth + s(10.0f, scale), panelHeight + s(10.0f, scale), 0.05f, 0.055f, 0.065f, 0.96f);
         drawColoredQuad(panelX, panelY, panelWidth, panelHeight, 0.15f, 0.16f, 0.18f, 0.98f);
 
         if (menuSystem.isOptions()) {
-            renderOptionsMenu(panelX, panelY, panelWidth);
+            renderOptionsMenu(panelX, panelY, panelWidth, scale);
         } else {
-            renderPauseMenu(panelX, panelY, panelWidth);
+            renderPauseMenu(panelX, panelY, panelWidth, scale);
         }
     }
 
-    private void renderPauseMenu(final float panelX, final float panelY, final float panelWidth) {
-        textRenderer.drawCenteredBoldText(localization.translate("ui.menu.title"), panelX + panelWidth * 0.5f, panelY + 24.0f, 24, TEXT_COLOR);
-        for (final MenuButton button : menuButtonsForPause(panelX, panelY, panelWidth)) {
-            drawMenuButton(button, labelFor(button.action()));
+    private void renderPauseMenu(final float panelX, final float panelY, final float panelWidth, final float scale) {
+        textRenderer.drawCenteredBoldText(localization.translate("ui.menu.title"), panelX + panelWidth * 0.5f, panelY + s(24.0f, scale), font(24, scale), TEXT_COLOR);
+        for (final MenuButton button : menuButtonsForPause(panelX, panelY, panelWidth, scale)) {
+            drawMenuButton(button, labelFor(button.action()), scale);
         }
     }
 
-    private void renderOptionsMenu(final float panelX, final float panelY, final float panelWidth) {
-        textRenderer.drawCenteredBoldText(localization.translate("ui.options.title"), panelX + panelWidth * 0.5f, panelY + 22.0f, 23, TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.sensitivity"), panelX + 38.0f, panelY + 84.0f, 15, MUTED_TEXT_COLOR);
-        textRenderer.drawCenteredBoldText(String.format(Locale.ROOT, "%.2f", player.getMouseSensitivity()), panelX + panelWidth * 0.5f, panelY + 112.0f, 18, TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.music_volume"), panelX + 38.0f, panelY + 154.0f, 15, MUTED_TEXT_COLOR);
-        textRenderer.drawCenteredBoldText(percent(musicManager.getVolume()), panelX + panelWidth * 0.5f, panelY + 182.0f, 18, TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.effects_volume"), panelX + 38.0f, panelY + 224.0f, 15, MUTED_TEXT_COLOR);
-        textRenderer.drawCenteredBoldText(percent(soundEffectManager.getVolume()), panelX + panelWidth * 0.5f, panelY + 252.0f, 18, TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.language"), panelX + 38.0f, panelY + 294.0f, 15, MUTED_TEXT_COLOR);
-        for (final MenuButton button : menuButtonsForOptions(panelX, panelY, panelWidth)) {
-            drawMenuButton(button, labelFor(button.action()));
+    private void renderOptionsMenu(final float panelX, final float panelY, final float panelWidth, final float scale) {
+        final float labelX = panelX + s(38.0f, scale);
+        final float centerX = panelX + panelWidth * 0.5f;
+
+        textRenderer.drawCenteredBoldText(localization.translate("ui.options.title"), centerX, panelY + s(22.0f, scale), font(23, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.sensitivity"), labelX, panelY + s(72.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawCenteredBoldText(String.format(Locale.ROOT, "%.2f", player.getMouseSensitivity()), centerX, panelY + s(100.0f, scale), font(18, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.music_volume"), labelX, panelY + s(134.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawCenteredBoldText(percent(musicManager.getVolume()), centerX, panelY + s(162.0f, scale), font(18, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.effects_volume"), labelX, panelY + s(196.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawCenteredBoldText(percent(soundEffectManager.getVolume()), centerX, panelY + s(224.0f, scale), font(18, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.fullscreen"), labelX, panelY + s(258.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.resolution"), labelX, panelY + s(338.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawCenteredBoldText(displayManager.currentResolutionLabel(), centerX, panelY + s(366.0f, scale), font(18, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.language"), labelX, panelY + s(420.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        for (final MenuButton button : menuButtonsForOptions(panelX, panelY, panelWidth, scale)) {
+            drawMenuButton(button, labelFor(button.action()), scale);
         }
     }
 
-    private void drawMenuButton(final MenuButton button, final String label) {
+    private void drawMenuButton(final MenuButton button, final String label, final float scale) {
         drawColoredQuad(button.x(), button.y(), button.width(), button.height(), 0.08f, 0.09f, 0.105f, 1.0f);
-        drawColoredQuad(button.x() + 2.0f, button.y() + 2.0f, button.width() - 4.0f, button.height() - 4.0f, 0.23f, 0.25f, 0.28f, 1.0f);
-        textRenderer.drawCenteredBoldText(label, button.x() + button.width() * 0.5f, button.y() + 9.0f, 15, TEXT_COLOR);
+        drawColoredQuad(button.x() + s(2.0f, scale), button.y() + s(2.0f, scale),
+                button.width() - s(4.0f, scale), button.height() - s(4.0f, scale), 0.23f, 0.25f, 0.28f, 1.0f);
+        textRenderer.drawCenteredBoldText(label, button.x() + button.width() * 0.5f, button.y() + button.height() * 0.24f, font(15, scale), TEXT_COLOR);
     }
 
     private String labelFor(final MenuAction action) {
@@ -369,47 +399,81 @@ public class HudRenderer {
             case MUSIC_VOLUME_INCREASE -> "+";
             case EFFECTS_VOLUME_DECREASE -> "-";
             case EFFECTS_VOLUME_INCREASE -> "+";
+            case FULLSCREEN_TOGGLE -> displayManager.isFullscreen()
+                    ? localization.translate("ui.options.fullscreen.on")
+                    : localization.translate("ui.options.fullscreen.off");
+            case RESOLUTION_PREVIOUS -> "<";
+            case RESOLUTION_NEXT -> ">";
             case LANGUAGE_TOGGLE -> localization.currentLanguageName();
             case NONE -> "";
         };
     }
 
     private MenuButton[] menuButtons(final int width, final int height) {
-        final float panelWidth = menuSystem.isOptions() ? 460.0f : 360.0f;
-        final float panelHeight = menuSystem.isOptions() ? 430.0f : 260.0f;
+        final float scale = uiScale(width, height);
+        final float panelWidth = s(menuSystem.isOptions() ? 520.0f : 360.0f, scale);
+        final float panelHeight = s(menuSystem.isOptions() ? 560.0f : 260.0f, scale);
         final float panelX = (width - panelWidth) * 0.5f;
         final float panelY = (height - panelHeight) * 0.44f;
         return menuSystem.isOptions()
-                ? menuButtonsForOptions(panelX, panelY, panelWidth)
-                : menuButtonsForPause(panelX, panelY, panelWidth);
+                ? menuButtonsForOptions(panelX, panelY, panelWidth, scale)
+                : menuButtonsForPause(panelX, panelY, panelWidth, scale);
     }
 
-    private MenuButton[] menuButtonsForPause(final float panelX, final float panelY, final float panelWidth) {
-        final float buttonWidth = 260.0f;
+    private MenuButton[] menuButtonsForPause(final float panelX, final float panelY, final float panelWidth, final float scale) {
+        final float buttonWidth = s(260.0f, scale);
         final float buttonX = panelX + (panelWidth - buttonWidth) * 0.5f;
         return new MenuButton[]{
-                new MenuButton(MenuAction.RESUME, buttonX, panelY + 82.0f, buttonWidth, 40.0f),
-                new MenuButton(MenuAction.OPTIONS, buttonX, panelY + 136.0f, buttonWidth, 40.0f),
-                new MenuButton(MenuAction.EXIT, buttonX, panelY + 190.0f, buttonWidth, 40.0f)
+                new MenuButton(MenuAction.RESUME, buttonX, panelY + s(82.0f, scale), buttonWidth, s(40.0f, scale)),
+                new MenuButton(MenuAction.OPTIONS, buttonX, panelY + s(136.0f, scale), buttonWidth, s(40.0f, scale)),
+                new MenuButton(MenuAction.EXIT, buttonX, panelY + s(190.0f, scale), buttonWidth, s(40.0f, scale))
         };
     }
 
-    private MenuButton[] menuButtonsForOptions(final float panelX, final float panelY, final float panelWidth) {
+    private MenuButton[] menuButtonsForOptions(final float panelX, final float panelY, final float panelWidth, final float scale) {
         final float centerX = panelX + panelWidth * 0.5f;
+        final float smallButtonWidth = s(42.0f, scale);
+        final float smallButtonHeight = s(36.0f, scale);
+        final float wideButtonWidth = s(220.0f, scale);
+        final float wideButtonHeight = s(38.0f, scale);
+        final float leftSmallX = centerX - s(110.0f, scale);
+        final float rightSmallX = centerX + s(68.0f, scale);
+        final float wideButtonX = centerX - wideButtonWidth * 0.5f;
         return new MenuButton[]{
-                new MenuButton(MenuAction.SENSITIVITY_DECREASE, centerX - 110.0f, panelY + 104.0f, 42.0f, 36.0f),
-                new MenuButton(MenuAction.SENSITIVITY_INCREASE, centerX + 68.0f, panelY + 104.0f, 42.0f, 36.0f),
-                new MenuButton(MenuAction.MUSIC_VOLUME_DECREASE, centerX - 110.0f, panelY + 174.0f, 42.0f, 36.0f),
-                new MenuButton(MenuAction.MUSIC_VOLUME_INCREASE, centerX + 68.0f, panelY + 174.0f, 42.0f, 36.0f),
-                new MenuButton(MenuAction.EFFECTS_VOLUME_DECREASE, centerX - 110.0f, panelY + 244.0f, 42.0f, 36.0f),
-                new MenuButton(MenuAction.EFFECTS_VOLUME_INCREASE, centerX + 68.0f, panelY + 244.0f, 42.0f, 36.0f),
-                new MenuButton(MenuAction.LANGUAGE_TOGGLE, centerX - 110.0f, panelY + 318.0f, 220.0f, 38.0f),
-                new MenuButton(MenuAction.BACK, centerX - 110.0f, panelY + 372.0f, 220.0f, 38.0f)
+                new MenuButton(MenuAction.SENSITIVITY_DECREASE, leftSmallX, panelY + s(92.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.SENSITIVITY_INCREASE, rightSmallX, panelY + s(92.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.MUSIC_VOLUME_DECREASE, leftSmallX, panelY + s(154.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.MUSIC_VOLUME_INCREASE, rightSmallX, panelY + s(154.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.EFFECTS_VOLUME_DECREASE, leftSmallX, panelY + s(216.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.EFFECTS_VOLUME_INCREASE, rightSmallX, panelY + s(216.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.FULLSCREEN_TOGGLE, wideButtonX, panelY + s(280.0f, scale), wideButtonWidth, wideButtonHeight),
+                new MenuButton(MenuAction.RESOLUTION_PREVIOUS, leftSmallX, panelY + s(358.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.RESOLUTION_NEXT, rightSmallX, panelY + s(358.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.LANGUAGE_TOGGLE, wideButtonX, panelY + s(442.0f, scale), wideButtonWidth, wideButtonHeight),
+                new MenuButton(MenuAction.BACK, wideButtonX, panelY + s(500.0f, scale), wideButtonWidth, wideButtonHeight)
         };
     }
 
     private String percent(final float value) {
         return Math.round(value * 100.0f) + "%";
+    }
+
+    private float uiScale(final int width, final int height) {
+        final float scaleByWidth = width / 1920.0f;
+        final float scaleByHeight = height / 1080.0f;
+        return clamp(Math.min(scaleByWidth, scaleByHeight), MIN_UI_SCALE, MAX_UI_SCALE);
+    }
+
+    private float s(final float value, final float scale) {
+        return value * scale;
+    }
+
+    private int font(final int baseSize, final float scale) {
+        return Math.max(8, Math.round(baseSize * scale));
+    }
+
+    private float clamp(final float value, final float min, final float max) {
+        return Math.max(min, Math.min(max, value));
     }
 
     private void drawStatsRow(final int value, final float startX, final float y, final float step, final float size, final int empty, final int half, final int full) {
@@ -424,13 +488,13 @@ public class HudRenderer {
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         glBindTexture(GL_TEXTURE_2D, textureId);
         glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f);
-        glVertex2f(x, y);
-        glTexCoord2f(1.0f, 0.0f);
-        glVertex2f(x + width, y);
-        glTexCoord2f(1.0f, 1.0f);
-        glVertex2f(x + width, y + height);
         glTexCoord2f(0.0f, 1.0f);
+        glVertex2f(x, y);
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex2f(x + width, y);
+        glTexCoord2f(1.0f, 0.0f);
+        glVertex2f(x + width, y + height);
+        glTexCoord2f(0.0f, 0.0f);
         glVertex2f(x, y + height);
         glEnd();
     }
@@ -505,6 +569,8 @@ public class HudRenderer {
                 icon = createSolidImage(16, 16, fallbackColor(item, model));
             } else if (model.hasTint("grass")) {
                 icon = multiplyTint(icon, grassTint);
+            } else if (model.hasTint("water")) {
+                icon = multiplyTint(icon, new Color(62, 128, 216, 200));
             }
             final int textureId = uploadTexture(icon);
             objectIcons.put(item.id(), textureId);
@@ -644,7 +710,20 @@ public class HudRenderer {
         return value.substring(0, Math.max(0, maxLength - 3)) + "...";
     }
 
-    private record InventoryLayout(int columns, float panelX, float panelY, float panelWidth, float panelHeight, float slotStartX, float slotStartY) {
+    private record InventoryLayout(
+            int columns,
+            float panelX,
+            float panelY,
+            float panelWidth,
+            float panelHeight,
+            float slotStartX,
+            float slotStartY,
+            float slotSize,
+            float slotGap,
+            float padding,
+            float iconSize,
+            float scale
+    ) {
     }
 
     private record MenuButton(MenuAction action, float x, float y, float width, float height) {

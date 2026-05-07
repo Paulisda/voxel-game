@@ -56,13 +56,13 @@ public final class TextRenderer {
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         glBindTexture(GL_TEXTURE_2D, texture.textureId());
         glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f);
-        glVertex2f(x, y);
-        glTexCoord2f(1.0f, 0.0f);
-        glVertex2f(x + texture.width(), y);
-        glTexCoord2f(1.0f, 1.0f);
-        glVertex2f(x + texture.width(), y + texture.height());
         glTexCoord2f(0.0f, 1.0f);
+        glVertex2f(x, y);
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex2f(x + texture.width(), y);
+        glTexCoord2f(1.0f, 0.0f);
+        glVertex2f(x + texture.width(), y + texture.height());
+        glTexCoord2f(0.0f, 0.0f);
         glVertex2f(x, y + texture.height());
         glEnd();
     }
