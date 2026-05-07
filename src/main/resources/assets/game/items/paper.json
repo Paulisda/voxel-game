@@ -1,0 +1,14 @@
+{
+    "id":  "game:paper",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "paper",
+                                     "fallback":  {
+                                                      "default":  "#e8edf0"
+                                                  }
+                                 }
+                   }
+}

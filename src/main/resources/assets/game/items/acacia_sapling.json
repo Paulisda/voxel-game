@@ -1,0 +1,14 @@
+{
+    "id":  "game:acacia_sapling",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "acacia_sapling",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

@@ -1,0 +1,14 @@
+{
+    "id":  "game:chainmail_leggings",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "model":  {
+                                     "texture":  "chainmail_leggings",
+                                     "fallback":  {
+                                                      "default":  "#c7cdd1"
+                                                  }
+                                 }
+                   }
+}

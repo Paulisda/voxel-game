@@ -1,0 +1,14 @@
+{
+    "id":  "game:firework_rocket",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "firework_rocket",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

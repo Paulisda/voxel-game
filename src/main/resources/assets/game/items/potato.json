@@ -1,0 +1,18 @@
+{
+    "id":  "game:potato",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "food":  {
+                                    "hunger":  1,
+                                    "saturation":  0.6
+                                },
+                       "model":  {
+                                     "texture":  "potato",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

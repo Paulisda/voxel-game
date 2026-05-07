@@ -1,0 +1,14 @@
+{
+    "id":  "game:cod_bucket",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "model":  {
+                                     "texture":  "cod_bucket",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

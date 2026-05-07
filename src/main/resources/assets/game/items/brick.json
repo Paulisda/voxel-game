@@ -1,0 +1,14 @@
+{
+    "id":  "game:brick",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "brick",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

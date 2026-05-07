@@ -1,0 +1,18 @@
+{
+    "id":  "game:rotten_flesh",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "food":  {
+                                    "hunger":  4,
+                                    "saturation":  0.8
+                                },
+                       "model":  {
+                                     "texture":  "rotten_flesh",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

@@ -1,0 +1,17 @@
+{
+    "id":  "game:golden_boots",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "durability":  {
+                                          "max":  32
+                                      },
+                       "model":  {
+                                     "texture":  "golden_boots",
+                                     "fallback":  {
+                                                      "default":  "#f2c94c"
+                                                  }
+                                 }
+                   }
+}

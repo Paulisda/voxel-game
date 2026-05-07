@@ -1,0 +1,14 @@
+{
+    "id":  "game:goat_horn",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "model":  {
+                                     "texture":  "goat_horn",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

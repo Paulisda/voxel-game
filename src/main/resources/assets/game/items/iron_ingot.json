@@ -1,0 +1,17 @@
+{
+    "id":  "game:iron_ingot",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "durability":  {
+                                          "max":  250
+                                      },
+                       "model":  {
+                                     "texture":  "iron_ingot",
+                                     "fallback":  {
+                                                      "default":  "#c7cdd1"
+                                                  }
+                                 }
+                   }
+}

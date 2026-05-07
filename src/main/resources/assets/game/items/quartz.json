@@ -1,0 +1,14 @@
+{
+    "id":  "game:quartz",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "quartz",
+                                     "fallback":  {
+                                                      "default":  "#e8edf0"
+                                                  }
+                                 }
+                   }
+}

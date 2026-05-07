@@ -1,0 +1,14 @@
+{
+    "id":  "game:diamond",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "diamond",
+                                     "fallback":  {
+                                                      "default":  "#47c6d9"
+                                                  }
+                                 }
+                   }
+}

@@ -1,0 +1,21 @@
+{
+    "id":  "game:stone_axe",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "weapon":  {
+                                      "damage":  9,
+                                      "attackSpeed":  1.6
+                                  },
+                       "durability":  {
+                                          "max":  131
+                                      },
+                       "model":  {
+                                     "texture":  "stone_axe",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

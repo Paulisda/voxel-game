@@ -1,0 +1,17 @@
+{
+    "id":  "game:golden_pickaxe",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "durability":  {
+                                          "max":  32
+                                      },
+                       "model":  {
+                                     "texture":  "golden_pickaxe",
+                                     "fallback":  {
+                                                      "default":  "#f2c94c"
+                                                  }
+                                 }
+                   }
+}

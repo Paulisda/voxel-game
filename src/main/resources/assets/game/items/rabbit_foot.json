@@ -1,0 +1,14 @@
+{
+    "id":  "game:rabbit_foot",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "rabbit_foot",
+                                     "fallback":  {
+                                                      "default":  "#d9534f"
+                                                  }
+                                 }
+                   }
+}

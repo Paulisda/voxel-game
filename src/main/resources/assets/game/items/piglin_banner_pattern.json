@@ -1,0 +1,14 @@
+{
+    "id":  "game:piglin_banner_pattern",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "piglin_banner_pattern",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

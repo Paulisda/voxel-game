@@ -1,0 +1,17 @@
+{
+    "id":  "game:iron_boots",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "durability":  {
+                                          "max":  250
+                                      },
+                       "model":  {
+                                     "texture":  "iron_boots",
+                                     "fallback":  {
+                                                      "default":  "#c7cdd1"
+                                                  }
+                                 }
+                   }
+}

@@ -1,0 +1,14 @@
+{
+    "id":  "game:bone",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "bone",
+                                     "fallback":  {
+                                                      "default":  "#e8edf0"
+                                                  }
+                                 }
+                   }
+}

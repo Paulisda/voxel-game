@@ -1,0 +1,17 @@
+{
+    "id":  "game:stone_pickaxe",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "durability":  {
+                                          "max":  131
+                                      },
+                       "model":  {
+                                     "texture":  "stone_pickaxe",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

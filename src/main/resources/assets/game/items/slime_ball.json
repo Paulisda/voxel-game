@@ -1,0 +1,14 @@
+{
+    "id":  "game:slime_ball",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "slime_ball",
+                                     "fallback":  {
+                                                      "default":  "#4fc26b"
+                                                  }
+                                 }
+                   }
+}

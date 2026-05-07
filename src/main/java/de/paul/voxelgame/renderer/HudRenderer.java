@@ -242,9 +242,14 @@ public class HudRenderer {
 
         final List<GameObject> entries = inventorySystem.allInventoryEntries();
         final InventoryLayout layout = inventoryLayout(entries.size(), width, height);
-        for (int i = 0; i < entries.size(); i++) {
-            final int column = i % layout.columns();
-            final int row = i / layout.columns();
+        inventorySystem.clampToPageCount(layout.pageCount());
+
+        final int start = layout.page() * layout.pageSize();
+        final int end = Math.min(entries.size(), start + layout.pageSize());
+        for (int i = start; i < end; i++) {
+            final int visibleIndex = i - start;
+            final int column = visibleIndex % layout.columns();
+            final int row = visibleIndex / layout.columns();
             final float slotX = layout.slotStartX() + column * (layout.slotSize() + layout.slotGap());
             final float slotY = layout.slotStartY() + row * (layout.slotSize() + layout.slotGap());
             if (mouseX >= slotX && mouseX <= slotX + layout.slotSize()
@@ -268,19 +273,31 @@ public class HudRenderer {
         return MenuAction.NONE;
     }
 
+    public int inventoryPageCount(final int width, final int height) {
+        return inventoryLayout(inventorySystem.allInventoryEntries().size(), width, height).pageCount();
+    }
+
     private void renderInventory(final int width, final int height) {
         final List<GameObject> entries = inventorySystem.allInventoryEntries();
         final InventoryLayout layout = inventoryLayout(entries.size(), width, height);
+        inventorySystem.clampToPageCount(layout.pageCount());
 
         drawColoredQuad(0, 0, width, height, 0.03f, 0.035f, 0.04f, 0.42f);
         drawColoredQuad(layout.panelX() - s(5.0f, layout.scale()), layout.panelY() - s(5.0f, layout.scale()),
                 layout.panelWidth() + s(10.0f, layout.scale()), layout.panelHeight() + s(10.0f, layout.scale()), 0.06f, 0.065f, 0.075f, 0.94f);
         drawColoredQuad(layout.panelX(), layout.panelY(), layout.panelWidth(), layout.panelHeight(), 0.16f, 0.17f, 0.18f, 0.96f);
         textRenderer.drawBoldText(localization.translate("ui.inventory.title"), layout.panelX() + layout.padding(), layout.panelY() + s(8.0f, layout.scale()), font(18, layout.scale()), TEXT_COLOR);
+        if (layout.pageCount() > 1) {
+            final String pageLabel = (layout.page() + 1) + "/" + layout.pageCount();
+            textRenderer.drawCenteredText(pageLabel, layout.panelX() + layout.panelWidth() - layout.padding() - s(22.0f, layout.scale()), layout.panelY() + s(10.0f, layout.scale()), font(13, layout.scale()), MUTED_TEXT_COLOR);
+        }
 
-        for (int i = 0; i < entries.size(); i++) {
-            final int column = i % layout.columns();
-            final int row = i / layout.columns();
+        final int start = layout.page() * layout.pageSize();
+        final int end = Math.min(entries.size(), start + layout.pageSize());
+        for (int i = start; i < end; i++) {
+            final int visibleIndex = i - start;
+            final int column = visibleIndex % layout.columns();
+            final int row = visibleIndex / layout.columns();
             final float slotX = layout.slotStartX() + column * (layout.slotSize() + layout.slotGap());
             final float slotY = layout.slotStartY() + row * (layout.slotSize() + layout.slotGap());
             final GameObject entry = entries.get(i);
@@ -309,7 +326,15 @@ public class HudRenderer {
         final float iconSize = s(INVENTORY_ICON_SIZE, scale);
         final float titleHeight = s(INVENTORY_TITLE_HEIGHT, scale);
         final int columns = Math.max(1, Math.min(INVENTORY_COLUMNS, Math.max(1, entryCount)));
-        final int rows = Math.max(1, (int) Math.ceil(entryCount / (double) columns));
+        final float maxPanelHeight = Math.max(s(240.0f, scale), height * 0.72f);
+        final float rowHeight = slotSize + slotGap;
+        final float nonGridHeight = padding * 2.0f + titleHeight;
+        final int maxRows = Math.max(1, (int) Math.floor((maxPanelHeight - nonGridHeight + slotGap) / rowHeight));
+        final int neededRows = Math.max(1, (int) Math.ceil(entryCount / (double) columns));
+        final int rows = Math.min(neededRows, maxRows);
+        final int pageSize = Math.max(1, rows * columns);
+        final int pageCount = Math.max(1, (int) Math.ceil(entryCount / (double) pageSize));
+        final int page = Math.max(0, Math.min(inventorySystem.page(), pageCount - 1));
         final float panelWidth = padding * 2.0f
                 + columns * slotSize
                 + (columns - 1) * slotGap;
@@ -331,7 +356,11 @@ public class HudRenderer {
                 slotGap,
                 padding,
                 iconSize,
-                scale
+                scale,
+                rows,
+                pageSize,
+                page,
+                pageCount
         );
     }
 
@@ -722,7 +751,11 @@ public class HudRenderer {
             float slotGap,
             float padding,
             float iconSize,
-            float scale
+            float scale,
+            int rows,
+            int pageSize,
+            int page,
+            int pageCount
     ) {
     }
 

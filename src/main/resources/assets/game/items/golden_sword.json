@@ -1,0 +1,21 @@
+{
+    "id":  "game:golden_sword",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "weapon":  {
+                                      "damage":  4,
+                                      "attackSpeed":  1.6
+                                  },
+                       "durability":  {
+                                          "max":  32
+                                      },
+                       "model":  {
+                                     "texture":  "golden_sword",
+                                     "fallback":  {
+                                                      "default":  "#f2c94c"
+                                                  }
+                                 }
+                   }
+}

@@ -1,0 +1,14 @@
+{
+    "id":  "game:bone_meal",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "bone_meal",
+                                     "fallback":  {
+                                                      "default":  "#e8edf0"
+                                                  }
+                                 }
+                   }
+}

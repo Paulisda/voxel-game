@@ -1,0 +1,14 @@
+{
+    "id":  "game:music_disc_mellohi",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "music_disc_mellohi",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

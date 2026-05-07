@@ -1,0 +1,18 @@
+{
+    "id":  "game:cooked_cod",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "food":  {
+                                    "hunger":  5,
+                                    "saturation":  6
+                                },
+                       "model":  {
+                                     "texture":  "cooked_cod",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

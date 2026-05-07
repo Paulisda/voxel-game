@@ -1,0 +1,14 @@
+{
+    "id":  "game:acacia_chest_boat",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "model":  {
+                                     "texture":  "acacia_chest_boat",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

@@ -1,0 +1,14 @@
+{
+    "id":  "game:tropical_fish_bucket",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "model":  {
+                                     "texture":  "tropical_fish_bucket",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

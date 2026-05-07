@@ -1,0 +1,18 @@
+{
+    "id":  "game:mutton",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "food":  {
+                                    "hunger":  2,
+                                    "saturation":  1.2
+                                },
+                       "model":  {
+                                     "texture":  "mutton",
+                                     "fallback":  {
+                                                      "default":  "#d9534f"
+                                                  }
+                                 }
+                   }
+}

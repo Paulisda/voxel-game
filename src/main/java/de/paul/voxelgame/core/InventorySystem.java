@@ -17,6 +17,7 @@ public final class InventorySystem {
 
     private final RegistryManager registries;
     private boolean open;
+    private int page;
 
     public InventorySystem(final RegistryManager registries) {
         this.registries = registries;
@@ -53,18 +54,44 @@ public final class InventorySystem {
 
     public void toggle() {
         open = !open;
+        if (open) {
+            page = 0;
+        }
     }
 
     public void open() {
         open = true;
+        page = 0;
     }
 
     public void close() {
         open = false;
+        page = 0;
     }
 
     public boolean isOpen() {
         return open;
+    }
+
+    public int page() {
+        return page;
+    }
+
+    public void nextPage(final int pageCount) {
+        page = clampPage(page + 1, pageCount);
+    }
+
+    public void previousPage(final int pageCount) {
+        page = clampPage(page - 1, pageCount);
+    }
+
+    public void clampToPageCount(final int pageCount) {
+        page = clampPage(page, pageCount);
+    }
+
+    private int clampPage(final int value, final int pageCount) {
+        final int maxPage = Math.max(0, pageCount - 1);
+        return Math.max(0, Math.min(maxPage, value));
     }
 
     private GameObject firstRegisteredItem() {

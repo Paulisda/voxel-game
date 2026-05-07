@@ -1,0 +1,18 @@
+{
+    "id":  "game:honey_bottle",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "food":  {
+                                    "hunger":  6,
+                                    "saturation":  1.2
+                                },
+                       "model":  {
+                                     "texture":  "honey_bottle",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

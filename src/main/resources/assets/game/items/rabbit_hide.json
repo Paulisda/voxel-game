@@ -1,0 +1,14 @@
+{
+    "id":  "game:rabbit_hide",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "rabbit_hide",
+                                     "fallback":  {
+                                                      "default":  "#d9534f"
+                                                  }
+                                 }
+                   }
+}

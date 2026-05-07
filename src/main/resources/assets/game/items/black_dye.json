@@ -1,0 +1,14 @@
+{
+    "id":  "game:black_dye",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "black_dye",
+                                     "fallback":  {
+                                                      "default":  "#2b2f36"
+                                                  }
+                                 }
+                   }
+}

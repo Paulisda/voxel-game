@@ -1,0 +1,17 @@
+{
+    "id":  "game:netherite_helmet",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "durability":  {
+                                          "max":  2031
+                                      },
+                       "model":  {
+                                     "texture":  "netherite_helmet",
+                                     "fallback":  {
+                                                      "default":  "#4a4148"
+                                                  }
+                                 }
+                   }
+}

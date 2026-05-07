@@ -127,6 +127,7 @@ public class Game {
             final boolean consumedDisplayInput = handleDisplayInput();
             final boolean consumedMenuClick = handleMenuClick(width, height);
             final boolean consumedInventoryClick = handleInventoryClick(width, height);
+            handleInventoryScroll(width, height);
             handleHotbarScroll();
 
             final double now = glfwGetTime();
@@ -317,6 +318,19 @@ public class Game {
             return;
         }
         player.scrollHotbar(inputState.getScrollY());
+    }
+
+    private void handleInventoryScroll(final int width, final int height) {
+        if (!inventorySystem.isOpen()) {
+            return;
+        }
+
+        final double scrollY = inputState.getScrollY();
+        if (scrollY > 0.0) {
+            inventorySystem.previousPage(hudRenderer.inventoryPageCount(width, height));
+        } else if (scrollY < 0.0) {
+            inventorySystem.nextPage(hudRenderer.inventoryPageCount(width, height));
+        }
     }
 
     private void initOpenGL() {

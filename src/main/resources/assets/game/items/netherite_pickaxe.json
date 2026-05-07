@@ -1,0 +1,17 @@
+{
+    "id":  "game:netherite_pickaxe",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "durability":  {
+                                          "max":  2031
+                                      },
+                       "model":  {
+                                     "texture":  "netherite_pickaxe",
+                                     "fallback":  {
+                                                      "default":  "#4a4148"
+                                                  }
+                                 }
+                   }
+}

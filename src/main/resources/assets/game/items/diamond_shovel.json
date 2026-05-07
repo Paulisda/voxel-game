@@ -1,0 +1,17 @@
+{
+    "id":  "game:diamond_shovel",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "durability":  {
+                                          "max":  1561
+                                      },
+                       "model":  {
+                                     "texture":  "diamond_shovel",
+                                     "fallback":  {
+                                                      "default":  "#47c6d9"
+                                                  }
+                                 }
+                   }
+}

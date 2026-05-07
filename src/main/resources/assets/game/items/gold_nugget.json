@@ -1,0 +1,14 @@
+{
+    "id":  "game:gold_nugget",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "gold_nugget",
+                                     "fallback":  {
+                                                      "default":  "#f2c94c"
+                                                  }
+                                 }
+                   }
+}

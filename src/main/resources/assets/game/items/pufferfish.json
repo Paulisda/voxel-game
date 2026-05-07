@@ -1,0 +1,18 @@
+{
+    "id":  "game:pufferfish",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "food":  {
+                                    "hunger":  1,
+                                    "saturation":  0.2
+                                },
+                       "model":  {
+                                     "texture":  "pufferfish",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

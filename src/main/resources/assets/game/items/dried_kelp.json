@@ -1,0 +1,18 @@
+{
+    "id":  "game:dried_kelp",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "food":  {
+                                    "hunger":  1,
+                                    "saturation":  0.6
+                                },
+                       "model":  {
+                                     "texture":  "dried_kelp",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

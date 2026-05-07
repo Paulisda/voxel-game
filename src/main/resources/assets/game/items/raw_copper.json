@@ -1,0 +1,14 @@
+{
+    "id":  "game:raw_copper",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "raw_copper",
+                                     "fallback":  {
+                                                      "default":  "#c87545"
+                                                  }
+                                 }
+                   }
+}

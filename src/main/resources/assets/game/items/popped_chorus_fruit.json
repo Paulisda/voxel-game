@@ -1,0 +1,14 @@
+{
+    "id":  "game:popped_chorus_fruit",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  "popped_chorus_fruit",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

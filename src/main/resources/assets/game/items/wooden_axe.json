@@ -1,0 +1,21 @@
+{
+    "id":  "game:wooden_axe",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "weapon":  {
+                                      "damage":  7,
+                                      "attackSpeed":  1.6
+                                  },
+                       "durability":  {
+                                          "max":  59
+                                      },
+                       "model":  {
+                                     "texture":  "wooden_axe",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

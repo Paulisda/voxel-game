@@ -1,0 +1,17 @@
+{
+    "id":  "game:stone_shovel",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "durability":  {
+                                          "max":  131
+                                      },
+                       "model":  {
+                                     "texture":  "stone_shovel",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

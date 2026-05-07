@@ -1,0 +1,17 @@
+{
+    "id":  "game:iron_shovel",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "durability":  {
+                                          "max":  250
+                                      },
+                       "model":  {
+                                     "texture":  "iron_shovel",
+                                     "fallback":  {
+                                                      "default":  "#c7cdd1"
+                                                  }
+                                 }
+                   }
+}

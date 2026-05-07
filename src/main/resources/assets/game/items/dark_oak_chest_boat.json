@@ -1,0 +1,14 @@
+{
+    "id":  "game:dark_oak_chest_boat",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "model":  {
+                                     "texture":  "dark_oak_chest_boat",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

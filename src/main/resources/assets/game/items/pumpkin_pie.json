@@ -1,0 +1,18 @@
+{
+    "id":  "game:pumpkin_pie",
+    "components":  {
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "food":  {
+                                    "hunger":  8,
+                                    "saturation":  4.8
+                                },
+                       "model":  {
+                                     "texture":  "pumpkin_pie",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}

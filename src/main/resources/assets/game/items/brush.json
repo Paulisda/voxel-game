@@ -1,0 +1,17 @@
+{
+    "id":  "game:brush",
+    "components":  {
+                       "stack":  {
+                                     "max":  1
+                                 },
+                       "durability":  {
+                                          "max":  64
+                                      },
+                       "model":  {
+                                     "texture":  "brush",
+                                     "fallback":  {
+                                                      "default":  "#b66ad7"
+                                                  }
+                                 }
+                   }
+}
