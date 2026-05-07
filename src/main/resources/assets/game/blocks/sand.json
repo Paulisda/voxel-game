@@ -1,0 +1,48 @@
+﻿{
+    "id":  "game:sand",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.5,
+                                     "resistance":  0.5,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "sand",
+                                                     "sand1",
+                                                     "sand2",
+                                                     "sand3"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "sand",
+                                                                   "sand1",
+                                                                   "sand2",
+                                                                   "sand3"
+                                                               ],
+                                                      "top":  [
+                                                                  "sand",
+                                                                  "sand1",
+                                                                  "sand2",
+                                                                  "sand3"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "sand",
+                                                                     "sand1",
+                                                                     "sand2",
+                                                                     "sand3"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#d8c07a",
+                                                      "top":  "#d8c07a",
+                                                      "bottom":  "#d8c07a",
+                                                      "default":  "#d8c07a"
+                                                  }
+                                 }
+                   }
+}

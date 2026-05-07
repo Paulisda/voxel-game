@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:lava_bucket",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
-      "texture": "lava_bucket",
+      "texture": ["lava_bucket", "lava_bucket_emissive"],
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#ffffff"
       }
     }
   }
 }
+

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:charcoal",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "charcoal",
       "fallback": {
-        "default": "#2b2f36"
+        "default": "#808080"
       }
     }
   }
 }
+

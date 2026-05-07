@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:square_top_right",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "square_top_right",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

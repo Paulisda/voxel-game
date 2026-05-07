@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:chainmail_helmet",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
       "texture": "chainmail_helmet",
       "fallback": {
-        "default": "#c7cdd1"
+        "default": "#808080"
       }
     }
   }
 }
+

@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:end_crystal",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "end_crystal",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:crossbow_standby",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "crossbow_standby",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

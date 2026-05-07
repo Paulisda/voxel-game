@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:light_blue_carpet",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0.1,
+                                     "resistance":  0.1,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "light_blue_wool"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "light_blue_wool"
+                                                               ],
+                                                      "top":  [
+                                                                  "light_blue_wool"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "light_blue_wool"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#3ab3da",
+                                                      "top":  "#3ab3da",
+                                                      "bottom":  "#3ab3da",
+                                                      "default":  "#3ab3da"
+                                                  }
+                                 }
+                   }
+}

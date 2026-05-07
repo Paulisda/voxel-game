@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:cyan_wool",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.8,
+                                     "resistance":  0.8,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "cyan_wool"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "cyan_wool"
+                                                               ],
+                                                      "top":  [
+                                                                  "cyan_wool"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "cyan_wool"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#169c9c",
+                                                      "top":  "#169c9c",
+                                                      "bottom":  "#169c9c",
+                                                      "default":  "#169c9c"
+                                                  }
+                                 }
+                   }
+}

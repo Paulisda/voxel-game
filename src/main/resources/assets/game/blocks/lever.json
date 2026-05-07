@@ -1,0 +1,40 @@
+﻿{
+    "id":  "game:lever",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0.5,
+                                     "resistance":  0.5,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "lever",
+                                                     "lever0"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "lever",
+                                                                   "lever0"
+                                                               ],
+                                                      "top":  [
+                                                                  "lever",
+                                                                  "lever0"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "lever",
+                                                                     "lever0"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

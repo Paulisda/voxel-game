@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:music_disc_",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": ["music_disc_11", "music_disc_13", "music_disc_5"],
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:sea_pickle",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "sea_pickle",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

@@ -1,0 +1,60 @@
+﻿{
+    "id":  "game:warped_wart_block",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "warped_wart_block",
+                                                     "warped_wart_block0",
+                                                     "warped_wart_block1",
+                                                     "warped_wart_block2",
+                                                     "warped_wart_block3",
+                                                     "warped_wart_block4",
+                                                     "warped_wart_block5"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "warped_wart_block",
+                                                                   "warped_wart_block0",
+                                                                   "warped_wart_block1",
+                                                                   "warped_wart_block2",
+                                                                   "warped_wart_block3",
+                                                                   "warped_wart_block4",
+                                                                   "warped_wart_block5"
+                                                               ],
+                                                      "top":  [
+                                                                  "warped_wart_block",
+                                                                  "warped_wart_block0",
+                                                                  "warped_wart_block1",
+                                                                  "warped_wart_block2",
+                                                                  "warped_wart_block3",
+                                                                  "warped_wart_block4",
+                                                                  "warped_wart_block5"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "warped_wart_block",
+                                                                     "warped_wart_block0",
+                                                                     "warped_wart_block1",
+                                                                     "warped_wart_block2",
+                                                                     "warped_wart_block3",
+                                                                     "warped_wart_block4",
+                                                                     "warped_wart_block5"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#2f8f83",
+                                                      "top":  "#2f8f83",
+                                                      "bottom":  "#2f8f83",
+                                                      "default":  "#2f8f83"
+                                                  }
+                                 }
+                   }
+}

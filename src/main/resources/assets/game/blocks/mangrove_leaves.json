@@ -1,0 +1,48 @@
+﻿{
+    "id":  "game:mangrove_leaves",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.2,
+                                     "resistance":  0.2,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "mangrove_leaves",
+                                                     "mangrove_leaves3",
+                                                     "mangrove_leaves4",
+                                                     "mangrove_leaves5"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "mangrove_leaves",
+                                                                   "mangrove_leaves3",
+                                                                   "mangrove_leaves4",
+                                                                   "mangrove_leaves5"
+                                                               ],
+                                                      "top":  [
+                                                                  "mangrove_leaves",
+                                                                  "mangrove_leaves3",
+                                                                  "mangrove_leaves4",
+                                                                  "mangrove_leaves5"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "mangrove_leaves",
+                                                                     "mangrove_leaves3",
+                                                                     "mangrove_leaves4",
+                                                                     "mangrove_leaves5"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#4f8f35",
+                                                      "top":  "#4f8f35",
+                                                      "bottom":  "#4f8f35",
+                                                      "default":  "#4f8f35"
+                                                  }
+                                 }
+                   }
+}

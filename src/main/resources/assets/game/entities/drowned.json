@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:drowned",
+  "components": {
+    "entity": {
+      "maxHealth": 20,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "drowned",
+      "fallback": {
+        "default": "#4a5a6a"
+      }
+    }
+  }
+}
+

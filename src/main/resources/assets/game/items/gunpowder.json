@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:gunpowder",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "gunpowder",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#ffffff"
       }
     }
   }
 }
+

@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:husk",
+  "components": {
+    "entity": {
+      "maxHealth": 20,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "husk",
+      "fallback": {
+        "default": "#e6c288"
+      }
+    }
+  }
+}
+

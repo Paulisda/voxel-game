@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:deepslate",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  3,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "deepslate_top"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "deepslate_top"
+                                                               ],
+                                                      "top":  [
+                                                                  "deepslate_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "deepslate_top"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#25292f",
+                                                      "top":  "#25292f",
+                                                      "bottom":  "#25292f",
+                                                      "default":  "#25292f"
+                                                  }
+                                 }
+                   }
+}

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:fermented_spider_eye",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "fermented_spider_eye",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

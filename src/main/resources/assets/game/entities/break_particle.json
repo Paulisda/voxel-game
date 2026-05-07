@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:break_particle",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "break_particle",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

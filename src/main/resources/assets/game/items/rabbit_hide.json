@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:rabbit_hide",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "rabbit_hide",
       "fallback": {
-        "default": "#d9534f"
+        "default": "#808080"
       }
     }
   }
 }
+

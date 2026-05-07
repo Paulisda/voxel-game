@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:gray_wool",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.8,
+                                     "resistance":  0.8,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "gray_wool"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "gray_wool"
+                                                               ],
+                                                      "top":  [
+                                                                  "gray_wool"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "gray_wool"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#474f52",
+                                                      "top":  "#474f52",
+                                                      "bottom":  "#474f52",
+                                                      "default":  "#474f52"
+                                                  }
+                                 }
+                   }
+}

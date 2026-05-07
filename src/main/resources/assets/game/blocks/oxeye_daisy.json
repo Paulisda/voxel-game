@@ -1,0 +1,40 @@
+﻿{
+    "id":  "game:oxeye_daisy",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0,
+                                     "resistance":  0,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "oxeye_daisy",
+                                                     "oxeye_daisy1"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "oxeye_daisy",
+                                                                   "oxeye_daisy1"
+                                                               ],
+                                                      "top":  [
+                                                                  "oxeye_daisy",
+                                                                  "oxeye_daisy1"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "oxeye_daisy",
+                                                                     "oxeye_daisy1"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

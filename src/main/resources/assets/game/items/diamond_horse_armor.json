@@ -1,17 +1,15 @@
-{
+﻿{
   "id": "game:diamond_horse_armor",
   "components": {
     "stack": {
       "max": 64
     },
-    "durability": {
-      "max": 1561
-    },
     "model": {
       "texture": "diamond_horse_armor",
       "fallback": {
-        "default": "#47c6d9"
+        "default": "#7b7b7b"
       }
     }
   }
 }
+

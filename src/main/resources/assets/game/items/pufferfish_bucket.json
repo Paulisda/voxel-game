@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:pufferfish_bucket",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
       "texture": "pufferfish_bucket",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#ffffff"
       }
     }
   }
 }
+

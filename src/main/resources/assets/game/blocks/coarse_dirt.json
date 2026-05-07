@@ -1,0 +1,44 @@
+﻿{
+    "id":  "game:coarse_dirt",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.5,
+                                     "resistance":  0.5,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "coarse_dirt0",
+                                                     "coarse_dirt1",
+                                                     "coarse_dirt2"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "coarse_dirt0",
+                                                                   "coarse_dirt1",
+                                                                   "coarse_dirt2"
+                                                               ],
+                                                      "top":  [
+                                                                  "coarse_dirt0",
+                                                                  "coarse_dirt1",
+                                                                  "coarse_dirt2"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "coarse_dirt0",
+                                                                     "coarse_dirt1",
+                                                                     "coarse_dirt2"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#8a5a37",
+                                                      "top":  "#8a5a37",
+                                                      "bottom":  "#8a5a37",
+                                                      "default":  "#8a5a37"
+                                                  }
+                                 }
+                   }
+}

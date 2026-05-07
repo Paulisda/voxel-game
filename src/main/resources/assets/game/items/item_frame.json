@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:item_frame",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "item_frame",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

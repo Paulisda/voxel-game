@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:slime_ball",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "slime_ball",
       "fallback": {
-        "default": "#4fc26b"
+        "default": "#ffffff"
       }
     }
   }
 }
+

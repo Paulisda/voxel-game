@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:bat",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.5,
+      "height": 0.9
+    },
+    "model": {
+      "texture": "bat",
+      "fallback": {
+        "default": "#2a2a2a"
+      }
+    }
+  }
+}
+

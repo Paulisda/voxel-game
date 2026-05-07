@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:lapis_block",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  3,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "lapis_block"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "lapis_block"
+                                                               ],
+                                                      "top":  [
+                                                                  "lapis_block"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "lapis_block"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#345ec3",
+                                                      "top":  "#345ec3",
+                                                      "bottom":  "#345ec3",
+                                                      "default":  "#345ec3"
+                                                  }
+                                 }
+                   }
+}

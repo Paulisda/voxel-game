@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:small_amethyst_bud",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "small_amethyst_bud"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "small_amethyst_bud"
+                                                               ],
+                                                      "top":  [
+                                                                  "small_amethyst_bud"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "small_amethyst_bud"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#9b5ac8",
+                                                      "top":  "#9b5ac8",
+                                                      "bottom":  "#9b5ac8",
+                                                      "default":  "#9b5ac8"
+                                                  }
+                                 }
+                   }
+}

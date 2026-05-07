@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:string",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "string",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#ffffff"
       }
     }
   }
 }
+

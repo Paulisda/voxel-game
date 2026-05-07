@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:elytra",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
       "texture": "elytra",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

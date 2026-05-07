@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:bamboo_hanging_sign",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  2,
+                                     "resistance":  3,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "bamboo"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "bamboo"
+                                                               ],
+                                                      "top":  [
+                                                                  "bamboo"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "bamboo"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#8b5a2b",
+                                                      "top":  "#8b5a2b",
+                                                      "bottom":  "#8b5a2b",
+                                                      "default":  "#8b5a2b"
+                                                  }
+                                 }
+                   }
+}

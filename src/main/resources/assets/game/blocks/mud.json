@@ -1,0 +1,44 @@
+﻿{
+    "id":  "game:mud",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.5,
+                                     "resistance":  0.5,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "mud",
+                                                     "mud1",
+                                                     "mud2"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "mud",
+                                                                   "mud1",
+                                                                   "mud2"
+                                                               ],
+                                                      "top":  [
+                                                                  "mud",
+                                                                  "mud1",
+                                                                  "mud2"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "mud",
+                                                                     "mud1",
+                                                                     "mud2"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#8a5a37",
+                                                      "top":  "#8a5a37",
+                                                      "bottom":  "#8a5a37",
+                                                      "default":  "#8a5a37"
+                                                  }
+                                 }
+                   }
+}

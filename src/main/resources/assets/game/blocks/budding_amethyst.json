@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:budding_amethyst",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "budding_amethyst"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "budding_amethyst"
+                                                               ],
+                                                      "top":  [
+                                                                  "budding_amethyst"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "budding_amethyst"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#9b5ac8",
+                                                      "top":  "#9b5ac8",
+                                                      "bottom":  "#9b5ac8",
+                                                      "default":  "#9b5ac8"
+                                                  }
+                                 }
+                   }
+}

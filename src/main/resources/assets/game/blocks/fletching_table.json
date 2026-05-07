@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:fletching_table",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  2,
+                                     "resistance":  3,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "fletching_table_side"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "fletching_table_side"
+                                                               ],
+                                                      "top":  [
+                                                                  "fletching_table_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "fletching_table_side"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:purple_dye",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "purple_dye",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

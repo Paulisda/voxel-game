@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:glistering_melon_slice",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "glistering_melon_slice",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#e6c288"
       }
     }
   }
 }
+

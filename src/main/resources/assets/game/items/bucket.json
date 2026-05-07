@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:bucket",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
       "texture": "bucket",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#ffffff"
       }
     }
   }
 }
+

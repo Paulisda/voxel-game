@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:red_sandstone_wall",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.5,
+                                     "resistance":  0.5,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "red_sandstone_bottom"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "red_sandstone_bottom"
+                                                               ],
+                                                      "top":  [
+                                                                  "red_sandstone_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "red_sandstone_bottom"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#b02e26",
+                                                      "top":  "#b02e26",
+                                                      "bottom":  "#b02e26",
+                                                      "default":  "#b02e26"
+                                                  }
+                                 }
+                   }
+}

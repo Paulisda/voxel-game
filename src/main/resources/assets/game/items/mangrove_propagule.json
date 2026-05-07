@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:mangrove_propagule",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "mangrove_propagule",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:ravager",
+  "components": {
+    "entity": {
+      "maxHealth": 100,
+      "width": 1.95,
+      "height": 1.9
+    },
+    "model": {
+      "texture": "ravager",
+      "fallback": {
+        "default": "#7a4a1a"
+      }
+    }
+  }
+}
+

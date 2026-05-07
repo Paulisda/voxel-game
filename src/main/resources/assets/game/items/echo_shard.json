@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:echo_shard",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "echo_shard",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

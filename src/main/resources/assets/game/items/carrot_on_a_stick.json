@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:carrot_on_a_stick",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
       "texture": "carrot_on_a_stick",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#7a4a1a"
       }
     }
   }
 }
+

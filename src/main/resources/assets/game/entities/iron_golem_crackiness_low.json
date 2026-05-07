@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:iron_golem_crackiness_low",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "iron_golem_crackiness_low",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

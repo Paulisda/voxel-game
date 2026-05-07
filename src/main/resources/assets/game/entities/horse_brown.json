@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:horse_brown",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "horse_brown",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

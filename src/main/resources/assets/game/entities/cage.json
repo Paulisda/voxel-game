@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:cage",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "cage",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

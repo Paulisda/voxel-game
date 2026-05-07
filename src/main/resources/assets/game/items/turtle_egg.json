@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:turtle_egg",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "turtle_egg",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#ffffff"
       }
     }
   }
 }
+

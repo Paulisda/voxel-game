@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:copper_ingot",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "copper_ingot",
       "fallback": {
-        "default": "#c87545"
+        "default": "#7b7b7b"
       }
     }
   }
 }
+

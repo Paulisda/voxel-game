@@ -1,0 +1,40 @@
+﻿{
+    "id":  "game:attached_pumpkin_stem",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0,
+                                     "resistance":  0,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "attached_pumpkin_stem",
+                                                     "attached_pumpkin_stem1"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "attached_pumpkin_stem",
+                                                                   "attached_pumpkin_stem1"
+                                                               ],
+                                                      "top":  [
+                                                                  "attached_pumpkin_stem",
+                                                                  "attached_pumpkin_stem1"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "attached_pumpkin_stem",
+                                                                     "attached_pumpkin_stem1"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

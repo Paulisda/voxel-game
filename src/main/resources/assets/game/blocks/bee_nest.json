@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:bee_nest",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "bee_nest_side"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "bee_nest_side"
+                                                               ],
+                                                      "top":  [
+                                                                  "bee_nest_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "bee_nest_bottom"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

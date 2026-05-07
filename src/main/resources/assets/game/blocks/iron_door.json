@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:iron_door",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  3,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "iron_door_bottom"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "iron_door_bottom"
+                                                               ],
+                                                      "top":  [
+                                                                  "iron_door_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "iron_door_bottom"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#8b5a2b",
+                                                      "top":  "#8b5a2b",
+                                                      "bottom":  "#8b5a2b",
+                                                      "default":  "#8b5a2b"
+                                                  }
+                                 }
+                   }
+}

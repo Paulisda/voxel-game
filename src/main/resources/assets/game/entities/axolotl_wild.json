@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:axolotl_wild",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "axolotl_wild",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

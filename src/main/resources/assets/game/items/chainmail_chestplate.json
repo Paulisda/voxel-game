@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:chainmail_chestplate",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
       "texture": "chainmail_chestplate",
       "fallback": {
-        "default": "#c7cdd1"
+        "default": "#7a4a1a"
       }
     }
   }
 }
+

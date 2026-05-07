@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:green_stained_glass",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.3,
+                                     "resistance":  0.3,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "green_stained_glass"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "green_stained_glass"
+                                                               ],
+                                                      "top":  [
+                                                                  "green_stained_glass"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "green_stained_glass"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#5e7c16",
+                                                      "top":  "#5e7c16",
+                                                      "bottom":  "#5e7c16",
+                                                      "default":  "#5e7c16"
+                                                  }
+                                 }
+                   }
+}

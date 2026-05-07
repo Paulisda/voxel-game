@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:weeping_vines",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0,
+                                     "resistance":  0,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "weeping_vines"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "weeping_vines"
+                                                               ],
+                                                      "top":  [
+                                                                  "weeping_vines"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "weeping_vines"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#4f8f35",
+                                                      "top":  "#4f8f35",
+                                                      "bottom":  "#4f8f35",
+                                                      "default":  "#4f8f35"
+                                                  }
+                                 }
+                   }
+}

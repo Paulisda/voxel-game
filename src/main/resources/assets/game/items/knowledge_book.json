@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:knowledge_book",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "knowledge_book",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#f0e6d2"
       }
     }
   }
 }
+

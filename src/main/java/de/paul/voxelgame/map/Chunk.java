@@ -16,7 +16,7 @@ public class Chunk {
     private final int height;
     private final int depth;
     private final GameObject bedrock;
-    private final GameObject grass;
+    private final GameObject grassBlock;
     private final GameObject dirt;
     private final GameObject stone;
 
@@ -28,7 +28,7 @@ public class Chunk {
         this.depth = depth;
         this.registries = registries;
         this.bedrock = block("game:bedrock");
-        this.grass = block("game:grass");
+        this.grassBlock = block("game:grass_block");
         this.dirt = block("game:dirt");
         this.stone = block("game:stone");
         this.blocks = new Block[width][height][depth];
@@ -64,7 +64,7 @@ public class Chunk {
             return bedrock;
         }
         if (y == surfaceY) {
-            return grass;
+            return grassBlock;
         }
         if (y >= surfaceY - 2) {
             return dirt;

@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:large_fern",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0,
+                                     "resistance":  0,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "large_fern_bottom"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "large_fern_bottom"
+                                                               ],
+                                                      "top":  [
+                                                                  "large_fern_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "large_fern_bottom"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#4f8f35",
+                                                      "top":  "#4f8f35",
+                                                      "bottom":  "#4f8f35",
+                                                      "default":  "#4f8f35"
+                                                  }
+                                 }
+                   }
+}

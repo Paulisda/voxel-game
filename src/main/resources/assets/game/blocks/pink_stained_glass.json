@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:pink_stained_glass",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.3,
+                                     "resistance":  0.3,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "pink_stained_glass"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "pink_stained_glass"
+                                                               ],
+                                                      "top":  [
+                                                                  "pink_stained_glass"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "pink_stained_glass"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#f38baa",
+                                                      "top":  "#f38baa",
+                                                      "bottom":  "#f38baa",
+                                                      "default":  "#f38baa"
+                                                  }
+                                 }
+                   }
+}

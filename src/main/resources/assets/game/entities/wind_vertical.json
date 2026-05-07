@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:wind_vertical",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "wind_vertical",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:chiseled_polished_blackstone",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "chiseled_polished_blackstone"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "chiseled_polished_blackstone"
+                                                               ],
+                                                      "top":  [
+                                                                  "chiseled_polished_blackstone"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "chiseled_polished_blackstone"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#25292f",
+                                                      "top":  "#25292f",
+                                                      "bottom":  "#25292f",
+                                                      "default":  "#25292f"
+                                                  }
+                                 }
+                   }
+}

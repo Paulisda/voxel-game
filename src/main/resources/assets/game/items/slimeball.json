@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:slimeball",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "slimeball",
+      "fallback": {
+        "default": "#ffffff"
+      }
+    }
+  }
+}
+

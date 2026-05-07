@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:spectral_arrow",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "spectral_arrow",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

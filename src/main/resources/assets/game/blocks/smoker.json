@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:smoker",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "smoker_side"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "smoker_side"
+                                                               ],
+                                                      "top":  [
+                                                                  "smoker_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "smoker_bottom"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:potion",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
-      "texture": "potion",
+      "texture": ["potion", "potion1", "potion_overlay"],
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

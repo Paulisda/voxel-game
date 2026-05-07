@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:spider_eyes",
+  "components": {
+    "entity": {
+      "maxHealth": 1,
+      "width": 0.3,
+      "height": 0.3
+    },
+    "model": {
+      "texture": "spider_eyes",
+      "fallback": {
+        "default": "#ff0000"
+      }
+    }
+  }
+}
+

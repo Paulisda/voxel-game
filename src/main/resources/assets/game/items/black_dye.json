@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:black_dye",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "black_dye",
       "fallback": {
-        "default": "#2b2f36"
+        "default": "#808080"
       }
     }
   }
 }
+

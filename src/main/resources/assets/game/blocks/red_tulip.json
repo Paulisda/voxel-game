@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:red_tulip",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0,
+                                     "resistance":  0,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "red_tulip"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "red_tulip"
+                                                               ],
+                                                      "top":  [
+                                                                  "red_tulip"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "red_tulip"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#b02e26",
+                                                      "top":  "#b02e26",
+                                                      "bottom":  "#b02e26",
+                                                      "default":  "#b02e26"
+                                                  }
+                                 }
+                   }
+}

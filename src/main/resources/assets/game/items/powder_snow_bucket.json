@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:powder_snow_bucket",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
       "texture": "powder_snow_bucket",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#e6c288"
       }
     }
   }
 }
+

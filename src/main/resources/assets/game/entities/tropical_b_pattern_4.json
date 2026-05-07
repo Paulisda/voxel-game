@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:tropical_b_pattern_4",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "tropical_b_pattern_4",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:cobblestone_slab",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "cobblestone"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "cobblestone"
+                                                               ],
+                                                      "top":  [
+                                                                  "cobblestone"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "cobblestone"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

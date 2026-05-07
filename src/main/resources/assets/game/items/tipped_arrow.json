@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:tipped_arrow",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "tipped_arrow_base",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:writable_book",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
       "texture": "writable_book",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#f0e6d2"
       }
     }
   }
 }
+

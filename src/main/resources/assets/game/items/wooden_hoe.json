@@ -1,17 +1,15 @@
-{
+﻿{
   "id": "game:wooden_hoe",
   "components": {
     "stack": {
-      "max": 1
-    },
-    "durability": {
-      "max": 59
+      "max": 64
     },
     "model": {
       "texture": "wooden_hoe",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#7a4a1a"
       }
     }
   }
 }
+

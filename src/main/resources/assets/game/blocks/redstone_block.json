@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:redstone_block",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  3,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "redstone_block"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "redstone_block"
+                                                               ],
+                                                      "top":  [
+                                                                  "redstone_block"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "redstone_block"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#b41818",
+                                                      "top":  "#b41818",
+                                                      "bottom":  "#b41818",
+                                                      "default":  "#b41818"
+                                                  }
+                                 }
+                   }
+}

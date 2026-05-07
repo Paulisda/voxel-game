@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:blaze_rod",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "blaze_rod",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

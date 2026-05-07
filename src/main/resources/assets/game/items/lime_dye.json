@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:lime_dye",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "lime_dye",
       "fallback": {
-        "default": "#4fc26b"
+        "default": "#808080"
       }
     }
   }
 }
+

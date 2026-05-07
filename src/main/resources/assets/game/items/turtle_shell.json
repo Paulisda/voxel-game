@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:turtle_shell",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "turtle_shell",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

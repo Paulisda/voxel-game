@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:redstone_lamp",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "redstone_lamp"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "redstone_lamp"
+                                                               ],
+                                                      "top":  [
+                                                                  "redstone_lamp"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "redstone_lamp"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#b41818",
+                                                      "top":  "#b41818",
+                                                      "bottom":  "#b41818",
+                                                      "default":  "#b41818"
+                                                  }
+                                 }
+                   }
+}

@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:pillager",
+  "components": {
+    "entity": {
+      "maxHealth": 24,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "pillager",
+      "fallback": {
+        "default": "#7a4a1a"
+      }
+    }
+  }
+}
+

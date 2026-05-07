@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:orange_tulip",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0,
+                                     "resistance":  0,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "orange_tulip"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "orange_tulip"
+                                                               ],
+                                                      "top":  [
+                                                                  "orange_tulip"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "orange_tulip"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#f9801d",
+                                                      "top":  "#f9801d",
+                                                      "bottom":  "#f9801d",
+                                                      "default":  "#f9801d"
+                                                  }
+                                 }
+                   }
+}

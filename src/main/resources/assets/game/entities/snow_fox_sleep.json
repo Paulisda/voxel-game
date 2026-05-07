@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:snow_fox_sleep",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "snow_fox_sleep",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

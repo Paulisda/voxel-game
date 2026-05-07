@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:leather_helmet",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
-      "texture": "leather_helmet",
+      "texture": ["leather_helmet", "leather_helmet_overlay"],
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#ffffff"
       }
     }
   }
 }
+

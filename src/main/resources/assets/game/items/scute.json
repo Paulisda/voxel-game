@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:scute",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "scute",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

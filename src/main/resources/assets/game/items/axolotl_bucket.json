@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:axolotl_bucket",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
       "texture": "axolotl_bucket",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#ffffff"
       }
     }
   }
 }
+

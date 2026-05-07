@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:rabbit_foot",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "rabbit_foot",
       "fallback": {
-        "default": "#d9534f"
+        "default": "#808080"
       }
     }
   }
 }
+

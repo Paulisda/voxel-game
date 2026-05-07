@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:clock_",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": ["clock_00", "clock_01", "clock_02", "clock_03", "clock_04", "clock_05", "clock_06", "clock_07", "clock_08", "clock_09", "clock_10", "clock_11", "clock_12", "clock_13", "clock_14", "clock_15", "clock_16", "clock_17", "clock_18", "clock_19", "clock_20", "clock_21", "clock_22", "clock_23", "clock_24", "clock_25", "clock_26", "clock_27", "clock_28", "clock_29", "clock_30", "clock_31", "clock_32", "clock_33", "clock_34", "clock_35", "clock_36", "clock_37", "clock_38", "clock_39", "clock_40", "clock_41", "clock_42", "clock_43", "clock_44", "clock_45", "clock_46", "clock_47", "clock_48", "clock_49", "clock_50", "clock_51", "clock_52", "clock_53", "clock_54", "clock_55", "clock_56", "clock_57", "clock_58", "clock_59", "clock_60", "clock_61", "clock_62", "clock_63"],
+      "fallback": {
+        "default": "#f0e6d2"
+      }
+    }
+  }
+}
+

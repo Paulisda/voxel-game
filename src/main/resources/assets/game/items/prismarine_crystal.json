@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:prismarine_crystal",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "prismarine_crystal",
       "fallback": {
-        "default": "#47c6d9"
+        "default": "#808080"
       }
     }
   }
 }
+

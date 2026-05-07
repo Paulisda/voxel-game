@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:tooting_goat_horn",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "tooting_goat_horn",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

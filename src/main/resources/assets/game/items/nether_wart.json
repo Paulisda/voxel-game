@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:nether_wart",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "nether_wart",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

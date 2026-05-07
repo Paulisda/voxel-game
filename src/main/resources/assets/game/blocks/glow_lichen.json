@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:glow_lichen",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "glow_lichen"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "glow_lichen"
+                                                               ],
+                                                      "top":  [
+                                                                  "glow_lichen"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "glow_lichen"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

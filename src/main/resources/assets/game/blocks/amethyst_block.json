@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:amethyst_block",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "amethyst_block"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "amethyst_block"
+                                                               ],
+                                                      "top":  [
+                                                                  "amethyst_block"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "amethyst_block"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#9b5ac8",
+                                                      "top":  "#9b5ac8",
+                                                      "bottom":  "#9b5ac8",
+                                                      "default":  "#9b5ac8"
+                                                  }
+                                 }
+                   }
+}

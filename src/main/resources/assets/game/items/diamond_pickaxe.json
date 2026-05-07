@@ -1,17 +1,15 @@
-{
+﻿{
   "id": "game:diamond_pickaxe",
   "components": {
     "stack": {
-      "max": 1
-    },
-    "durability": {
-      "max": 1561
+      "max": 64
     },
     "model": {
       "texture": "diamond_pickaxe",
       "fallback": {
-        "default": "#47c6d9"
+        "default": "#7b7b7b"
       }
     }
   }
 }
+

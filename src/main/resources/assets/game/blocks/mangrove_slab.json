@@ -1,0 +1,40 @@
+﻿{
+    "id":  "game:mangrove_slab",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "mangrove_planks",
+                                                     "mangrove_planks1"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "mangrove_planks",
+                                                                   "mangrove_planks1"
+                                                               ],
+                                                      "top":  [
+                                                                  "mangrove_planks",
+                                                                  "mangrove_planks1"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "mangrove_planks",
+                                                                     "mangrove_planks1"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

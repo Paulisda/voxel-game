@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:end_rod",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0.5,
+                                     "resistance":  0.5,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "end_rod"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "end_rod"
+                                                               ],
+                                                      "top":  [
+                                                                  "end_rod"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "end_rod"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

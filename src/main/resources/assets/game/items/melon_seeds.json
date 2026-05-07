@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:melon_seeds",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "melon_seeds",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

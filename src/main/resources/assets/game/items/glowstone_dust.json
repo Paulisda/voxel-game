@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:glowstone_dust",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "glowstone_dust",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#7b7b7b"
       }
     }
   }
 }
+

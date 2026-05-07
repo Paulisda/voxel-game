@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:elytra",
+  "components": {
+    "entity": {
+      "maxHealth": 1,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "elytra",
+      "fallback": {
+        "default": "#c0c0c0"
+      }
+    }
+  }
+}
+

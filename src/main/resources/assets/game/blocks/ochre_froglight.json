@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:ochre_froglight",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "ochre_froglight_side"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "ochre_froglight_side"
+                                                               ],
+                                                      "top":  [
+                                                                  "ochre_froglight_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "ochre_froglight_top"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

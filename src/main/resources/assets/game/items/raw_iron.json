@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:raw_iron",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "raw_iron",
       "fallback": {
-        "default": "#c7cdd1"
+        "default": "#7b7b7b"
       }
     }
   }
 }
+

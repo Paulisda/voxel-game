@@ -1,17 +1,15 @@
-{
+﻿{
   "id": "game:golden_chestplate",
   "components": {
     "stack": {
-      "max": 1
-    },
-    "durability": {
-      "max": 32
+      "max": 64
     },
     "model": {
       "texture": "golden_chestplate",
       "fallback": {
-        "default": "#f2c94c"
+        "default": "#7b7b7b"
       }
     }
   }
 }
+

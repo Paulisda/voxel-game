@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:pumpkin_seeds",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "pumpkin_seeds",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

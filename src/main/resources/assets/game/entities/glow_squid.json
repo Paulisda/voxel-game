@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:glow_squid",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "glow_squid",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

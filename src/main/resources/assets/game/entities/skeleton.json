@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:skeleton",
+  "components": {
+    "entity": {
+      "maxHealth": 20,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "skeleton",
+      "fallback": {
+        "default": "#c0c0c0"
+      }
+    }
+  }
+}
+

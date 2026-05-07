@@ -1,17 +1,15 @@
-{
+﻿{
   "id": "game:iron_nugget",
   "components": {
     "stack": {
       "max": 64
     },
-    "durability": {
-      "max": 250
-    },
     "model": {
       "texture": "iron_nugget",
       "fallback": {
-        "default": "#c7cdd1"
+        "default": "#7b7b7b"
       }
     }
   }
 }
+

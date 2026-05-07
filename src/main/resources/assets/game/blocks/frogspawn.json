@@ -1,0 +1,48 @@
+﻿{
+    "id":  "game:frogspawn",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0,
+                                     "resistance":  0,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "frogspawn",
+                                                     "frogspawn0",
+                                                     "frogspawn1",
+                                                     "frogspawn2"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "frogspawn",
+                                                                   "frogspawn0",
+                                                                   "frogspawn1",
+                                                                   "frogspawn2"
+                                                               ],
+                                                      "top":  [
+                                                                  "frogspawn",
+                                                                  "frogspawn0",
+                                                                  "frogspawn1",
+                                                                  "frogspawn2"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "frogspawn",
+                                                                     "frogspawn0",
+                                                                     "frogspawn1",
+                                                                     "frogspawn2"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

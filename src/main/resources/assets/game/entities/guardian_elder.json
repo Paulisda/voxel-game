@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:guardian_elder",
+  "components": {
+    "entity": {
+      "maxHealth": 80,
+      "width": 1.95,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "guardian_elder",
+      "fallback": {
+        "default": "#7a4a1a"
+      }
+    }
+  }
+}
+

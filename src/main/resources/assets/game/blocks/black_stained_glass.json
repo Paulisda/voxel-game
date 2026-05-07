@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:black_stained_glass",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.3,
+                                     "resistance":  0.3,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "black_stained_glass"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "black_stained_glass"
+                                                               ],
+                                                      "top":  [
+                                                                  "black_stained_glass"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "black_stained_glass"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#1d1d21",
+                                                      "top":  "#1d1d21",
+                                                      "bottom":  "#1d1d21",
+                                                      "default":  "#1d1d21"
+                                                  }
+                                 }
+                   }
+}

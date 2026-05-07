@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:bucket_parts",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": ["bucket_parts", "bucket_parts1", "bucket_parts2"],
+      "fallback": {
+        "default": "#ffffff"
+      }
+    }
+  }
+}
+

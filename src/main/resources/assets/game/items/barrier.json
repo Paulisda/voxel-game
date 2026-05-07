@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:barrier",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "barrier",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

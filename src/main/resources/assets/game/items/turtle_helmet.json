@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:turtle_helmet",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
       "texture": "turtle_helmet",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

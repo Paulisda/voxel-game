@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:lapis_lazuli",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "lapis_lazuli",
       "fallback": {
-        "default": "#3b7ddd"
+        "default": "#7b7b7b"
       }
     }
   }
 }
+

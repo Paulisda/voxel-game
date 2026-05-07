@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:armor_stand",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
       "texture": "armor_stand",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#c0c0c0"
       }
     }
   }
 }
+

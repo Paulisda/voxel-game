@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:axolotl_lucy",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "axolotl_lucy",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

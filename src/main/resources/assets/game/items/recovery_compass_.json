@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:recovery_compass_",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": ["recovery_compass_00", "recovery_compass_01", "recovery_compass_02", "recovery_compass_03", "recovery_compass_04", "recovery_compass_05", "recovery_compass_06", "recovery_compass_07", "recovery_compass_08", "recovery_compass_09", "recovery_compass_10", "recovery_compass_11", "recovery_compass_12", "recovery_compass_13", "recovery_compass_14", "recovery_compass_15", "recovery_compass_16", "recovery_compass_17", "recovery_compass_18", "recovery_compass_19", "recovery_compass_20", "recovery_compass_21", "recovery_compass_22", "recovery_compass_23", "recovery_compass_24", "recovery_compass_25", "recovery_compass_26", "recovery_compass_27", "recovery_compass_28", "recovery_compass_29", "recovery_compass_30", "recovery_compass_31", "recovery_compass_32", "recovery_compass_33", "recovery_compass_34", "recovery_compass_35", "recovery_compass_36", "recovery_compass_37", "recovery_compass_38", "recovery_compass_39", "recovery_compass_40", "recovery_compass_41", "recovery_compass_42", "recovery_compass_43", "recovery_compass_44", "recovery_compass_45", "recovery_compass_46", "recovery_compass_47", "recovery_compass_48", "recovery_compass_49", "recovery_compass_50", "recovery_compass_51", "recovery_compass_52", "recovery_compass_53", "recovery_compass_54", "recovery_compass_55", "recovery_compass_56", "recovery_compass_57", "recovery_compass_58", "recovery_compass_59", "recovery_compass_60", "recovery_compass_61", "recovery_compass_62", "recovery_compass_63", "recovery_compass_64", "recovery_compass_65", "recovery_compass_66", "recovery_compass_67", "recovery_compass_68", "recovery_compass_69", "recovery_compass_70", "recovery_compass_71", "recovery_compass_72", "recovery_compass_73", "recovery_compass_74", "recovery_compass_75", "recovery_compass_76", "recovery_compass_77", "recovery_compass_78", "recovery_compass_79", "recovery_compass_80", "recovery_compass_81", "recovery_compass_82", "recovery_compass_83", "recovery_compass_84", "recovery_compass_85", "recovery_compass_86", "recovery_compass_87", "recovery_compass_88", "recovery_compass_89", "recovery_compass_90", "recovery_compass_91", "recovery_compass_92", "recovery_compass_93", "recovery_compass_94", "recovery_compass_95", "recovery_compass_96", "recovery_compass_97", "recovery_compass_98", "recovery_compass_99"],
+      "fallback": {
+        "default": "#f0e6d2"
+      }
+    }
+  }
+}
+

@@ -6,11 +6,20 @@ import java.util.List;
 import java.util.Map;
 
 final class JsonParser {
+    private static final char BYTE_ORDER_MARK = '\uFEFF';
+
     private final String input;
     private int index;
 
     private JsonParser(final String input) {
-        this.input = input == null ? "" : input;
+        this.input = removeLeadingByteOrderMark(input == null ? "" : input);
+    }
+
+    private static String removeLeadingByteOrderMark(final String input) {
+        if (!input.isEmpty() && input.charAt(0) == BYTE_ORDER_MARK) {
+            return input.substring(1);
+        }
+        return input;
     }
 
     static Object parse(final String input) {

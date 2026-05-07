@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:leather_chestplate",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
-      "texture": "leather_chestplate",
+      "texture": ["leather_chestplate", "leather_chestplate_overlay"],
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#7a4a1a"
       }
     }
   }
 }
+

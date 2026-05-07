@@ -1,0 +1,60 @@
+﻿{
+    "id":  "game:acacia_leaves",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.2,
+                                     "resistance":  0.2,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "acacia_leaves",
+                                                     "acacia_leaves0",
+                                                     "acacia_leaves1",
+                                                     "acacia_leaves2",
+                                                     "acacia_leaves3",
+                                                     "acacia_leaves4",
+                                                     "acacia_leaves5"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "acacia_leaves",
+                                                                   "acacia_leaves0",
+                                                                   "acacia_leaves1",
+                                                                   "acacia_leaves2",
+                                                                   "acacia_leaves3",
+                                                                   "acacia_leaves4",
+                                                                   "acacia_leaves5"
+                                                               ],
+                                                      "top":  [
+                                                                  "acacia_leaves",
+                                                                  "acacia_leaves0",
+                                                                  "acacia_leaves1",
+                                                                  "acacia_leaves2",
+                                                                  "acacia_leaves3",
+                                                                  "acacia_leaves4",
+                                                                  "acacia_leaves5"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "acacia_leaves",
+                                                                     "acacia_leaves0",
+                                                                     "acacia_leaves1",
+                                                                     "acacia_leaves2",
+                                                                     "acacia_leaves3",
+                                                                     "acacia_leaves4",
+                                                                     "acacia_leaves5"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#4f8f35",
+                                                      "top":  "#4f8f35",
+                                                      "bottom":  "#4f8f35",
+                                                      "default":  "#4f8f35"
+                                                  }
+                                 }
+                   }
+}

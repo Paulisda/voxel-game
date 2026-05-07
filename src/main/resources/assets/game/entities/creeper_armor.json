@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:creeper_armor",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "creeper_armor",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:spawn_egg",
   "components": {
     "stack": {
       "max": 64
     },
     "model": {
-      "texture": "spawn_egg",
+      "texture": ["spawn_egg", "spawn_egg_overlay"],
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#ffffff"
       }
     }
   }
 }
+

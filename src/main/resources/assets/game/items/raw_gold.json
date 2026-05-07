@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:raw_gold",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "raw_gold",
       "fallback": {
-        "default": "#f2c94c"
+        "default": "#7b7b7b"
       }
     }
   }
 }
+

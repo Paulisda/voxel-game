@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:fire_charge",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "fire_charge",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

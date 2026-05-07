@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:shulker_cyan",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "shulker_cyan",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

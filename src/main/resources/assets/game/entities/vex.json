@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:vex",
+  "components": {
+    "entity": {
+      "maxHealth": 14,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "vex",
+      "fallback": {
+        "default": "#c0c0c0"
+      }
+    }
+  }
+}
+

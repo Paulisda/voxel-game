@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:phantom",
+  "components": {
+    "entity": {
+      "maxHealth": 20,
+      "width": 0.9,
+      "height": 0.5
+    },
+    "model": {
+      "texture": "phantom",
+      "fallback": {
+        "default": "#7a4a1a"
+      }
+    }
+  }
+}
+

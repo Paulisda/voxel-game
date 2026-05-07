@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:stonecutter",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  3.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "stonecutter_side"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "stonecutter_side"
+                                                               ],
+                                                      "top":  [
+                                                                  "stonecutter_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "stonecutter_bottom"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

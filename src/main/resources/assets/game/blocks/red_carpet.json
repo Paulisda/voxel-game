@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:red_carpet",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0.1,
+                                     "resistance":  0.1,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "red_wool"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "red_wool"
+                                                               ],
+                                                      "top":  [
+                                                                  "red_wool"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "red_wool"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#b02e26",
+                                                      "top":  "#b02e26",
+                                                      "bottom":  "#b02e26",
+                                                      "default":  "#b02e26"
+                                                  }
+                                 }
+                   }
+}

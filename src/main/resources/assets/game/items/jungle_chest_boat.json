@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:jungle_chest_boat",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
       "texture": "jungle_chest_boat",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#7a4a1a"
       }
     }
   }
 }
+

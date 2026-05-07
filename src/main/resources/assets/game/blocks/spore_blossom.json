@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:spore_blossom",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  3,
+                                     "resistance":  3,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "spore_blossom"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "spore_blossom"
+                                                               ],
+                                                      "top":  [
+                                                                  "spore_blossom"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "spore_blossom"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

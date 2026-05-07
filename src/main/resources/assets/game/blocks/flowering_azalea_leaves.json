@@ -1,0 +1,60 @@
+﻿{
+    "id":  "game:flowering_azalea_leaves",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.2,
+                                     "resistance":  0.2,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "flowering_azalea_leaves",
+                                                     "flowering_azalea_leaves0",
+                                                     "flowering_azalea_leaves1",
+                                                     "flowering_azalea_leaves2",
+                                                     "flowering_azalea_leaves3",
+                                                     "flowering_azalea_leaves4",
+                                                     "flowering_azalea_leaves5"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "flowering_azalea_leaves",
+                                                                   "flowering_azalea_leaves0",
+                                                                   "flowering_azalea_leaves1",
+                                                                   "flowering_azalea_leaves2",
+                                                                   "flowering_azalea_leaves3",
+                                                                   "flowering_azalea_leaves4",
+                                                                   "flowering_azalea_leaves5"
+                                                               ],
+                                                      "top":  [
+                                                                  "flowering_azalea_leaves",
+                                                                  "flowering_azalea_leaves0",
+                                                                  "flowering_azalea_leaves1",
+                                                                  "flowering_azalea_leaves2",
+                                                                  "flowering_azalea_leaves3",
+                                                                  "flowering_azalea_leaves4",
+                                                                  "flowering_azalea_leaves5"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "flowering_azalea_leaves",
+                                                                     "flowering_azalea_leaves0",
+                                                                     "flowering_azalea_leaves1",
+                                                                     "flowering_azalea_leaves2",
+                                                                     "flowering_azalea_leaves3",
+                                                                     "flowering_azalea_leaves4",
+                                                                     "flowering_azalea_leaves5"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#4f8f35",
+                                                      "top":  "#4f8f35",
+                                                      "bottom":  "#4f8f35",
+                                                      "default":  "#4f8f35"
+                                                  }
+                                 }
+                   }
+}

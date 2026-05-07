@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:jungle_sapling",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "jungle_sapling",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#7a4a1a"
       }
     }
   }
 }
+

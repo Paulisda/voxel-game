@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:bucket_water",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "bucket_water",
+      "fallback": {
+        "default": "#ffffff"
+      }
+    }
+  }
+}
+

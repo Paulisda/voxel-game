@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:weak_panda",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "weak_panda",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

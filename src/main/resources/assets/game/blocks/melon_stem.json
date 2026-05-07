@@ -1,0 +1,64 @@
+﻿{
+    "id":  "game:melon_stem",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0,
+                                     "resistance":  0,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "melon_stem0",
+                                                     "melon_stem1",
+                                                     "melon_stem2",
+                                                     "melon_stem3",
+                                                     "melon_stem4",
+                                                     "melon_stem5",
+                                                     "melon_stem6",
+                                                     "melon_stem7"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "melon_stem0",
+                                                                   "melon_stem1",
+                                                                   "melon_stem2",
+                                                                   "melon_stem3",
+                                                                   "melon_stem4",
+                                                                   "melon_stem5",
+                                                                   "melon_stem6",
+                                                                   "melon_stem7"
+                                                               ],
+                                                      "top":  [
+                                                                  "melon_stem0",
+                                                                  "melon_stem1",
+                                                                  "melon_stem2",
+                                                                  "melon_stem3",
+                                                                  "melon_stem4",
+                                                                  "melon_stem5",
+                                                                  "melon_stem6",
+                                                                  "melon_stem7"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "melon_stem0",
+                                                                     "melon_stem1",
+                                                                     "melon_stem2",
+                                                                     "melon_stem3",
+                                                                     "melon_stem4",
+                                                                     "melon_stem5",
+                                                                     "melon_stem6",
+                                                                     "melon_stem7"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

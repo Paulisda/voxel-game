@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:piston",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "piston_side"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "piston_side"
+                                                               ],
+                                                      "top":  [
+                                                                  "piston_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "piston_bottom"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

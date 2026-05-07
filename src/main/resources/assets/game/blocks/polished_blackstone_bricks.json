@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:polished_blackstone_bricks",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "polished_blackstone_bricks"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "polished_blackstone_bricks"
+                                                               ],
+                                                      "top":  [
+                                                                  "polished_blackstone_bricks"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "polished_blackstone_bricks"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#25292f",
+                                                      "top":  "#25292f",
+                                                      "bottom":  "#25292f",
+                                                      "default":  "#25292f"
+                                                  }
+                                 }
+                   }
+}

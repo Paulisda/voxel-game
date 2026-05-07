@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:kelp",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "kelp",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#7a4a1a"
       }
     }
   }
 }
+

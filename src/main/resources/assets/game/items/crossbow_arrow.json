@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:crossbow_arrow",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "crossbow_arrow",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

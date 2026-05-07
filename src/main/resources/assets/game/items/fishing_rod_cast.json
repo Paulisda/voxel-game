@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:fishing_rod_cast",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "fishing_rod_cast",
+      "fallback": {
+        "default": "#7a4a1a"
+      }
+    }
+  }
+}
+

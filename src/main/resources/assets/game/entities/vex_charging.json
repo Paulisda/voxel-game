@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:vex_charging",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "vex_charging",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:bundle",
   "components": {
     "stack": {
       "max": 64
     },
     "model": {
-      "texture": "bundle",
+      "texture": ["bundle", "bundle_filled"],
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

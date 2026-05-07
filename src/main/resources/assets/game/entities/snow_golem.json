@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:snow_golem",
+  "components": {
+    "entity": {
+      "maxHealth": 4,
+      "width": 0.4,
+      "height": 1.8
+    },
+    "model": {
+      "texture": "snow_golem",
+      "fallback": {
+        "default": "#ffffff"
+      }
+    }
+  }
+}
+

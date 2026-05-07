@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:cut_copper",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  3,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "cut_copper"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "cut_copper"
+                                                               ],
+                                                      "top":  [
+                                                                  "cut_copper"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "cut_copper"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#b66b45",
+                                                      "top":  "#b66b45",
+                                                      "bottom":  "#b66b45",
+                                                      "default":  "#b66b45"
+                                                  }
+                                 }
+                   }
+}

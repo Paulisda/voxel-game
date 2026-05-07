@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:jungle_sign",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  2,
+                                     "resistance":  3,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "jungle_planks"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "jungle_planks"
+                                                               ],
+                                                      "top":  [
+                                                                  "jungle_planks"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "jungle_planks"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#8b5a2b",
+                                                      "top":  "#8b5a2b",
+                                                      "bottom":  "#8b5a2b",
+                                                      "default":  "#8b5a2b"
+                                                  }
+                                 }
+                   }
+}

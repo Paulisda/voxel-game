@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:globe_banner_pattern",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "globe_banner_pattern",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

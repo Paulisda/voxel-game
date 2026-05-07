@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:triangle_top",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "triangle_top",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

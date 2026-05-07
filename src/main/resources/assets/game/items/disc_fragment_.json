@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:disc_fragment_",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "disc_fragment_5",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

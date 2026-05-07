@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:small_stripes",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "small_stripes",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

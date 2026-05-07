@@ -1,0 +1,40 @@
+﻿{
+    "id":  "game:brown_mushroom",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0,
+                                     "resistance":  0,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "brown_mushroom_side"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "brown_mushroom_side"
+                                                               ],
+                                                      "top":  [
+                                                                  "brown_mushroom_top",
+                                                                  "brown_mushroom_top1",
+                                                                  "brown_mushroom_top2"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "brown_mushroom_top",
+                                                                     "brown_mushroom_top1",
+                                                                     "brown_mushroom_top2"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#835432",
+                                                      "top":  "#835432",
+                                                      "bottom":  "#835432",
+                                                      "default":  "#835432"
+                                                  }
+                                 }
+                   }
+}

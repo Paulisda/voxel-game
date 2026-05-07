@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:quartz_bricks",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "quartz_bricks"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "quartz_bricks"
+                                                               ],
+                                                      "top":  [
+                                                                  "quartz_bricks"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "quartz_bricks"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#eeeeee",
+                                                      "top":  "#eeeeee",
+                                                      "bottom":  "#eeeeee",
+                                                      "default":  "#eeeeee"
+                                                  }
+                                 }
+                   }
+}

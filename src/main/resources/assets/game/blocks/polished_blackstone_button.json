@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:polished_blackstone_button",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0.5,
+                                     "resistance":  0.5,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "polished_blackstone"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "polished_blackstone"
+                                                               ],
+                                                      "top":  [
+                                                                  "polished_blackstone"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "polished_blackstone"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#25292f",
+                                                      "top":  "#25292f",
+                                                      "bottom":  "#25292f",
+                                                      "default":  "#25292f"
+                                                  }
+                                 }
+                   }
+}

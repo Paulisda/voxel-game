@@ -1,17 +1,15 @@
-{
+﻿{
   "id": "game:shears",
   "components": {
     "stack": {
-      "max": 1
-    },
-    "durability": {
-      "max": 238
+      "max": 64
     },
     "model": {
       "texture": "shears",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

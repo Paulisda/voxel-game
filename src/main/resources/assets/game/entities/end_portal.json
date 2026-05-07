@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:end_portal",
+  "components": {
+    "entity": {
+      "maxHealth": 0,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "end_portal",
+      "fallback": {
+        "default": "#0000ff"
+      }
+    }
+  }
+}
+

@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:crossbow_firework",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "crossbow_firework",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

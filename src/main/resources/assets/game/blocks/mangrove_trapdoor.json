@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:mangrove_trapdoor",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  2,
+                                     "resistance":  3,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "mangrove_trapdoor"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "mangrove_trapdoor"
+                                                               ],
+                                                      "top":  [
+                                                                  "mangrove_trapdoor"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "mangrove_trapdoor"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#8b5a2b",
+                                                      "top":  "#8b5a2b",
+                                                      "bottom":  "#8b5a2b",
+                                                      "default":  "#8b5a2b"
+                                                  }
+                                 }
+                   }
+}

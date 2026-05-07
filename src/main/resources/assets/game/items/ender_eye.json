@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:ender_eye",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "ender_eye",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

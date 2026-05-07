@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:leather_leggings",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
-      "texture": "leather_leggings",
+      "texture": ["leather_leggings", "leather_leggings_overlay"],
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#ffffff"
       }
     }
   }
 }
+

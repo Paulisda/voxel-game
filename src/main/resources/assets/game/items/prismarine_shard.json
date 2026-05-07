@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:prismarine_shard",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "prismarine_shard",
       "fallback": {
-        "default": "#47c6d9"
+        "default": "#808080"
       }
     }
   }
 }
+

@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:lava",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  100,
+                                     "resistance":  100,
+                                     "breakable":  false
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "lava_still"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "lava_still"
+                                                               ],
+                                                      "top":  [
+                                                                  "lava_still"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "lava_still"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#ff6d00",
+                                                      "top":  "#ff6d00",
+                                                      "bottom":  "#ff6d00",
+                                                      "default":  "#ff6d00"
+                                                  }
+                                 }
+                   }
+}

@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:splash_potion",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
-      "texture": "splash_potion",
+      "texture": ["splash_potion", "splash_potion1"],
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

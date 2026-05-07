@@ -1,17 +1,15 @@
-{
+﻿{
   "id": "game:iron_pickaxe",
   "components": {
     "stack": {
-      "max": 1
-    },
-    "durability": {
-      "max": 250
+      "max": 64
     },
     "model": {
       "texture": "iron_pickaxe",
       "fallback": {
-        "default": "#c7cdd1"
+        "default": "#7b7b7b"
       }
     }
   }
 }
+

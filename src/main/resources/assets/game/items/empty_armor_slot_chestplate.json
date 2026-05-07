@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:empty_armor_slot_chestplate",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "empty_armor_slot_chestplate",
+      "fallback": {
+        "default": "#c0c0c0"
+      }
+    }
+  }
+}
+

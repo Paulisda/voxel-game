@@ -1,17 +1,36 @@
-{
-  "id": "game:bedrock",
-  "components": {
-    "block": {
-      "solid": true,
-      "hardness": -1.0,
-      "resistance": 3600000.0,
-      "breakable": false
-    },
-    "model": {
-      "texture": "bedrock",
-      "fallback": {
-        "default": "#3d3d3d"
-      }
-    }
-  }
+﻿{
+    "id":  "game:bedrock",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  -1,
+                                     "resistance":  3600000,
+                                     "breakable":  false
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "bedrock"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "bedrock"
+                                                               ],
+                                                      "top":  [
+                                                                  "bedrock"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "bedrock"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
 }

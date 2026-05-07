@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:smooth_stone_slab",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  1.5,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "smooth_stone_slab_side"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "smooth_stone_slab_side"
+                                                               ],
+                                                      "top":  [
+                                                                  "smooth_stone_slab_side"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "smooth_stone_slab_side"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:spyglass_parts",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "spyglass_parts",
+      "fallback": {
+        "default": "#ffffff"
+      }
+    }
+  }
+}
+

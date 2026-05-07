@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:chest_back",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "chest_back",
+      "fallback": {
+        "default": "#7a4a1a"
+      }
+    }
+  }
+}
+

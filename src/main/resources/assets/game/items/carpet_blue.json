@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:carpet_blue",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "carpet_blue",
       "fallback": {
-        "default": "#3b7ddd"
+        "default": "#7a4a1a"
       }
     }
   }
 }
+

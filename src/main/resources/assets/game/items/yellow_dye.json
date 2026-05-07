@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:yellow_dye",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "yellow_dye",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

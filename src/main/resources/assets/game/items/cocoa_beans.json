@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:cocoa_beans",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "cocoa_beans",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

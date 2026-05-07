@@ -1,27 +1,40 @@
-{
-  "id": "game:grass",
-  "components": {
-    "block": {
-      "solid": true,
-      "hardness": 0.6,
-      "resistance": 0.6,
-      "breakable": true
-    },
-    "stack": {
-      "max": 64
-    },
-    "model": {
-      "textures": {
-        "side": ["grass_block_side", "grass_block_side0", "grass_block_side1", "grass_block_side2", "grass_block_side3", "grass_block_side4", "grass_side"],
-        "top": ["grass_block_top", "grass_top", "grass"],
-        "bottom": ["dirt4", "dirt3", "dirt2", "dirt1", "dirt0", "dirt"]
-      },
-      "tint": "grass",
-      "fallback": {
-        "side": "#6e9d4a",
-        "top": "#63b243",
-        "bottom": "#8a5a33"
-      }
-    }
-  }
+﻿{
+    "id":  "game:grass",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0,
+                                     "resistance":  0,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "grass",
+                                                     "grass1"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "grass",
+                                                                   "grass1"
+                                                               ],
+                                                      "top":  [
+                                                                  "grass",
+                                                                  "grass1"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "grass",
+                                                                     "grass1"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#4f8f35",
+                                                      "top":  "#4f8f35",
+                                                      "bottom":  "#4f8f35",
+                                                      "default":  "#4f8f35"
+                                                  }
+                                 }
+                   }
 }

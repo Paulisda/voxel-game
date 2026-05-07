@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:emerald_block",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  3,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "emerald_block"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "emerald_block"
+                                                               ],
+                                                      "top":  [
+                                                                  "emerald_block"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "emerald_block"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#37d567",
+                                                      "top":  "#37d567",
+                                                      "bottom":  "#37d567",
+                                                      "default":  "#37d567"
+                                                  }
+                                 }
+                   }
+}

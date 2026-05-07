@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:glass_bottle",
   "components": {
     "stack": {
       "max": 64
     },
     "model": {
-      "texture": "glass_bottle",
+      "texture": ["glass_bottle", "glass_bottle1"],
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#ffffff"
       }
     }
   }
 }
+

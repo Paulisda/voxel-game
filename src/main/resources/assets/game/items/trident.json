@@ -1,21 +1,15 @@
-{
+﻿{
   "id": "game:trident",
   "components": {
     "stack": {
-      "max": 1
-    },
-    "weapon": {
-      "damage": 9,
-      "attackSpeed": 1.6
-    },
-    "durability": {
-      "max": 250
+      "max": 64
     },
     "model": {
       "texture": "trident",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

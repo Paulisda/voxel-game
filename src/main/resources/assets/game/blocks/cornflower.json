@@ -1,0 +1,52 @@
+﻿{
+    "id":  "game:cornflower",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0,
+                                     "resistance":  0,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "cornflower",
+                                                     "cornflower0",
+                                                     "cornflower1",
+                                                     "cornflower2",
+                                                     "cornflower3"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "cornflower",
+                                                                   "cornflower0",
+                                                                   "cornflower1",
+                                                                   "cornflower2",
+                                                                   "cornflower3"
+                                                               ],
+                                                      "top":  [
+                                                                  "cornflower",
+                                                                  "cornflower0",
+                                                                  "cornflower1",
+                                                                  "cornflower2",
+                                                                  "cornflower3"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "cornflower",
+                                                                     "cornflower0",
+                                                                     "cornflower1",
+                                                                     "cornflower2",
+                                                                     "cornflower3"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

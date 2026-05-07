@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:cherry_sign",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  2,
+                                     "resistance":  3,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "cherry_planks"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "cherry_planks"
+                                                               ],
+                                                      "top":  [
+                                                                  "cherry_planks"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "cherry_planks"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#8b5a2b",
+                                                      "top":  "#8b5a2b",
+                                                      "bottom":  "#8b5a2b",
+                                                      "default":  "#8b5a2b"
+                                                  }
+                                 }
+                   }
+}

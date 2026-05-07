@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:weathered_copper_trapdoor",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  3,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "weathered_copper"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "weathered_copper"
+                                                               ],
+                                                      "top":  [
+                                                                  "weathered_copper"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "weathered_copper"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#8b5a2b",
+                                                      "top":  "#8b5a2b",
+                                                      "bottom":  "#8b5a2b",
+                                                      "default":  "#8b5a2b"
+                                                  }
+                                 }
+                   }
+}

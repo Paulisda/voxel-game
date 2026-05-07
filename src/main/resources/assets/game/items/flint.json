@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:flint",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "flint",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

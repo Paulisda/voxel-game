@@ -1,17 +1,15 @@
-{
+﻿{
   "id": "game:golden_hoe",
   "components": {
     "stack": {
-      "max": 1
-    },
-    "durability": {
-      "max": 32
+      "max": 64
     },
     "model": {
       "texture": "golden_hoe",
       "fallback": {
-        "default": "#f2c94c"
+        "default": "#7b7b7b"
       }
     }
   }
 }
+

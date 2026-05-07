@@ -1,0 +1,68 @@
+﻿{
+    "id":  "game:pumpkin_stem",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0,
+                                     "resistance":  0,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "pumpkin_stem",
+                                                     "pumpkin_stem0",
+                                                     "pumpkin_stem1",
+                                                     "pumpkin_stem2",
+                                                     "pumpkin_stem3",
+                                                     "pumpkin_stem4",
+                                                     "pumpkin_stem5",
+                                                     "pumpkin_stem6",
+                                                     "pumpkin_stem7"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "pumpkin_stem",
+                                                                   "pumpkin_stem0",
+                                                                   "pumpkin_stem1",
+                                                                   "pumpkin_stem2",
+                                                                   "pumpkin_stem3",
+                                                                   "pumpkin_stem4",
+                                                                   "pumpkin_stem5",
+                                                                   "pumpkin_stem6",
+                                                                   "pumpkin_stem7"
+                                                               ],
+                                                      "top":  [
+                                                                  "pumpkin_stem",
+                                                                  "pumpkin_stem0",
+                                                                  "pumpkin_stem1",
+                                                                  "pumpkin_stem2",
+                                                                  "pumpkin_stem3",
+                                                                  "pumpkin_stem4",
+                                                                  "pumpkin_stem5",
+                                                                  "pumpkin_stem6",
+                                                                  "pumpkin_stem7"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "pumpkin_stem",
+                                                                     "pumpkin_stem0",
+                                                                     "pumpkin_stem1",
+                                                                     "pumpkin_stem2",
+                                                                     "pumpkin_stem3",
+                                                                     "pumpkin_stem4",
+                                                                     "pumpkin_stem5",
+                                                                     "pumpkin_stem6",
+                                                                     "pumpkin_stem7"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

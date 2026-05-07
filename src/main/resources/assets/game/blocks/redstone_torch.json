@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:redstone_torch",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0.5,
+                                     "resistance":  0.5,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "redstone_torch"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "redstone_torch"
+                                                               ],
+                                                      "top":  [
+                                                                  "redstone_torch_end"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "redstone_torch_end"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#b41818",
+                                                      "top":  "#b41818",
+                                                      "bottom":  "#b41818",
+                                                      "default":  "#b41818"
+                                                  }
+                                 }
+                   }
+}

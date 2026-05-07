@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:leather_boots",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
-      "texture": "leather_boots",
+      "texture": ["leather_boots", "leather_boots_overlay"],
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#ffffff"
       }
     }
   }
 }
+

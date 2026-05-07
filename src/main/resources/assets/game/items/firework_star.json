@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:firework_star",
   "components": {
     "stack": {
       "max": 64
     },
     "model": {
-      "texture": "firework_star",
+      "texture": ["firework_star", "firework_star_overlay"],
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

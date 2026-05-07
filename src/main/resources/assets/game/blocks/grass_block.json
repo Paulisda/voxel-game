@@ -1,0 +1,52 @@
+﻿{
+    "id":  "game:grass_block",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.5,
+                                     "resistance":  0.5,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "grass_block_side",
+                                                     "grass_block_side0",
+                                                     "grass_block_side1",
+                                                     "grass_block_side2",
+                                                     "grass_block_side3",
+                                                     "grass_block_side4"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "grass_block_side",
+                                                                   "grass_block_side0",
+                                                                   "grass_block_side1",
+                                                                   "grass_block_side2",
+                                                                   "grass_block_side3",
+                                                                   "grass_block_side4"
+                                                               ],
+                                                      "top":  [
+                                                                  "grass_block_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "dirt",
+                                                                     "dirt0",
+                                                                     "dirt1",
+                                                                     "dirt2",
+                                                                     "dirt3",
+                                                                     "dirt4"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#6b8e3d",
+                                                      "top":  "#7fb238",
+                                                      "bottom":  "#866043",
+                                                      "default":  "#6b8e3d"
+                                                  },
+                                     "tint":  "grass"
+                                 }
+                   }
+}

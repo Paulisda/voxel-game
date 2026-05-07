@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:totem_of_undying",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "totem_of_undying",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

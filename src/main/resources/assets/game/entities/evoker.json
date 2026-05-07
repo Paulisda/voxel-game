@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:evoker",
+  "components": {
+    "entity": {
+      "maxHealth": 24,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "evoker",
+      "fallback": {
+        "default": "#7a4a1a"
+      }
+    }
+  }
+}
+

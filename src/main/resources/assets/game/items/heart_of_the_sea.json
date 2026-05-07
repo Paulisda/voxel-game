@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:heart_of_the_sea",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "heart_of_the_sea",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

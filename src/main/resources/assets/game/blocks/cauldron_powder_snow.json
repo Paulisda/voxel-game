@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:cauldron_powder_snow",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.2,
+                                     "resistance":  0.2,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "cauldron_side"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "cauldron_side"
+                                                               ],
+                                                      "top":  [
+                                                                  "cauldron_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "cauldron_bottom"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#eeeeee",
+                                                      "top":  "#eeeeee",
+                                                      "bottom":  "#eeeeee",
+                                                      "default":  "#eeeeee"
+                                                  }
+                                 }
+                   }
+}

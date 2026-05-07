@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:popped_chorus_fruit",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "popped_chorus_fruit",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

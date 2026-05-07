@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:big_sea_turtle",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "big_sea_turtle",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

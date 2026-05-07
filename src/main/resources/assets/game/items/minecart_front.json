@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:minecart_front",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "minecart_front",
+      "fallback": {
+        "default": "#c0c0c0"
+      }
+    }
+  }
+}
+

@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:spruce_planks",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  2,
+                                     "resistance":  3,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "spruce_planks"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "spruce_planks"
+                                                               ],
+                                                      "top":  [
+                                                                  "spruce_planks"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "spruce_planks"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#8b5a2b",
+                                                      "top":  "#8b5a2b",
+                                                      "bottom":  "#8b5a2b",
+                                                      "default":  "#8b5a2b"
+                                                  }
+                                 }
+                   }
+}

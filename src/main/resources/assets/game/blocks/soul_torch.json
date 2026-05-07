@@ -1,0 +1,44 @@
+﻿{
+    "id":  "game:soul_torch",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0.5,
+                                     "resistance":  0.5,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "soul_torch",
+                                                     "soul_torch0",
+                                                     "soul_torch1"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "soul_torch",
+                                                                   "soul_torch0",
+                                                                   "soul_torch1"
+                                                               ],
+                                                      "top":  [
+                                                                  "soul_torch",
+                                                                  "soul_torch0",
+                                                                  "soul_torch1"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "soul_torch",
+                                                                     "soul_torch0",
+                                                                     "soul_torch1"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

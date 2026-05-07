@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:blaze",
+  "components": {
+    "entity": {
+      "maxHealth": 20,
+      "width": 0.6,
+      "height": 1.8
+    },
+    "model": {
+      "texture": "blaze",
+      "fallback": {
+        "default": "#ff5500"
+      }
+    }
+  }
+}
+

@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:open_eye",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "open_eye",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

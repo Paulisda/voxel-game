@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:oak_log",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  2,
+                                     "resistance":  3,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "oak_log_top"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "oak_log_top"
+                                                               ],
+                                                      "top":  [
+                                                                  "oak_log_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "oak_log_top"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#8b5a2b",
+                                                      "top":  "#8b5a2b",
+                                                      "bottom":  "#8b5a2b",
+                                                      "default":  "#8b5a2b"
+                                                  }
+                                 }
+                   }
+}

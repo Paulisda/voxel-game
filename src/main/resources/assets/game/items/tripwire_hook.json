@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:tripwire_hook",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "tripwire_hook",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

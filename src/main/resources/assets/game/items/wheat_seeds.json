@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:wheat_seeds",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "wheat_seeds",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#7a4a1a"
       }
     }
   }
 }
+

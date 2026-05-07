@@ -1,0 +1,44 @@
+﻿{
+    "id":  "game:bookshelf",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  2,
+                                     "resistance":  3,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "bookshelf",
+                                                     "bookshelf0",
+                                                     "bookshelf1"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "bookshelf",
+                                                                   "bookshelf0",
+                                                                   "bookshelf1"
+                                                               ],
+                                                      "top":  [
+                                                                  "bookshelf",
+                                                                  "bookshelf0",
+                                                                  "bookshelf1"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "bookshelf",
+                                                                     "bookshelf0",
+                                                                     "bookshelf1"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#8b5a2b",
+                                                      "top":  "#8b5a2b",
+                                                      "bottom":  "#8b5a2b",
+                                                      "default":  "#8b5a2b"
+                                                  }
+                                 }
+                   }
+}

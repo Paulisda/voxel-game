@@ -1,18 +1,15 @@
-{
+﻿{
   "id": "game:salmon",
   "components": {
     "stack": {
       "max": 64
     },
-    "food": {
-      "hunger": 2,
-      "saturation": 0.4
-    },
     "model": {
       "texture": "salmon",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

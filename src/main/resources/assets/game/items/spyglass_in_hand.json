@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:spyglass_in_hand",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "spyglass_in_hand",
+      "fallback": {
+        "default": "#ffffff"
+      }
+    }
+  }
+}
+

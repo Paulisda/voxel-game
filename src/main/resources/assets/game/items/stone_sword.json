@@ -1,21 +1,15 @@
-{
+﻿{
   "id": "game:stone_sword",
   "components": {
     "stack": {
-      "max": 1
-    },
-    "weapon": {
-      "damage": 5,
-      "attackSpeed": 1.6
-    },
-    "durability": {
-      "max": 131
+      "max": 64
     },
     "model": {
       "texture": "stone_sword",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#7b7b7b"
       }
     }
   }
 }
+

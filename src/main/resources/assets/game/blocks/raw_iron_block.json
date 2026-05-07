@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:raw_iron_block",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  3,
+                                     "resistance":  6,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "raw_iron_block"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "raw_iron_block"
+                                                               ],
+                                                      "top":  [
+                                                                  "raw_iron_block"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "raw_iron_block"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

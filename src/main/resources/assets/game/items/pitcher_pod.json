@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:pitcher_pod",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "pitcher_pod",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#7a4a1a"
       }
     }
   }
 }
+

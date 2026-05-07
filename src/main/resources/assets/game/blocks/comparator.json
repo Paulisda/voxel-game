@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:comparator",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0.5,
+                                     "resistance":  0.5,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "comparator"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "comparator"
+                                                               ],
+                                                      "top":  [
+                                                                  "comparator"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "comparator"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#808080",
+                                                      "top":  "#808080",
+                                                      "bottom":  "#808080",
+                                                      "default":  "#808080"
+                                                  }
+                                 }
+                   }
+}

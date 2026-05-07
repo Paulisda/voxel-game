@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:purple_wool",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.8,
+                                     "resistance":  0.8,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "purple_wool"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "purple_wool"
+                                                               ],
+                                                      "top":  [
+                                                                  "purple_wool"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "purple_wool"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#8932b8",
+                                                      "top":  "#8932b8",
+                                                      "bottom":  "#8932b8",
+                                                      "default":  "#8932b8"
+                                                  }
+                                 }
+                   }
+}

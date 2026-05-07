@@ -1,0 +1,17 @@
+﻿{
+  "id": "game:curly_border",
+  "components": {
+    "entity": {
+      "maxHealth": 10,
+      "width": 0.6,
+      "height": 1.95
+    },
+    "model": {
+      "texture": "curly_border",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+

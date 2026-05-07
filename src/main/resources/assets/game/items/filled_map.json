@@ -1,14 +1,15 @@
-{
+﻿{
   "id": "game:filled_map",
   "components": {
     "stack": {
-      "max": 1
+      "max": 64
     },
     "model": {
       "texture": "filled_map",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#f0e6d2"
       }
     }
   }
 }
+

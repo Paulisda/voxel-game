@@ -1,17 +1,15 @@
-{
+﻿{
   "id": "game:fishing_rod",
   "components": {
     "stack": {
-      "max": 1
-    },
-    "durability": {
       "max": 64
     },
     "model": {
       "texture": "fishing_rod",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#7a4a1a"
       }
     }
   }
 }
+

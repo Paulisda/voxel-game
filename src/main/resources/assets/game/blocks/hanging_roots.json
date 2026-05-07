@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:hanging_roots",
+    "components":  {
+                       "block":  {
+                                     "solid":  false,
+                                     "hardness":  0,
+                                     "resistance":  0,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "hanging_roots_top"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "hanging_roots_top"
+                                                               ],
+                                                      "top":  [
+                                                                  "hanging_roots_top"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "hanging_roots_top"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#4f8f35",
+                                                      "top":  "#4f8f35",
+                                                      "bottom":  "#4f8f35",
+                                                      "default":  "#4f8f35"
+                                                  }
+                                 }
+                   }
+}

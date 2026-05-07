@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:gold_ingot",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "gold_ingot",
       "fallback": {
-        "default": "#f2c94c"
+        "default": "#7b7b7b"
       }
     }
   }
 }
+

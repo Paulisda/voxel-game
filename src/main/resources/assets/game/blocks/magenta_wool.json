@@ -1,0 +1,36 @@
+﻿{
+    "id":  "game:magenta_wool",
+    "components":  {
+                       "block":  {
+                                     "solid":  true,
+                                     "hardness":  0.8,
+                                     "resistance":  0.8,
+                                     "breakable":  true
+                                 },
+                       "stack":  {
+                                     "max":  64
+                                 },
+                       "model":  {
+                                     "texture":  [
+                                                     "magenta_wool"
+                                                 ],
+                                     "textures":  {
+                                                      "side":  [
+                                                                   "magenta_wool"
+                                                               ],
+                                                      "top":  [
+                                                                  "magenta_wool"
+                                                              ],
+                                                      "bottom":  [
+                                                                     "magenta_wool"
+                                                                 ]
+                                                  },
+                                     "fallback":  {
+                                                      "side":  "#c74ebd",
+                                                      "top":  "#c74ebd",
+                                                      "bottom":  "#c74ebd",
+                                                      "default":  "#c74ebd"
+                                                  }
+                                 }
+                   }
+}

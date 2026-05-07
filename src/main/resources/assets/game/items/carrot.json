@@ -1,18 +1,15 @@
-{
+﻿{
   "id": "game:carrot",
   "components": {
     "stack": {
       "max": 64
     },
-    "food": {
-      "hunger": 3,
-      "saturation": 3.6
-    },
     "model": {
       "texture": "carrot",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#7a4a1a"
       }
     }
   }
 }
+

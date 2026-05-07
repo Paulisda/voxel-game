@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "game:sugar_cane",
   "components": {
     "stack": {
@@ -7,8 +7,9 @@
     "model": {
       "texture": "sugar_cane",
       "fallback": {
-        "default": "#b66ad7"
+        "default": "#808080"
       }
     }
   }
 }
+

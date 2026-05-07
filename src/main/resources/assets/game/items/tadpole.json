@@ -1,0 +1,15 @@
+﻿{
+  "id": "game:tadpole",
+  "components": {
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": "tadpole",
+      "fallback": {
+        "default": "#808080"
+      }
+    }
+  }
+}
+
