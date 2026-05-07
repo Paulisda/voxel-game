@@ -17,7 +17,7 @@ public final class MusicManager {
     private volatile boolean stopRequested;
     private volatile SourceDataLine currentLine;
     private Thread playbackThread;
-    private float volume = 0.55f;
+    private float volume = 0.05f;
 
     public MusicManager(final ResourceManager resources) {
         this.resources = resources;

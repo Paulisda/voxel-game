@@ -16,7 +16,7 @@ public final class SoundEffectManager {
     private final ResourceManager resources;
     private final Map<String, DecodedAudio> cache = new HashMap<>();
     private final Set<Clip> activeClips = new HashSet<>();
-    private float volume = 0.75f;
+    private float volume = 0.05f;
 
     public SoundEffectManager(final ResourceManager resources) {
         this.resources = resources;

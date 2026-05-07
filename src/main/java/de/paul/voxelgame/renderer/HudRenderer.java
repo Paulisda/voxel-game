@@ -87,6 +87,8 @@ public class HudRenderer {
     private static final float INVENTORY_PADDING = 18.0f;
     private static final float INVENTORY_ICON_SIZE = 30.0f;
     private static final float INVENTORY_TITLE_HEIGHT = 24.0f;
+    private static final float INVENTORY_SEARCH_HEIGHT = 28.0f;
+    private static final float INVENTORY_SEARCH_GAP = 10.0f;
     private static final Color TEXT_COLOR = new Color(242, 244, 246, 255);
     private static final Color MUTED_TEXT_COLOR = new Color(190, 197, 205, 255);
 
@@ -177,6 +179,9 @@ public class HudRenderer {
         final float iconSize = 16.0f * hudScale;
         for (int i = 0; i < HUD_SLOT_COUNT; i++) {
             final GameObject item = player.getHotbarItem(i);
+            if (item == null) {
+                continue;
+            }
             final int iconTexture = iconFor(item);
             final float iconX = hotbarX + (3 + i * 20) * hudScale;
             final float iconY = hotbarY + 3.0f * hudScale;
@@ -184,8 +189,10 @@ public class HudRenderer {
         }
 
         final GameObject selectedItem = player.getHotbarItem(selected);
-        final String selectedName = localization.translate("ui.hotbar.selected") + ": " + localization.objectName(selectedItem);
-        textRenderer.drawCenteredText(selectedName, width * 0.5f, hotbarY - s(42.0f, scale), font(14, scale), TEXT_COLOR);
+        if (selectedItem != null) {
+            final String selectedName = localization.translate("ui.hotbar.selected") + ": " + localization.objectName(selectedItem);
+            textRenderer.drawCenteredText(selectedName, width * 0.5f, hotbarY - s(42.0f, scale), font(14, scale), TEXT_COLOR);
+        }
 
         final float pipSize = ICON_W * hudScale;
         final float pipStep = 8.0f * hudScale;
@@ -240,7 +247,7 @@ public class HudRenderer {
             return null;
         }
 
-        final List<GameObject> entries = inventorySystem.allInventoryEntries();
+        final List<GameObject> entries = inventorySystem.filteredInventoryEntries(localization);
         final InventoryLayout layout = inventoryLayout(entries.size(), width, height);
         inventorySystem.clampToPageCount(layout.pageCount());
 
@@ -274,11 +281,11 @@ public class HudRenderer {
     }
 
     public int inventoryPageCount(final int width, final int height) {
-        return inventoryLayout(inventorySystem.allInventoryEntries().size(), width, height).pageCount();
+        return inventoryLayout(inventorySystem.filteredInventoryEntries(localization).size(), width, height).pageCount();
     }
 
     private void renderInventory(final int width, final int height) {
-        final List<GameObject> entries = inventorySystem.allInventoryEntries();
+        final List<GameObject> entries = inventorySystem.filteredInventoryEntries(localization);
         final InventoryLayout layout = inventoryLayout(entries.size(), width, height);
         inventorySystem.clampToPageCount(layout.pageCount());
 
@@ -291,9 +298,14 @@ public class HudRenderer {
             final String pageLabel = (layout.page() + 1) + "/" + layout.pageCount();
             textRenderer.drawCenteredText(pageLabel, layout.panelX() + layout.panelWidth() - layout.padding() - s(22.0f, layout.scale()), layout.panelY() + s(10.0f, layout.scale()), font(13, layout.scale()), MUTED_TEXT_COLOR);
         }
+        drawInventorySearchField(layout);
 
         final int start = layout.page() * layout.pageSize();
         final int end = Math.min(entries.size(), start + layout.pageSize());
+        if (start == end) {
+            textRenderer.drawCenteredText(localization.translate("ui.inventory.no_results"), layout.panelX() + layout.panelWidth() * 0.5f, layout.slotStartY() + s(18.0f, layout.scale()), font(13, layout.scale()), MUTED_TEXT_COLOR);
+            return;
+        }
         for (int i = start; i < end; i++) {
             final int visibleIndex = i - start;
             final int column = visibleIndex % layout.columns();
@@ -318,6 +330,21 @@ public class HudRenderer {
         }
     }
 
+    private void drawInventorySearchField(final InventoryLayout layout) {
+        final float searchX = layout.panelX() + layout.padding();
+        final float searchY = layout.panelY() + layout.padding() + s(INVENTORY_TITLE_HEIGHT, layout.scale());
+        final float searchWidth = layout.panelWidth() - layout.padding() * 2.0f;
+        final float searchHeight = s(INVENTORY_SEARCH_HEIGHT, layout.scale());
+        drawColoredQuad(searchX, searchY, searchWidth, searchHeight, 0.06f, 0.065f, 0.075f, 1.0f);
+        drawColoredQuad(searchX + s(2.0f, layout.scale()), searchY + s(2.0f, layout.scale()),
+                searchWidth - s(4.0f, layout.scale()), searchHeight - s(4.0f, layout.scale()), 0.11f, 0.12f, 0.135f, 1.0f);
+
+        final String query = inventorySystem.searchQuery();
+        final String searchText = query.isBlank() ? localization.translate("ui.inventory.search") : shortName(query, 42);
+        final Color color = query.isBlank() ? MUTED_TEXT_COLOR : TEXT_COLOR;
+        textRenderer.drawText(searchText, searchX + s(9.0f, layout.scale()), searchY + s(7.0f, layout.scale()), font(12, layout.scale()), color);
+    }
+
     private InventoryLayout inventoryLayout(final int entryCount, final int width, final int height) {
         final float scale = uiScale(width, height);
         final float slotSize = s(INVENTORY_SLOT_SIZE, scale);
@@ -325,10 +352,12 @@ public class HudRenderer {
         final float padding = s(INVENTORY_PADDING, scale);
         final float iconSize = s(INVENTORY_ICON_SIZE, scale);
         final float titleHeight = s(INVENTORY_TITLE_HEIGHT, scale);
+        final float searchHeight = s(INVENTORY_SEARCH_HEIGHT, scale);
+        final float searchGap = s(INVENTORY_SEARCH_GAP, scale);
         final int columns = Math.max(1, Math.min(INVENTORY_COLUMNS, Math.max(1, entryCount)));
         final float maxPanelHeight = Math.max(s(240.0f, scale), height * 0.72f);
         final float rowHeight = slotSize + slotGap;
-        final float nonGridHeight = padding * 2.0f + titleHeight;
+        final float nonGridHeight = padding * 2.0f + titleHeight + searchHeight + searchGap;
         final int maxRows = Math.max(1, (int) Math.floor((maxPanelHeight - nonGridHeight + slotGap) / rowHeight));
         final int neededRows = Math.max(1, (int) Math.ceil(entryCount / (double) columns));
         final int rows = Math.min(neededRows, maxRows);
@@ -351,7 +380,7 @@ public class HudRenderer {
                 panelWidth,
                 panelHeight,
                 panelX + padding,
-                panelY + padding + titleHeight,
+                panelY + padding + titleHeight + searchHeight + searchGap,
                 slotSize,
                 slotGap,
                 padding,

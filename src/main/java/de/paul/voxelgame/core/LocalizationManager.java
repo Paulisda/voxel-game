@@ -6,6 +6,7 @@ import de.paul.voxelgame.objects.GameObject;
 import de.paul.voxelgame.objects.ObjectKind;
 import de.paul.voxelgame.objects.ResourceId;
 
+import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Locale;
@@ -107,7 +108,12 @@ public final class LocalizationManager {
     }
 
     public String translate(final String key) {
-        final Map<String, String> current = translations.getOrDefault(currentLanguage, Map.of());
+        return translateFor(currentLanguage, key);
+    }
+
+    public String translateFor(final Language language, final String key) {
+        final Language requestedLanguage = language == null ? currentLanguage : language;
+        final Map<String, String> current = translations.getOrDefault(requestedLanguage, Map.of());
         final String translated = current.get(key);
         if (translated != null) {
             return translated;
@@ -119,23 +125,47 @@ public final class LocalizationManager {
             return englishFallback;
         }
 
-        return generatedObjectName(key);
+        return generatedObjectName(key, requestedLanguage);
     }
 
     public String objectName(final GameObject object) {
         if (object == null) {
             return "";
         }
+        return objectNameForLanguage(object, currentLanguage);
+    }
+
+    public String objectNameForLanguage(final GameObject object, final Language language) {
+        if (object == null) {
+            return "";
+        }
         if (object.has(BlockItemComponent.class)) {
-            return translate(key("block", object.get(BlockItemComponent.class).blockId()));
+            return translateFor(language, key("block", object.get(BlockItemComponent.class).blockId()));
         }
         if (object.kind() == ObjectKind.BLOCK) {
-            return translate(key("block", object.id()));
+            return translateFor(language, key("block", object.id()));
         }
         if (object.kind() == ObjectKind.ENTITY) {
-            return translate(key("entity", object.id()));
+            return translateFor(language, key("entity", object.id()));
         }
-        return translate(key("item", object.id()));
+        return translateFor(language, key("item", object.id()));
+    }
+
+    public boolean objectNameMatches(final GameObject object, final String query) {
+        if (object == null || query == null || query.isBlank()) {
+            return true;
+        }
+
+        if (matchesSearchText(object.id().toString(), query)) {
+            return true;
+        }
+
+        for (final Language language : Language.values()) {
+            if (matchesSearchText(objectNameForLanguage(object, language), query)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Language currentLanguage() {
@@ -173,23 +203,23 @@ public final class LocalizationManager {
         return prefix + "." + id.namespace() + "." + id.path().replace('/', '.');
     }
 
-    private String generatedObjectName(final String key) {
+    private String generatedObjectName(final String key, final Language language) {
         final String itemPrefix = "item.game.";
         final String blockPrefix = "block.game.";
         final String entityPrefix = "entity.game.";
         if (key.startsWith(itemPrefix)) {
-            return generatedDisplayName(key.substring(itemPrefix.length()));
+            return generatedDisplayName(key.substring(itemPrefix.length()), language);
         }
         if (key.startsWith(blockPrefix)) {
-            return generatedDisplayName(key.substring(blockPrefix.length()));
+            return generatedDisplayName(key.substring(blockPrefix.length()), language);
         }
         if (key.startsWith(entityPrefix)) {
-            return generatedDisplayName(key.substring(entityPrefix.length()));
+            return generatedDisplayName(key.substring(entityPrefix.length()), language);
         }
         return key;
     }
 
-    private String generatedDisplayName(final String path) {
+    private String generatedDisplayName(final String path, final Language language) {
         final String[] parts = path.replace('.', '_').split("_");
         final StringBuilder name = new StringBuilder();
         for (final String part : parts) {
@@ -199,11 +229,40 @@ public final class LocalizationManager {
             if (name.length() > 0) {
                 name.append(' ');
             }
-            name.append(currentLanguage == Language.DE_DE
+            name.append(language == Language.DE_DE
                     ? DE_WORDS.getOrDefault(part, title(part))
                     : title(part));
         }
         return name.toString();
+    }
+
+    private boolean matchesSearchText(final String value, final String query) {
+        final String expandedQuery = normalizeSearchText(query, true);
+        final String foldedQuery = normalizeSearchText(query, false);
+        if (expandedQuery.isBlank() && foldedQuery.isBlank()) {
+            return true;
+        }
+        return normalizeSearchText(value, true).contains(expandedQuery)
+                || normalizeSearchText(value, false).contains(foldedQuery);
+    }
+
+    private String normalizeSearchText(final String value, final boolean expandGermanUmlauts) {
+        if (value == null) {
+            return "";
+        }
+        final String normalizedValue = expandGermanUmlauts
+                ? value.replace("ä", "ae")
+                        .replace("ö", "oe")
+                        .replace("ü", "ue")
+                        .replace("Ä", "Ae")
+                        .replace("Ö", "Oe")
+                        .replace("Ü", "Ue")
+                        .replace("ß", "ss")
+                : value;
+        return Normalizer.normalize(normalizedValue, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .toLowerCase(Locale.ROOT)
+                .trim();
     }
 
     private String title(final String value) {

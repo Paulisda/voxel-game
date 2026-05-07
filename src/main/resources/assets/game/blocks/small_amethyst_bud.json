@@ -11,6 +11,7 @@
       "max": 64
     },
     "model": {
+      "shape": "cross",
       "texture": [
         "small_amethyst_bud"
       ],

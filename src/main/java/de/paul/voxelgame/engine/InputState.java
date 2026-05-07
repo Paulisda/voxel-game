@@ -6,6 +6,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.glfwGetKey;
 import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
+import static org.lwjgl.glfw.GLFW.glfwSetCharCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
 
 public class InputState {
@@ -21,10 +22,17 @@ public class InputState {
     private double scrollY;
     private double mouseX;
     private double mouseY;
+    private final StringBuilder pendingTypedText = new StringBuilder();
+    private String typedText = "";
 
     public InputState(final long window) {
         this.window = window;
         glfwSetScrollCallback(window, (callbackWindow, xOffset, yOffset) -> pendingScrollY += yOffset);
+        glfwSetCharCallback(window, (callbackWindow, codepoint) -> {
+            if (Character.isValidCodePoint(codepoint) && !Character.isISOControl(codepoint)) {
+                pendingTypedText.appendCodePoint(codepoint);
+            }
+        });
         update();
     }
 
@@ -33,6 +41,8 @@ public class InputState {
         System.arraycopy(currentMouseButtons, 0, previousMouseButtons, 0, MOUSE_BUTTON_COUNT);
         scrollY = pendingScrollY;
         pendingScrollY = 0.0;
+        typedText = pendingTypedText.toString();
+        pendingTypedText.setLength(0);
 
         for (int key = 0; key < KEY_COUNT; key++) {
             currentKeys[key] = glfwGetKey(window, key) == GLFW_PRESS;
@@ -87,5 +97,11 @@ public class InputState {
 
     public double getScrollY() {
         return scrollY;
+    }
+
+    public String consumeTypedText() {
+        final String result = typedText;
+        typedText = "";
+        return result;
     }
 }

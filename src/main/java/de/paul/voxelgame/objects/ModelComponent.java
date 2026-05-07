@@ -8,10 +8,11 @@ public record ModelComponent(
         String[] topTextureCandidates,
         String[] bottomTextureCandidates,
         String tint,
+        String shape,
         Map<String, Integer> fallbackColors
 ) implements Component {
     public ModelComponent(final String texturePath) {
-        this(new String[]{texturePath}, null, null, null, "", Map.of());
+        this(new String[]{texturePath}, null, null, null, "", "cube", Map.of());
     }
 
     public ModelComponent {
@@ -20,6 +21,7 @@ public record ModelComponent(
         topTextureCandidates = normalize(topTextureCandidates);
         bottomTextureCandidates = normalize(bottomTextureCandidates);
         tint = tint == null ? "" : tint.trim().toLowerCase();
+        shape = shape == null || shape.isBlank() ? "cube" : shape.trim().toLowerCase();
         fallbackColors = fallbackColors == null ? Map.of() : Map.copyOf(fallbackColors);
     }
 

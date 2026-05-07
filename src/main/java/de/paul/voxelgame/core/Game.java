@@ -17,6 +17,8 @@ import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DELETE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_F11;
@@ -123,6 +125,7 @@ public class Game {
             final int height = Math.max(1, frameHeight[0]);
 
             final boolean consumedEscapeInput = handleEscapeInput();
+            final boolean consumedInventorySearchInput = handleInventorySearchInput();
             final boolean consumedInventoryInput = handleInventoryInput();
             final boolean consumedDisplayInput = handleDisplayInput();
             final boolean consumedMenuClick = handleMenuClick(width, height);
@@ -138,6 +141,7 @@ public class Game {
             if (!menuSystem.isOpen()
                     && !inventorySystem.isOpen()
                     && !consumedEscapeInput
+                    && !consumedInventorySearchInput
                     && !consumedInventoryInput
                     && !consumedDisplayInput
                     && !consumedMenuClick
@@ -186,17 +190,37 @@ public class Game {
     }
 
     private boolean handleInventoryInput() {
-        if (menuSystem.isOpen() || !inputState.isKeyPressed(GLFW_KEY_E)) {
+        if (menuSystem.isOpen() || inventorySystem.isOpen() || !inputState.isKeyPressed(GLFW_KEY_E)) {
             return false;
         }
 
-        inventorySystem.toggle();
-        if (inventorySystem.isOpen()) {
-            player.releaseMouse();
-        } else {
-            player.captureMouse();
-        }
+        inventorySystem.open();
+        inputState.consumeTypedText();
+        player.releaseMouse();
         return true;
+    }
+
+    private boolean handleInventorySearchInput() {
+        if (!inventorySystem.isOpen()) {
+            inputState.consumeTypedText();
+            return false;
+        }
+
+        boolean consumed = false;
+        final String typedText = inputState.consumeTypedText();
+        if (!typedText.isEmpty()) {
+            inventorySystem.appendSearchText(typedText);
+            consumed = true;
+        }
+        if (inputState.isKeyPressed(GLFW_KEY_BACKSPACE)) {
+            inventorySystem.removeLastSearchCharacter();
+            consumed = true;
+        }
+        if (inputState.isKeyPressed(GLFW_KEY_DELETE)) {
+            inventorySystem.clearSearch();
+            consumed = true;
+        }
+        return consumed;
     }
 
     private boolean handleDisplayInput() {

@@ -14,6 +14,8 @@
     "ui.options.resolution":  "Auflösung",
     "ui.options.language":  "Sprache",
     "ui.inventory.title":  "Inventar",
+    "ui.inventory.search":  "Suche...",
+    "ui.inventory.no_results":  "Keine Treffer",
     "ui.hotbar.selected":  "Ausgewählt",
     "ui.language.de_de":  "Deutsch",
     "ui.language.en_us":  "Englisch",

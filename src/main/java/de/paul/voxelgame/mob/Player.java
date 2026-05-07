@@ -281,7 +281,7 @@ public class Player extends Mob {
             final int blockZ = toBlockCoordinate(point.getZ());
 
             final Block block = world.getBlock(blockX, blockY, blockZ);
-            if (block != null && block.isSolid()) {
+            if (block != null) {
                 return new RaycastHit(blockX, blockY, blockZ, candidateX, candidateY, candidateZ, hasCandidate);
             }
 
@@ -336,10 +336,9 @@ public class Player extends Mob {
 
     public GameObject getHotbarItem(final int slotIndex) {
         if (slotIndex < 0 || slotIndex >= hotbarItems.length) {
-            return firstHotbarItem();
+            return null;
         }
-        final GameObject item = hotbarItems[slotIndex];
-        return item == null ? firstHotbarItem() : item;
+        return hotbarItems[slotIndex];
     }
 
     public void setHotbarItem(final int slotIndex, final GameObject item) {
@@ -391,15 +390,6 @@ public class Player extends Mob {
 
     private GameObject getSelectedHotbarItem() {
         return getHotbarItem(selectedHotbarSlot);
-    }
-
-    private GameObject firstHotbarItem() {
-        for (final GameObject item : hotbarItems) {
-            if (item != null) {
-                return item;
-            }
-        }
-        return null;
     }
 
     private static int clampStat(final int value) {

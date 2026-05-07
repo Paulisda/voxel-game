@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-final class JsonParser {
+public final class JsonParser {
     private static final char BYTE_ORDER_MARK = '\uFEFF';
 
     private final String input;
@@ -22,7 +22,7 @@ final class JsonParser {
         return input;
     }
 
-    static Object parse(final String input) {
+    public static Object parse(final String input) {
         final JsonParser parser = new JsonParser(input);
         final Object value = parser.readValue();
         parser.skipWhitespace();
@@ -33,7 +33,7 @@ final class JsonParser {
     }
 
     @SuppressWarnings("unchecked")
-    static Map<String, Object> parseObject(final String input) {
+    public static Map<String, Object> parseObject(final String input) {
         final Object value = parse(input);
         if (!(value instanceof Map<?, ?>)) {
             throw new IllegalArgumentException("JSON root must be an object");

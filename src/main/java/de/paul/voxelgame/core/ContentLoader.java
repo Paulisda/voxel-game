@@ -137,7 +137,7 @@ public class ContentLoader {
         }
 
         if (components.containsKey("model")) {
-            gameObject.add(readModel(object(components.get("model"))));
+            gameObject.add(readModel(gameObject.id(), object(components.get("model"))));
         }
     }
 
@@ -171,7 +171,7 @@ public class ContentLoader {
         }
     }
 
-    private ModelComponent readModel(final Map<String, Object> model) {
+    private ModelComponent readModel(final ResourceId id, final Map<String, Object> model) {
         final Map<String, Object> textures = object(model.get("textures"));
         final Map<String, Object> fallback = object(model.get("fallback"));
         final Map<String, Integer> fallbackColors = new LinkedHashMap<>();
@@ -185,8 +185,38 @@ public class ContentLoader {
                 stringArray(textures.get("top")),
                 stringArray(textures.get("bottom")),
                 string(model, "tint", ""),
+                string(model, "shape", inferMinecraftShape(id)),
                 fallbackColors
         );
+    }
+
+    private String inferMinecraftShape(final ResourceId id) {
+        final String path = id.path();
+        if (path.equals("redstone_wire")) {
+            return "redstone_wire";
+        }
+        if (path.equals("amethyst_cluster") || path.equals("small_amethyst_bud")
+                || path.equals("medium_amethyst_bud") || path.equals("large_amethyst_bud")) {
+            return "cross";
+        }
+        if (path.endsWith("_torch") || path.equals("torch") || path.equals("redstone_torch") || path.equals("soul_torch")) {
+            return "torch";
+        }
+        if (path.equals("wheat_stage") || path.equals("carrot") || path.equals("potato") || path.equals("beetroot_stage")
+                || path.equals("pitcher_crop") || path.equals("melon_stem") || path.equals("pumpkin_stem")
+                || path.equals("attached_melon_stem") || path.equals("attached_pumpkin_stem")) {
+            return "crop";
+        }
+        if (path.contains("sapling") || path.equals("grass") || path.equals("tall_grass")
+                || path.equals("fern") || path.equals("large_fern") || path.endsWith("_tulip")
+                || path.equals("poppy") || path.equals("blue_orchid") || path.equals("allium")
+                || path.equals("azure_bluet") || path.equals("oxeye_daisy") || path.equals("cornflower")
+                || path.equals("lily_of_the_valley") || path.equals("brown_mushroom") || path.equals("red_mushroom")
+                || path.equals("crimson_roots") || path.equals("warped_roots") || path.equals("hanging_roots")
+                || path.equals("sugar_cane") || path.equals("sunflower") || path.equals("flowering_trail")) {
+            return "cross";
+        }
+        return "cube";
     }
 
     private void loadTags(final String folder, final Registry<GameObject> registry) {

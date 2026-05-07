@@ -11,6 +11,7 @@
       "max": 64
     },
     "model": {
+      "shape": "cross",
       "texture": [
         "amethyst_cluster"
       ],

@@ -2,38 +2,26 @@ package de.paul.voxelgame.core;
 
 import de.paul.voxelgame.objects.GameObject;
 import de.paul.voxelgame.objects.RegistryManager;
-import de.paul.voxelgame.objects.ResourceId;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public final class InventorySystem {
-    private static final String[] DEFAULT_HOTBAR_IDS = {
-            "game:dirt", "game:stone", "game:wood",
-            "game:grass", "game:water", "game:dirt",
-            "game:stone", "game:wood", "game:grass"
-    };
+    private static final int HOTBAR_SLOT_COUNT = 9;
 
     private final RegistryManager registries;
     private boolean open;
     private int page;
+    private String searchQuery = "";
 
     public InventorySystem(final RegistryManager registries) {
         this.registries = registries;
     }
 
     public GameObject[] createDefaultHotbar() {
-        final GameObject[] hotbar = new GameObject[DEFAULT_HOTBAR_IDS.length];
-        final GameObject fallback = firstRegisteredItem();
-
-        for (int i = 0; i < DEFAULT_HOTBAR_IDS.length; i++) {
-            hotbar[i] = registries.items()
-                    .find(ResourceId.of(DEFAULT_HOTBAR_IDS[i]))
-                    .orElse(fallback);
-        }
-
-        return hotbar;
+        return new GameObject[HOTBAR_SLOT_COUNT];
     }
 
     public List<GameObject> blocksWithTag(final String tag) {
@@ -52,21 +40,40 @@ public final class InventorySystem {
         return Collections.unmodifiableList(entries);
     }
 
+    public List<GameObject> filteredInventoryEntries(final LocalizationManager localization) {
+        final String query = searchQuery.trim();
+        if (query.isEmpty()) {
+            return allInventoryEntries();
+        }
+
+        final String normalizedQuery = query.toLowerCase(Locale.ROOT);
+        final List<GameObject> entries = new ArrayList<>();
+        for (final GameObject item : registries.items().values()) {
+            if (localization.objectNameMatches(item, normalizedQuery)) {
+                entries.add(item);
+            }
+        }
+        return Collections.unmodifiableList(entries);
+    }
+
     public void toggle() {
         open = !open;
         if (open) {
             page = 0;
+            searchQuery = "";
         }
     }
 
     public void open() {
         open = true;
         page = 0;
+        searchQuery = "";
     }
 
     public void close() {
         open = false;
         page = 0;
+        searchQuery = "";
     }
 
     public boolean isOpen() {
@@ -89,15 +96,36 @@ public final class InventorySystem {
         page = clampPage(page, pageCount);
     }
 
+    public String searchQuery() {
+        return searchQuery;
+    }
+
+    public void appendSearchText(final String text) {
+        if (text == null || text.isEmpty()) {
+            return;
+        }
+        searchQuery += text;
+        page = 0;
+    }
+
+    public void removeLastSearchCharacter() {
+        if (searchQuery.isEmpty()) {
+            return;
+        }
+        searchQuery = searchQuery.substring(0, searchQuery.offsetByCodePoints(searchQuery.length(), -1));
+        page = 0;
+    }
+
+    public void clearSearch() {
+        if (searchQuery.isEmpty()) {
+            return;
+        }
+        searchQuery = "";
+        page = 0;
+    }
+
     private int clampPage(final int value, final int pageCount) {
         final int maxPage = Math.max(0, pageCount - 1);
         return Math.max(0, Math.min(maxPage, value));
-    }
-
-    private GameObject firstRegisteredItem() {
-        for (final GameObject item : registries.items().values()) {
-            return item;
-        }
-        throw new IllegalStateException("No items registered");
     }
 }

@@ -16,6 +16,7 @@ public class ResourcePackLoader {
     private static final String COLORMAP_TEXTURE_PREFIX = "assets/minecraft/textures/colormap/";
     private static final String GUI_TEXTURE_PREFIX = "assets/minecraft/textures/gui/";
     private static final String ITEM_TEXTURE_PREFIX = "assets/minecraft/textures/item/";
+    private static final String BLOCK_MODEL_PREFIX = "assets/minecraft/models/block/";
     private static final String[] RESOURCE_PACK_DIRECTORIES = {
             "resourcepacks",
             "src/main/resources/resourcepacks"
@@ -43,12 +44,21 @@ public class ResourcePackLoader {
         return loadTextureWithPrefix(ITEM_TEXTURE_PREFIX, textureCandidates);
     }
 
+    public String loadBlockModel(final String... modelCandidates) {
+        final byte[] data = loadResourceWithPrefix(BLOCK_MODEL_PREFIX, ".json", modelCandidates);
+        return data == null ? null : new String(data, java.nio.charset.StandardCharsets.UTF_8);
+    }
+
     private byte[] loadTextureWithPrefix(final String prefix, final String... textureCandidates) {
+        return loadResourceWithPrefix(prefix, ".png", textureCandidates);
+    }
+
+    private byte[] loadResourceWithPrefix(final String prefix, final String suffix, final String... textureCandidates) {
         if (textureCandidates == null || textureCandidates.length == 0) {
             return null;
         }
         for (final Path pack : packFiles) {
-            final byte[] data = tryLoadTextureFromPack(pack, prefix, textureCandidates);
+            final byte[] data = tryLoadResourceFromPack(pack, prefix, suffix, textureCandidates);
             if (data != null) {
                 return data;
             }
@@ -81,13 +91,13 @@ public class ResourcePackLoader {
         }
     }
 
-    private byte[] tryLoadTextureFromPack(final Path packFile, final String prefix, final String... textureCandidates) {
+    private byte[] tryLoadResourceFromPack(final Path packFile, final String prefix, final String suffix, final String... textureCandidates) {
         try (final ZipFile zipFile = new ZipFile(packFile.toFile())) {
             for (final String candidate : textureCandidates) {
                 if (candidate == null || candidate.isBlank()) {
                     continue;
                 }
-                final String entryName = prefix + candidate + ".png";
+                final String entryName = prefix + candidate + suffix;
                 final ZipEntry entry = zipFile.getEntry(entryName);
                 if (entry == null) {
                     continue;
