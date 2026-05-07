@@ -3,6 +3,7 @@ package de.paul.voxelgame.core;
 import de.paul.voxelgame.assets.ResourceManager;
 import de.paul.voxelgame.debug.GameDebug;
 import de.paul.voxelgame.objects.BlockComponent;
+import de.paul.voxelgame.objects.BlockItemComponent;
 import de.paul.voxelgame.objects.DurabilityComponent;
 import de.paul.voxelgame.objects.EntityComponent;
 import de.paul.voxelgame.objects.FoodComponent;
@@ -12,6 +13,7 @@ import de.paul.voxelgame.objects.ObjectKind;
 import de.paul.voxelgame.objects.Registry;
 import de.paul.voxelgame.objects.RegistryManager;
 import de.paul.voxelgame.objects.ResourceId;
+import de.paul.voxelgame.objects.SpawnEntityComponent;
 import de.paul.voxelgame.objects.StackComponent;
 import de.paul.voxelgame.objects.WeaponComponent;
 
@@ -34,6 +36,7 @@ public class ContentLoader {
     public void loadAll() {
         loadBlocks();
         loadItems();
+        createMissingBlockItems();
         loadEntities();
         loadTags("blocks", registries.blocks());
         loadTags("items", registries.items());
@@ -99,6 +102,18 @@ public class ContentLoader {
             ));
         }
 
+        final Object blockItemComponent = firstPresent(components, "blockItem", "block_item");
+        if (blockItemComponent != null) {
+            final Map<String, Object> blockItem = object(blockItemComponent);
+            gameObject.add(new BlockItemComponent(ResourceId.of(string(blockItem, "block", gameObject.id().toString()))));
+        }
+
+        final Object spawnEntityComponent = firstPresent(components, "spawnEntity", "spawn_entity");
+        if (spawnEntityComponent != null) {
+            final Map<String, Object> spawnEntity = object(spawnEntityComponent);
+            gameObject.add(new SpawnEntityComponent(ResourceId.of(string(spawnEntity, "entity", "game:zombie"))));
+        }
+
         if (components.containsKey("weapon")) {
             final Map<String, Object> weapon = object(components.get("weapon"));
             gameObject.add(new WeaponComponent(
@@ -123,6 +138,36 @@ public class ContentLoader {
 
         if (components.containsKey("model")) {
             gameObject.add(readModel(object(components.get("model"))));
+        }
+    }
+
+    private void createMissingBlockItems() {
+        for (final GameObject block : registries.blocks().values()) {
+            final GameObject existingItem = registries.items().find(block.id()).orElse(null);
+            if (existingItem != null) {
+                if (!existingItem.has(BlockItemComponent.class)) {
+                    existingItem.add(new BlockItemComponent(block.id()));
+                }
+                if (!existingItem.has(StackComponent.class)) {
+                    existingItem.add(new StackComponent(64));
+                }
+                if (!existingItem.has(ModelComponent.class) && block.has(ModelComponent.class)) {
+                    existingItem.add(block.get(ModelComponent.class));
+                }
+                existingItem.addTag("game:block_item");
+                continue;
+            }
+
+            final GameObject item = new GameObject(block.id(), ObjectKind.ITEM);
+            item.add(new StackComponent(64));
+            item.add(new BlockItemComponent(block.id()));
+            if (block.has(ModelComponent.class)) {
+                item.add(block.get(ModelComponent.class));
+            } else {
+                item.add(new ModelComponent(block.id().path()));
+            }
+            item.addTag("game:block_item");
+            registries.items().register(item.id(), item);
         }
     }
 
@@ -215,6 +260,15 @@ public class ContentLoader {
     private String string(final Map<String, Object> object, final String key, final String defaultValue) {
         final Object value = object.get(key);
         return value == null ? defaultValue : String.valueOf(value);
+    }
+
+    private Object firstPresent(final Map<String, Object> object, final String... keys) {
+        for (final String key : keys) {
+            if (object.containsKey(key)) {
+                return object.get(key);
+            }
+        }
+        return null;
     }
 
     private int integer(final Map<String, Object> object, final String key, final int defaultValue) {

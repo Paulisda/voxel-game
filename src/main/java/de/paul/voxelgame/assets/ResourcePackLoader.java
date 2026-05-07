@@ -15,6 +15,7 @@ public class ResourcePackLoader {
     private static final String BLOCK_TEXTURE_PREFIX = "assets/minecraft/textures/block/";
     private static final String COLORMAP_TEXTURE_PREFIX = "assets/minecraft/textures/colormap/";
     private static final String GUI_TEXTURE_PREFIX = "assets/minecraft/textures/gui/";
+    private static final String ITEM_TEXTURE_PREFIX = "assets/minecraft/textures/item/";
     private static final String[] RESOURCE_PACK_DIRECTORIES = {
             "resourcepacks",
             "src/main/resources/resourcepacks"
@@ -36,6 +37,10 @@ public class ResourcePackLoader {
 
     public byte[] loadGuiTexture(final String... textureCandidates) {
         return loadTextureWithPrefix(GUI_TEXTURE_PREFIX, textureCandidates);
+    }
+
+    public byte[] loadItemTexture(final String... textureCandidates) {
+        return loadTextureWithPrefix(ITEM_TEXTURE_PREFIX, textureCandidates);
     }
 
     private byte[] loadTextureWithPrefix(final String prefix, final String... textureCandidates) {

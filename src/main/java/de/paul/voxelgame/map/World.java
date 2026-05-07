@@ -6,6 +6,7 @@ import de.paul.voxelgame.objects.BlockComponent;
 import de.paul.voxelgame.objects.GameObject;
 import de.paul.voxelgame.objects.ObjectKind;
 import de.paul.voxelgame.objects.RegistryManager;
+import de.paul.voxelgame.objects.ResourceId;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -108,6 +109,13 @@ public class World {
         }
         setBlock(blockX, blockY, blockZ, new Block(blockX, blockY, blockZ, type));
         return true;
+    }
+
+    public boolean placeBlock(final int blockX, final int blockY, final int blockZ, final ResourceId typeId) {
+        return registries.blocks()
+                .find(typeId)
+                .map(type -> placeBlock(blockX, blockY, blockZ, type))
+                .orElse(false);
     }
 
     private boolean isPlaceableBlock(final GameObject type) {

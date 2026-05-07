@@ -1,0 +1,16 @@
+package de.paul.voxelgame.core;
+
+public enum MenuAction {
+    NONE,
+    RESUME,
+    OPTIONS,
+    EXIT,
+    BACK,
+    SENSITIVITY_DECREASE,
+    SENSITIVITY_INCREASE,
+    MUSIC_VOLUME_DECREASE,
+    MUSIC_VOLUME_INCREASE,
+    EFFECTS_VOLUME_DECREASE,
+    EFFECTS_VOLUME_INCREASE,
+    LANGUAGE_TOGGLE
+}

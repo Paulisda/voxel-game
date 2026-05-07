@@ -5,6 +5,7 @@ import de.paul.voxelgame.objects.RegistryManager;
 import de.paul.voxelgame.objects.ResourceId;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class InventorySystem {
@@ -15,6 +16,7 @@ public final class InventorySystem {
     };
 
     private final RegistryManager registries;
+    private boolean open;
 
     public InventorySystem(final RegistryManager registries) {
         this.registries = registries;
@@ -22,10 +24,10 @@ public final class InventorySystem {
 
     public GameObject[] createDefaultHotbar() {
         final GameObject[] hotbar = new GameObject[DEFAULT_HOTBAR_IDS.length];
-        final GameObject fallback = firstRegisteredBlock();
+        final GameObject fallback = firstRegisteredItem();
 
         for (int i = 0; i < DEFAULT_HOTBAR_IDS.length; i++) {
-            hotbar[i] = registries.blocks()
+            hotbar[i] = registries.items()
                     .find(ResourceId.of(DEFAULT_HOTBAR_IDS[i]))
                     .orElse(fallback);
         }
@@ -43,10 +45,32 @@ public final class InventorySystem {
         return result;
     }
 
-    private GameObject firstRegisteredBlock() {
-        for (final GameObject block : registries.blocks().values()) {
-            return block;
+    public List<GameObject> allInventoryEntries() {
+        final List<GameObject> entries = new ArrayList<>();
+        entries.addAll(registries.items().values());
+        return Collections.unmodifiableList(entries);
+    }
+
+    public void toggle() {
+        open = !open;
+    }
+
+    public void open() {
+        open = true;
+    }
+
+    public void close() {
+        open = false;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    private GameObject firstRegisteredItem() {
+        for (final GameObject item : registries.items().values()) {
+            return item;
         }
-        throw new IllegalStateException("No blocks registered");
+        throw new IllegalStateException("No items registered");
     }
 }

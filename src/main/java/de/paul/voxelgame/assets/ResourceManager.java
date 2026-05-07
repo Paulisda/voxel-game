@@ -77,32 +77,39 @@ public class ResourceManager {
     }
 
     public List<String> listJsonResources(final String directory) {
+        return listResources(directory, ".json");
+    }
+
+    public List<String> listResources(final String directory, final String extension) {
         final String normalized = normalize(directory);
+        final String suffix = extension == null || extension.isBlank()
+                ? ""
+                : extension.trim().toLowerCase();
         final Set<String> resources = new LinkedHashSet<>();
 
-        collectFromDirectory(SOURCE_RESOURCES.resolve(normalized), normalized, resources);
-        collectFromDirectory(TARGET_RESOURCES.resolve(normalized), normalized, resources);
-        collectFromClassLoader(normalized, resources);
+        collectFromDirectory(SOURCE_RESOURCES.resolve(normalized), normalized, suffix, resources);
+        collectFromDirectory(TARGET_RESOURCES.resolve(normalized), normalized, suffix, resources);
+        collectFromClassLoader(normalized, suffix, resources);
 
         final List<String> result = new ArrayList<>(resources);
         Collections.sort(result);
         return result;
     }
 
-    private void collectFromDirectory(final Path directory, final String resourcePrefix, final Set<String> resources) {
+    private void collectFromDirectory(final Path directory, final String resourcePrefix, final String suffix, final Set<String> resources) {
         if (!Files.isDirectory(directory)) {
             return;
         }
 
         try (Stream<Path> paths = Files.walk(directory)) {
-            paths.filter(path -> Files.isRegularFile(path) && path.getFileName().toString().endsWith(".json"))
+            paths.filter(path -> Files.isRegularFile(path) && hasSuffix(path.getFileName().toString(), suffix))
                     .map(path -> resourcePrefix + "/" + directory.relativize(path).toString().replace('\\', '/'))
                     .forEach(resources::add);
         } catch (IOException ignored) {
         }
     }
 
-    private void collectFromClassLoader(final String directory, final Set<String> resources) {
+    private void collectFromClassLoader(final String directory, final String suffix, final Set<String> resources) {
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             return;
@@ -111,16 +118,16 @@ public class ResourceManager {
         try {
             final Enumeration<URL> urls = classLoader.getResources(directory);
             while (urls.hasMoreElements()) {
-                collectFromUrl(urls.nextElement(), directory, resources);
+                collectFromUrl(urls.nextElement(), directory, suffix, resources);
             }
         } catch (IOException ignored) {
         }
     }
 
-    private void collectFromUrl(final URL url, final String directory, final Set<String> resources) {
+    private void collectFromUrl(final URL url, final String directory, final String suffix, final Set<String> resources) {
         if ("file".equals(url.getProtocol())) {
             try {
-                collectFromDirectory(Paths.get(url.toURI()), directory, resources);
+                collectFromDirectory(Paths.get(url.toURI()), directory, suffix, resources);
             } catch (URISyntaxException ignored) {
             }
             return;
@@ -137,7 +144,7 @@ public class ResourceManager {
                 while (entries.hasMoreElements()) {
                     final JarEntry entry = entries.nextElement();
                     final String name = entry.getName();
-                    if (!entry.isDirectory() && name.startsWith(directory + "/") && name.endsWith(".json")) {
+                    if (!entry.isDirectory() && name.startsWith(directory + "/") && hasSuffix(name, suffix)) {
                         resources.add(name);
                     }
                 }
@@ -159,5 +166,9 @@ public class ResourceManager {
             normalized = normalized.substring(0, normalized.length() - 1);
         }
         return normalized;
+    }
+
+    private boolean hasSuffix(final String value, final String suffix) {
+        return suffix.isEmpty() || value.toLowerCase().endsWith(suffix);
     }
 }

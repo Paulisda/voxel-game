@@ -1,14 +1,16 @@
 package de.paul.voxelgame.mob;
 
 import de.paul.voxelgame.GameConfig;
+import de.paul.voxelgame.audio.SoundEffectManager;
 import de.paul.voxelgame.engine.InputState;
 import de.paul.voxelgame.map.Block;
 import de.paul.voxelgame.map.World;
 import de.paul.voxelgame.math.HitBox;
 import de.paul.voxelgame.math.Vector3f;
-import de.paul.voxelgame.objects.BlockComponent;
+import de.paul.voxelgame.objects.BlockItemComponent;
 import de.paul.voxelgame.objects.GameObject;
-import de.paul.voxelgame.objects.ObjectKind;
+import de.paul.voxelgame.objects.ResourceId;
+import de.paul.voxelgame.objects.SpawnEntityComponent;
 
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
@@ -41,7 +43,9 @@ import static org.lwjgl.glfw.GLFW.glfwRawMouseMotionSupported;
 import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 
 public class Player extends Mob {
-    private static final double MOUSE_SENSITIVITY = 0.11;
+    private static final double DEFAULT_MOUSE_SENSITIVITY = 0.11;
+    private static final double MIN_MOUSE_SENSITIVITY = 0.02;
+    private static final double MAX_MOUSE_SENSITIVITY = 0.30;
     private static final double BREAK_REACH = 6.0;
     private static final double RAYCAST_STEP = 0.1;
     private static final double SURVIVAL_SPEED = 5.0;
@@ -52,8 +56,12 @@ public class Player extends Mob {
             GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3, GLFW_KEY_4, GLFW_KEY_5,
             GLFW_KEY_6, GLFW_KEY_7, GLFW_KEY_8, GLFW_KEY_9
     };
+    private static final ResourceId TAP_EFFECT = ResourceId.of("game:tap");
+    private static final ResourceId JUMP_EFFECT = ResourceId.of("game:jump");
+
     private final long window;
-    private final GameObject[] hotbarBlocks;
+    private final SoundEffectManager soundEffectManager;
+    private final GameObject[] hotbarItems;
     private int selectedHotbarSlot;
     private int healthPoints = 20;
     private int hungerPoints = 20;
@@ -62,11 +70,13 @@ public class Player extends Mob {
     private boolean hasLastMousePosition;
     private double lastMouseX;
     private double lastMouseY;
+    private double mouseSensitivity = DEFAULT_MOUSE_SENSITIVITY;
 
-    public Player(final long window, final World world, final GameObject[] hotbarBlocks) {
+    public Player(final long window, final World world, final GameObject[] hotbarItems, final SoundEffectManager soundEffectManager) {
         super(world);
         this.window = window;
-        this.hotbarBlocks = hotbarBlocks == null ? new GameObject[HOTBAR_KEYS.length] : hotbarBlocks.clone();
+        this.soundEffectManager = soundEffectManager;
+        this.hotbarItems = hotbarItems == null ? new GameObject[HOTBAR_KEYS.length] : hotbarItems.clone();
 
         movementSpeed = SURVIVAL_SPEED;
         gravityOn = GameConfig.GAMEMODE == 0;
@@ -125,8 +135,8 @@ public class Player extends Mob {
         lastMouseX = mouseX[0];
         lastMouseY = mouseY[0];
 
-        setYaw(getYaw() - dx * MOUSE_SENSITIVITY);
-        setPitch(getPitch() - dy * MOUSE_SENSITIVITY);
+        setYaw(getYaw() - dx * mouseSensitivity);
+        setPitch(getPitch() - dy * mouseSensitivity);
     }
 
     private void handleBlockActions(final InputState input) {
@@ -134,7 +144,7 @@ public class Player extends Mob {
             destroyBlockInView();
         }
         if (input.isMousePressed(GLFW_MOUSE_BUTTON_RIGHT)) {
-            placeBlockInView(getSelectedHotbarBlock());
+            useItemInView(getSelectedHotbarItem());
         }
     }
 
@@ -144,6 +154,14 @@ public class Player extends Mob {
                 selectedHotbarSlot = i;
             }
         }
+    }
+
+    public void scrollHotbar(final double scrollY) {
+        final int steps = (int) Math.signum(scrollY) * (int) Math.ceil(Math.abs(scrollY));
+        if (steps == 0 || hotbarItems.length == 0) {
+            return;
+        }
+        selectedHotbarSlot = Math.floorMod(selectedHotbarSlot - steps, hotbarItems.length);
     }
 
     private Vector3f calculateMovementVector(final InputState input, final double deltaSeconds) {
@@ -178,6 +196,7 @@ public class Player extends Mob {
             if (input.isKeyDown(GLFW_KEY_SPACE) && isOnGround) {
                 fallVelocity = jumpVelocity;
                 isOnGround = false;
+                soundEffectManager.play(JUMP_EFFECT);
             }
             fallVelocity += gravity * (float) deltaSeconds;
             if (fallVelocity < maxFallSpeed) {
@@ -207,13 +226,28 @@ public class Player extends Mob {
     public void destroyBlockInView() {
         final RaycastHit hit = raycastSolidBlock(BREAK_REACH, RAYCAST_STEP);
         if (hit != null) {
-            world.removeBlock(hit.hitX, hit.hitY, hit.hitZ);
+            if (world.removeBlock(hit.hitX, hit.hitY, hit.hitZ)) {
+                soundEffectManager.play(TAP_EFFECT);
+            }
         }
     }
 
-    public void placeBlockInView(final GameObject type) {
+    public void useItemInView(final GameObject item) {
+        if (item == null) {
+            return;
+        }
+        if (item.has(BlockItemComponent.class)) {
+            placeBlockItemInView(item.get(BlockItemComponent.class));
+            return;
+        }
+        if (item.has(SpawnEntityComponent.class)) {
+            return;
+        }
+    }
+
+    private void placeBlockItemInView(final BlockItemComponent blockItem) {
         final RaycastHit hit = raycastSolidBlock(BREAK_REACH, RAYCAST_STEP);
-        if (hit == null || !hit.hasPlacementCandidate || !isPlaceableBlock(type)) {
+        if (hit == null || !hit.hasPlacementCandidate) {
             return;
         }
 
@@ -226,11 +260,9 @@ public class Player extends Mob {
             return;
         }
 
-        world.placeBlock(hit.placeX, hit.placeY, hit.placeZ, type);
-    }
-
-    private boolean isPlaceableBlock(final GameObject type) {
-        return type != null && type.kind() == ObjectKind.BLOCK && type.has(BlockComponent.class);
+        if (world.placeBlock(hit.placeX, hit.placeY, hit.placeZ, blockItem.blockId())) {
+            soundEffectManager.play(TAP_EFFECT);
+        }
     }
 
     private RaycastHit raycastSolidBlock(final double reach, final double step) {
@@ -299,15 +331,34 @@ public class Player extends Mob {
     }
 
     public int getHotbarSize() {
-        return hotbarBlocks.length;
+        return hotbarItems.length;
     }
 
-    public GameObject getHotbarBlock(final int slotIndex) {
-        if (slotIndex < 0 || slotIndex >= hotbarBlocks.length) {
-            return firstHotbarBlock();
+    public GameObject getHotbarItem(final int slotIndex) {
+        if (slotIndex < 0 || slotIndex >= hotbarItems.length) {
+            return firstHotbarItem();
         }
-        final GameObject type = hotbarBlocks[slotIndex];
-        return type == null ? firstHotbarBlock() : type;
+        final GameObject item = hotbarItems[slotIndex];
+        return item == null ? firstHotbarItem() : item;
+    }
+
+    public void setHotbarItem(final int slotIndex, final GameObject item) {
+        if (slotIndex < 0 || slotIndex >= hotbarItems.length || item == null) {
+            return;
+        }
+        hotbarItems[slotIndex] = item;
+    }
+
+    public double getMouseSensitivity() {
+        return mouseSensitivity;
+    }
+
+    public void setMouseSensitivity(final double mouseSensitivity) {
+        this.mouseSensitivity = Math.max(MIN_MOUSE_SENSITIVITY, Math.min(MAX_MOUSE_SENSITIVITY, mouseSensitivity));
+    }
+
+    public void adjustMouseSensitivity(final double delta) {
+        setMouseSensitivity(mouseSensitivity + delta);
     }
 
     public int getHealthPoints() {
@@ -338,14 +389,14 @@ public class Player extends Mob {
         return getPitch();
     }
 
-    private GameObject getSelectedHotbarBlock() {
-        return getHotbarBlock(selectedHotbarSlot);
+    private GameObject getSelectedHotbarItem() {
+        return getHotbarItem(selectedHotbarSlot);
     }
 
-    private GameObject firstHotbarBlock() {
-        for (final GameObject block : hotbarBlocks) {
-            if (block != null) {
-                return block;
+    private GameObject firstHotbarItem() {
+        for (final GameObject item : hotbarItems) {
+            if (item != null) {
+                return item;
             }
         }
         return null;
