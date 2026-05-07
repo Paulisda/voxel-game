@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:calcite",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "calcite"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "calcite"
-                                                               ],
-                                                      "top":  [
-                                                                  "calcite"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "calcite"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#eeeeee",
-                                                      "top":  "#eeeeee",
-                                                      "bottom":  "#eeeeee",
-                                                      "default":  "#eeeeee"
-                                                  }
-                                 }
-                   }
+  "id": "game:calcite",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "calcite"
+      ],
+      "textures": {
+        "side": [
+          "calcite"
+        ],
+        "top": [
+          "calcite"
+        ],
+        "bottom": [
+          "calcite"
+        ]
+      },
+      "fallback": {
+        "side": "#eeeeee",
+        "top": "#eeeeee",
+        "bottom": "#eeeeee",
+        "default": "#eeeeee"
+      }
+    }
+  }
 }

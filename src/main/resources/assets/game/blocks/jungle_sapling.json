@@ -1,44 +1,44 @@
 ﻿{
-    "id":  "game:jungle_sapling",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0,
-                                     "resistance":  0,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "jungle_sapling",
-                                                     "jungle_sapling1",
-                                                     "jungle_sapling2"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "jungle_sapling",
-                                                                   "jungle_sapling1",
-                                                                   "jungle_sapling2"
-                                                               ],
-                                                      "top":  [
-                                                                  "jungle_sapling",
-                                                                  "jungle_sapling1",
-                                                                  "jungle_sapling2"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "jungle_sapling",
-                                                                     "jungle_sapling1",
-                                                                     "jungle_sapling2"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#4f8f35",
-                                                      "top":  "#4f8f35",
-                                                      "bottom":  "#4f8f35",
-                                                      "default":  "#4f8f35"
-                                                  }
-                                 }
-                   }
+  "id": "game:jungle_sapling",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0,
+      "resistance": 0,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "jungle_sapling",
+        "jungle_sapling1",
+        "jungle_sapling2"
+      ],
+      "textures": {
+        "side": [
+          "jungle_sapling",
+          "jungle_sapling1",
+          "jungle_sapling2"
+        ],
+        "top": [
+          "jungle_sapling",
+          "jungle_sapling1",
+          "jungle_sapling2"
+        ],
+        "bottom": [
+          "jungle_sapling",
+          "jungle_sapling1",
+          "jungle_sapling2"
+        ]
+      },
+      "fallback": {
+        "side": "#4f8f35",
+        "top": "#4f8f35",
+        "bottom": "#4f8f35",
+        "default": "#4f8f35"
+      }
+    }
+  }
 }

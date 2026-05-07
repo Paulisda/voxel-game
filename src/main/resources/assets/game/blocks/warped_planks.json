@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:warped_planks",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  2,
-                                     "resistance":  3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "warped_planks"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "warped_planks"
-                                                               ],
-                                                      "top":  [
-                                                                  "warped_planks"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "warped_planks"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#8b5a2b",
-                                                      "top":  "#8b5a2b",
-                                                      "bottom":  "#8b5a2b",
-                                                      "default":  "#8b5a2b"
-                                                  }
-                                 }
-                   }
+  "id": "game:warped_planks",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 2,
+      "resistance": 3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "warped_planks"
+      ],
+      "textures": {
+        "side": [
+          "warped_planks"
+        ],
+        "top": [
+          "warped_planks"
+        ],
+        "bottom": [
+          "warped_planks"
+        ]
+      },
+      "fallback": {
+        "side": "#8b5a2b",
+        "top": "#8b5a2b",
+        "bottom": "#8b5a2b",
+        "default": "#8b5a2b"
+      }
+    }
+  }
 }

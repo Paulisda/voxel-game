@@ -1,64 +1,64 @@
 ﻿{
-    "id":  "game:fire",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0.5,
-                                     "resistance":  0.5,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "fire0",
-                                                     "fire1",
-                                                     "fire2",
-                                                     "fire3",
-                                                     "fire4",
-                                                     "fire5",
-                                                     "fire6",
-                                                     "fire7"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "fire0",
-                                                                   "fire1",
-                                                                   "fire2",
-                                                                   "fire3",
-                                                                   "fire4",
-                                                                   "fire5",
-                                                                   "fire6",
-                                                                   "fire7"
-                                                               ],
-                                                      "top":  [
-                                                                  "fire0",
-                                                                  "fire1",
-                                                                  "fire2",
-                                                                  "fire3",
-                                                                  "fire4",
-                                                                  "fire5",
-                                                                  "fire6",
-                                                                  "fire7"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "fire0",
-                                                                     "fire1",
-                                                                     "fire2",
-                                                                     "fire3",
-                                                                     "fire4",
-                                                                     "fire5",
-                                                                     "fire6",
-                                                                     "fire7"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#ff6d00",
-                                                      "top":  "#ff6d00",
-                                                      "bottom":  "#ff6d00",
-                                                      "default":  "#ff6d00"
-                                                  }
-                                 }
-                   }
+  "id": "game:fire",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0.5,
+      "resistance": 0.5,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "fire0",
+        "fire1",
+        "fire2",
+        "fire3",
+        "fire4",
+        "fire5",
+        "fire6",
+        "fire7"
+      ],
+      "textures": {
+        "side": [
+          "fire0",
+          "fire1",
+          "fire2",
+          "fire3",
+          "fire4",
+          "fire5",
+          "fire6",
+          "fire7"
+        ],
+        "top": [
+          "fire0",
+          "fire1",
+          "fire2",
+          "fire3",
+          "fire4",
+          "fire5",
+          "fire6",
+          "fire7"
+        ],
+        "bottom": [
+          "fire0",
+          "fire1",
+          "fire2",
+          "fire3",
+          "fire4",
+          "fire5",
+          "fire6",
+          "fire7"
+        ]
+      },
+      "fallback": {
+        "side": "#ff6d00",
+        "top": "#ff6d00",
+        "bottom": "#ff6d00",
+        "default": "#ff6d00"
+      }
+    }
+  }
 }

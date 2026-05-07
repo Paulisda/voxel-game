@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:warped_stem",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0,
-                                     "resistance":  0,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "warped_stem_top"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "warped_stem_top"
-                                                               ],
-                                                      "top":  [
-                                                                  "warped_stem_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "warped_stem_top"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#2f8f83",
-                                                      "top":  "#2f8f83",
-                                                      "bottom":  "#2f8f83",
-                                                      "default":  "#2f8f83"
-                                                  }
-                                 }
-                   }
+  "id": "game:warped_stem",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0,
+      "resistance": 0,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "warped_stem_top"
+      ],
+      "textures": {
+        "side": [
+          "warped_stem_top"
+        ],
+        "top": [
+          "warped_stem_top"
+        ],
+        "bottom": [
+          "warped_stem_top"
+        ]
+      },
+      "fallback": {
+        "side": "#2f8f83",
+        "top": "#2f8f83",
+        "bottom": "#2f8f83",
+        "default": "#2f8f83"
+      }
+    }
+  }
 }

@@ -5,7 +5,11 @@
       "max": 64
     },
     "model": {
-      "texture": ["compass_parts", "compass_parts1", "compass_parts2"],
+      "texture": [
+        "compass_parts",
+        "compass_parts1",
+        "compass_parts2"
+      ],
       "fallback": {
         "default": "#f0e6d2"
       }

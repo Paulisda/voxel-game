@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:cauldron_lava",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  3.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "cauldron_side"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "cauldron_side"
-                                                               ],
-                                                      "top":  [
-                                                                  "cauldron_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "cauldron_bottom"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#ff6d00",
-                                                      "top":  "#ff6d00",
-                                                      "bottom":  "#ff6d00",
-                                                      "default":  "#ff6d00"
-                                                  }
-                                 }
-                   }
+  "id": "game:cauldron_lava",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 3.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "cauldron_side"
+      ],
+      "textures": {
+        "side": [
+          "cauldron_side"
+        ],
+        "top": [
+          "cauldron_top"
+        ],
+        "bottom": [
+          "cauldron_bottom"
+        ]
+      },
+      "fallback": {
+        "side": "#ff6d00",
+        "top": "#ff6d00",
+        "bottom": "#ff6d00",
+        "default": "#ff6d00"
+      }
+    }
+  }
 }

@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:pink_wool",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.8,
-                                     "resistance":  0.8,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "pink_wool"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "pink_wool"
-                                                               ],
-                                                      "top":  [
-                                                                  "pink_wool"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "pink_wool"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#f38baa",
-                                                      "top":  "#f38baa",
-                                                      "bottom":  "#f38baa",
-                                                      "default":  "#f38baa"
-                                                  }
-                                 }
-                   }
+  "id": "game:pink_wool",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.8,
+      "resistance": 0.8,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "pink_wool"
+      ],
+      "textures": {
+        "side": [
+          "pink_wool"
+        ],
+        "top": [
+          "pink_wool"
+        ],
+        "bottom": [
+          "pink_wool"
+        ]
+      },
+      "fallback": {
+        "side": "#f38baa",
+        "top": "#f38baa",
+        "bottom": "#f38baa",
+        "default": "#f38baa"
+      }
+    }
+  }
 }

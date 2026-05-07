@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:cobbled_deepslate",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  3,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "cobbled_deepslate"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "cobbled_deepslate"
-                                                               ],
-                                                      "top":  [
-                                                                  "cobbled_deepslate"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "cobbled_deepslate"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#25292f",
-                                                      "top":  "#25292f",
-                                                      "bottom":  "#25292f",
-                                                      "default":  "#25292f"
-                                                  }
-                                 }
-                   }
+  "id": "game:cobbled_deepslate",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 3,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "cobbled_deepslate"
+      ],
+      "textures": {
+        "side": [
+          "cobbled_deepslate"
+        ],
+        "top": [
+          "cobbled_deepslate"
+        ],
+        "bottom": [
+          "cobbled_deepslate"
+        ]
+      },
+      "fallback": {
+        "side": "#25292f",
+        "top": "#25292f",
+        "bottom": "#25292f",
+        "default": "#25292f"
+      }
+    }
+  }
 }

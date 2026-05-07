@@ -5,7 +5,10 @@
       "max": 64
     },
     "model": {
-      "texture": ["firework_star", "firework_star_overlay"],
+      "texture": [
+        "firework_star",
+        "firework_star_overlay"
+      ],
       "fallback": {
         "default": "#808080"
       }

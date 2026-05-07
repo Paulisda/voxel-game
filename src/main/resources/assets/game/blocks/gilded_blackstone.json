@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:gilded_blackstone",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "gilded_blackstone"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "gilded_blackstone"
-                                                               ],
-                                                      "top":  [
-                                                                  "gilded_blackstone"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "gilded_blackstone"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#25292f",
-                                                      "top":  "#25292f",
-                                                      "bottom":  "#25292f",
-                                                      "default":  "#25292f"
-                                                  }
-                                 }
-                   }
+  "id": "game:gilded_blackstone",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "gilded_blackstone"
+      ],
+      "textures": {
+        "side": [
+          "gilded_blackstone"
+        ],
+        "top": [
+          "gilded_blackstone"
+        ],
+        "bottom": [
+          "gilded_blackstone"
+        ]
+      },
+      "fallback": {
+        "side": "#25292f",
+        "top": "#25292f",
+        "bottom": "#25292f",
+        "default": "#25292f"
+      }
+    }
+  }
 }

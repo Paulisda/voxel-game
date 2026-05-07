@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:quartz_block",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "quartz_block_side"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "quartz_block_side"
-                                                               ],
-                                                      "top":  [
-                                                                  "quartz_block_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "quartz_block_bottom"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#eeeeee",
-                                                      "top":  "#eeeeee",
-                                                      "bottom":  "#eeeeee",
-                                                      "default":  "#eeeeee"
-                                                  }
-                                 }
-                   }
+  "id": "game:quartz_block",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "quartz_block_side"
+      ],
+      "textures": {
+        "side": [
+          "quartz_block_side"
+        ],
+        "top": [
+          "quartz_block_top"
+        ],
+        "bottom": [
+          "quartz_block_bottom"
+        ]
+      },
+      "fallback": {
+        "side": "#eeeeee",
+        "top": "#eeeeee",
+        "bottom": "#eeeeee",
+        "default": "#eeeeee"
+      }
+    }
+  }
 }

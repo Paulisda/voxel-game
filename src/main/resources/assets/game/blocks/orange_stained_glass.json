@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:orange_stained_glass",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.3,
-                                     "resistance":  0.3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "orange_stained_glass"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "orange_stained_glass"
-                                                               ],
-                                                      "top":  [
-                                                                  "orange_stained_glass"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "orange_stained_glass"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#f9801d",
-                                                      "top":  "#f9801d",
-                                                      "bottom":  "#f9801d",
-                                                      "default":  "#f9801d"
-                                                  }
-                                 }
-                   }
+  "id": "game:orange_stained_glass",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.3,
+      "resistance": 0.3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "orange_stained_glass"
+      ],
+      "textures": {
+        "side": [
+          "orange_stained_glass"
+        ],
+        "top": [
+          "orange_stained_glass"
+        ],
+        "bottom": [
+          "orange_stained_glass"
+        ]
+      },
+      "fallback": {
+        "side": "#f9801d",
+        "top": "#f9801d",
+        "bottom": "#f9801d",
+        "default": "#f9801d"
+      }
+    }
+  }
 }

@@ -1,44 +1,44 @@
 ﻿{
-    "id":  "game:glass",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.3,
-                                     "resistance":  0.3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "glass",
-                                                     "glass1",
-                                                     "glass2"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "glass",
-                                                                   "glass1",
-                                                                   "glass2"
-                                                               ],
-                                                      "top":  [
-                                                                  "glass",
-                                                                  "glass1",
-                                                                  "glass2"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "glass",
-                                                                     "glass1",
-                                                                     "glass2"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#d6f7ff88",
-                                                      "top":  "#d6f7ff88",
-                                                      "bottom":  "#d6f7ff88",
-                                                      "default":  "#d6f7ff88"
-                                                  }
-                                 }
-                   }
+  "id": "game:glass",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.3,
+      "resistance": 0.3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "glass",
+        "glass1",
+        "glass2"
+      ],
+      "textures": {
+        "side": [
+          "glass",
+          "glass1",
+          "glass2"
+        ],
+        "top": [
+          "glass",
+          "glass1",
+          "glass2"
+        ],
+        "bottom": [
+          "glass",
+          "glass1",
+          "glass2"
+        ]
+      },
+      "fallback": {
+        "side": "#d6f7ff88",
+        "top": "#d6f7ff88",
+        "bottom": "#d6f7ff88",
+        "default": "#d6f7ff88"
+      }
+    }
+  }
 }

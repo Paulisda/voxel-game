@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:warped_button",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0.5,
-                                     "resistance":  0.5,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "warped_planks"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "warped_planks"
-                                                               ],
-                                                      "top":  [
-                                                                  "warped_planks"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "warped_planks"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#2f8f83",
-                                                      "top":  "#2f8f83",
-                                                      "bottom":  "#2f8f83",
-                                                      "default":  "#2f8f83"
-                                                  }
-                                 }
-                   }
+  "id": "game:warped_button",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0.5,
+      "resistance": 0.5,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "warped_planks"
+      ],
+      "textures": {
+        "side": [
+          "warped_planks"
+        ],
+        "top": [
+          "warped_planks"
+        ],
+        "bottom": [
+          "warped_planks"
+        ]
+      },
+      "fallback": {
+        "side": "#2f8f83",
+        "top": "#2f8f83",
+        "bottom": "#2f8f83",
+        "default": "#2f8f83"
+      }
+    }
+  }
 }

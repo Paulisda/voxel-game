@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:moss_block",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "moss_block"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "moss_block"
-                                                               ],
-                                                      "top":  [
-                                                                  "moss_block"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "moss_block"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#4f8f35",
-                                                      "top":  "#4f8f35",
-                                                      "bottom":  "#4f8f35",
-                                                      "default":  "#4f8f35"
-                                                  }
-                                 }
-                   }
+  "id": "game:moss_block",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "moss_block"
+      ],
+      "textures": {
+        "side": [
+          "moss_block"
+        ],
+        "top": [
+          "moss_block"
+        ],
+        "bottom": [
+          "moss_block"
+        ]
+      },
+      "fallback": {
+        "side": "#4f8f35",
+        "top": "#4f8f35",
+        "bottom": "#4f8f35",
+        "default": "#4f8f35"
+      }
+    }
+  }
 }

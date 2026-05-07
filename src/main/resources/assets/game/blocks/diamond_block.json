@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:diamond_block",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  3,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "diamond_block"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "diamond_block"
-                                                               ],
-                                                      "top":  [
-                                                                  "diamond_block"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "diamond_block"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#8eeeff",
-                                                      "top":  "#8eeeff",
-                                                      "bottom":  "#8eeeff",
-                                                      "default":  "#8eeeff"
-                                                  }
-                                 }
-                   }
+  "id": "game:diamond_block",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 3,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "diamond_block"
+      ],
+      "textures": {
+        "side": [
+          "diamond_block"
+        ],
+        "top": [
+          "diamond_block"
+        ],
+        "bottom": [
+          "diamond_block"
+        ]
+      },
+      "fallback": {
+        "side": "#8eeeff",
+        "top": "#8eeeff",
+        "bottom": "#8eeeff",
+        "default": "#8eeeff"
+      }
+    }
+  }
 }

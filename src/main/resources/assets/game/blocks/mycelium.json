@@ -1,48 +1,48 @@
 ﻿{
-    "id":  "game:mycelium",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.5,
-                                     "resistance":  0.5,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "mycelium_side",
-                                                     "mycelium_side1"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "mycelium_side",
-                                                                   "mycelium_side1"
-                                                               ],
-                                                      "top":  [
-                                                                  "mycelium_top",
-                                                                  "mycelium_top1",
-                                                                  "mycelium_top2",
-                                                                  "mycelium_top3",
-                                                                  "mycelium_top4",
-                                                                  "mycelium_top5"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "mycelium_top",
-                                                                     "mycelium_top1",
-                                                                     "mycelium_top2",
-                                                                     "mycelium_top3",
-                                                                     "mycelium_top4",
-                                                                     "mycelium_top5"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:mycelium",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.5,
+      "resistance": 0.5,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "mycelium_side",
+        "mycelium_side1"
+      ],
+      "textures": {
+        "side": [
+          "mycelium_side",
+          "mycelium_side1"
+        ],
+        "top": [
+          "mycelium_top",
+          "mycelium_top1",
+          "mycelium_top2",
+          "mycelium_top3",
+          "mycelium_top4",
+          "mycelium_top5"
+        ],
+        "bottom": [
+          "mycelium_top",
+          "mycelium_top1",
+          "mycelium_top2",
+          "mycelium_top3",
+          "mycelium_top4",
+          "mycelium_top5"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

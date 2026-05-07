@@ -1,52 +1,52 @@
 ﻿{
-    "id":  "game:loom",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  2,
-                                     "resistance":  3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "stone",
-                                                     "stone0",
-                                                     "stone1",
-                                                     "stone2",
-                                                     "stone3"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "stone",
-                                                                   "stone0",
-                                                                   "stone1",
-                                                                   "stone2",
-                                                                   "stone3"
-                                                               ],
-                                                      "top":  [
-                                                                  "stone",
-                                                                  "stone0",
-                                                                  "stone1",
-                                                                  "stone2",
-                                                                  "stone3"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "stone",
-                                                                     "stone0",
-                                                                     "stone1",
-                                                                     "stone2",
-                                                                     "stone3"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:loom",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 2,
+      "resistance": 3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "stone",
+        "stone0",
+        "stone1",
+        "stone2",
+        "stone3"
+      ],
+      "textures": {
+        "side": [
+          "stone",
+          "stone0",
+          "stone1",
+          "stone2",
+          "stone3"
+        ],
+        "top": [
+          "stone",
+          "stone0",
+          "stone1",
+          "stone2",
+          "stone3"
+        ],
+        "bottom": [
+          "stone",
+          "stone0",
+          "stone1",
+          "stone2",
+          "stone3"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

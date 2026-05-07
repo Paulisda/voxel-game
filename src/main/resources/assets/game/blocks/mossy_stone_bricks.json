@@ -1,44 +1,44 @@
 ﻿{
-    "id":  "game:mossy_stone_bricks",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "mossy_stone_bricks",
-                                                     "mossy_stone_bricks0",
-                                                     "mossy_stone_bricks1"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "mossy_stone_bricks",
-                                                                   "mossy_stone_bricks0",
-                                                                   "mossy_stone_bricks1"
-                                                               ],
-                                                      "top":  [
-                                                                  "mossy_stone_bricks",
-                                                                  "mossy_stone_bricks0",
-                                                                  "mossy_stone_bricks1"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "mossy_stone_bricks",
-                                                                     "mossy_stone_bricks0",
-                                                                     "mossy_stone_bricks1"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#4f8f35",
-                                                      "top":  "#4f8f35",
-                                                      "bottom":  "#4f8f35",
-                                                      "default":  "#4f8f35"
-                                                  }
-                                 }
-                   }
+  "id": "game:mossy_stone_bricks",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "mossy_stone_bricks",
+        "mossy_stone_bricks0",
+        "mossy_stone_bricks1"
+      ],
+      "textures": {
+        "side": [
+          "mossy_stone_bricks",
+          "mossy_stone_bricks0",
+          "mossy_stone_bricks1"
+        ],
+        "top": [
+          "mossy_stone_bricks",
+          "mossy_stone_bricks0",
+          "mossy_stone_bricks1"
+        ],
+        "bottom": [
+          "mossy_stone_bricks",
+          "mossy_stone_bricks0",
+          "mossy_stone_bricks1"
+        ]
+      },
+      "fallback": {
+        "side": "#4f8f35",
+        "top": "#4f8f35",
+        "bottom": "#4f8f35",
+        "default": "#4f8f35"
+      }
+    }
+  }
 }

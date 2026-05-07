@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:grindstone",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  3.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "grindstone_side"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "grindstone_side"
-                                                               ],
-                                                      "top":  [
-                                                                  "grindstone_side"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "grindstone_side"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:grindstone",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 3.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "grindstone_side"
+      ],
+      "textures": {
+        "side": [
+          "grindstone_side"
+        ],
+        "top": [
+          "grindstone_side"
+        ],
+        "bottom": [
+          "grindstone_side"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

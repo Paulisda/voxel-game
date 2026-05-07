@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:copper_block",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  3,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "copper_block"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "copper_block"
-                                                               ],
-                                                      "top":  [
-                                                                  "copper_block"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "copper_block"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#b66b45",
-                                                      "top":  "#b66b45",
-                                                      "bottom":  "#b66b45",
-                                                      "default":  "#b66b45"
-                                                  }
-                                 }
-                   }
+  "id": "game:copper_block",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 3,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "copper_block"
+      ],
+      "textures": {
+        "side": [
+          "copper_block"
+        ],
+        "top": [
+          "copper_block"
+        ],
+        "bottom": [
+          "copper_block"
+        ]
+      },
+      "fallback": {
+        "side": "#b66b45",
+        "top": "#b66b45",
+        "bottom": "#b66b45",
+        "default": "#b66b45"
+      }
+    }
+  }
 }

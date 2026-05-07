@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:crafting_table",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  2,
-                                     "resistance":  3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "crafting_table_side"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "crafting_table_side"
-                                                               ],
-                                                      "top":  [
-                                                                  "crafting_table_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "crafting_table_side"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#8b5a2b",
-                                                      "top":  "#8b5a2b",
-                                                      "bottom":  "#8b5a2b",
-                                                      "default":  "#8b5a2b"
-                                                  }
-                                 }
-                   }
+  "id": "game:crafting_table",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 2,
+      "resistance": 3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "crafting_table_side"
+      ],
+      "textures": {
+        "side": [
+          "crafting_table_side"
+        ],
+        "top": [
+          "crafting_table_top"
+        ],
+        "bottom": [
+          "crafting_table_side"
+        ]
+      },
+      "fallback": {
+        "side": "#8b5a2b",
+        "top": "#8b5a2b",
+        "bottom": "#8b5a2b",
+        "default": "#8b5a2b"
+      }
+    }
+  }
 }

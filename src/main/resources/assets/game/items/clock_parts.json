@@ -5,7 +5,10 @@
       "max": 64
     },
     "model": {
-      "texture": ["clock_parts0", "clock_parts1"],
+      "texture": [
+        "clock_parts0",
+        "clock_parts1"
+      ],
       "fallback": {
         "default": "#f0e6d2"
       }

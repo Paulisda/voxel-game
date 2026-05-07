@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:redstone_wire",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0.5,
-                                     "resistance":  0.5,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "redstone_dust"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "redstone_dust"
-                                                               ],
-                                                      "top":  [
-                                                                  "redstone_dust"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "redstone_dust"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#b41818",
-                                                      "top":  "#b41818",
-                                                      "bottom":  "#b41818",
-                                                      "default":  "#b41818"
-                                                  }
-                                 }
-                   }
+  "id": "game:redstone_wire",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0.5,
+      "resistance": 0.5,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "redstone_dust"
+      ],
+      "textures": {
+        "side": [
+          "redstone_dust"
+        ],
+        "top": [
+          "redstone_dust"
+        ],
+        "bottom": [
+          "redstone_dust"
+        ]
+      },
+      "fallback": {
+        "side": "#b41818",
+        "top": "#b41818",
+        "bottom": "#b41818",
+        "default": "#b41818"
+      }
+    }
+  }
 }

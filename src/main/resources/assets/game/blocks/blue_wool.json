@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:blue_wool",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.8,
-                                     "resistance":  0.8,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "blue_wool"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "blue_wool"
-                                                               ],
-                                                      "top":  [
-                                                                  "blue_wool"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "blue_wool"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#3c44aa",
-                                                      "top":  "#3c44aa",
-                                                      "bottom":  "#3c44aa",
-                                                      "default":  "#3c44aa"
-                                                  }
-                                 }
-                   }
+  "id": "game:blue_wool",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.8,
+      "resistance": 0.8,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "blue_wool"
+      ],
+      "textures": {
+        "side": [
+          "blue_wool"
+        ],
+        "top": [
+          "blue_wool"
+        ],
+        "bottom": [
+          "blue_wool"
+        ]
+      },
+      "fallback": {
+        "side": "#3c44aa",
+        "top": "#3c44aa",
+        "bottom": "#3c44aa",
+        "default": "#3c44aa"
+      }
+    }
+  }
 }

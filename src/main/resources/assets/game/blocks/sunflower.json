@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:sunflower",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0,
-                                     "resistance":  0,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "sunflower_front"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "sunflower_front"
-                                                               ],
-                                                      "top":  [
-                                                                  "sunflower_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "sunflower_bottom"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:sunflower",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0,
+      "resistance": 0,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "sunflower_front"
+      ],
+      "textures": {
+        "side": [
+          "sunflower_front"
+        ],
+        "top": [
+          "sunflower_top"
+        ],
+        "bottom": [
+          "sunflower_bottom"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

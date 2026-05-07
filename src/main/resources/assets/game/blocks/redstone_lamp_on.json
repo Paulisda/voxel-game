@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:redstone_lamp_on",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "redstone_lamp_on"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "redstone_lamp_on"
-                                                               ],
-                                                      "top":  [
-                                                                  "redstone_lamp_on"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "redstone_lamp_on"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#b41818",
-                                                      "top":  "#b41818",
-                                                      "bottom":  "#b41818",
-                                                      "default":  "#b41818"
-                                                  }
-                                 }
-                   }
+  "id": "game:redstone_lamp_on",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "redstone_lamp_on"
+      ],
+      "textures": {
+        "side": [
+          "redstone_lamp_on"
+        ],
+        "top": [
+          "redstone_lamp_on"
+        ],
+        "bottom": [
+          "redstone_lamp_on"
+        ]
+      },
+      "fallback": {
+        "side": "#b41818",
+        "top": "#b41818",
+        "bottom": "#b41818",
+        "default": "#b41818"
+      }
+    }
+  }
 }

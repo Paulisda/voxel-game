@@ -5,7 +5,11 @@
       "max": 64
     },
     "model": {
-      "texture": ["potion", "potion1", "potion_overlay"],
+      "texture": [
+        "potion",
+        "potion1",
+        "potion_overlay"
+      ],
       "fallback": {
         "default": "#808080"
       }

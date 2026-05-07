@@ -1,40 +1,40 @@
 ﻿{
-    "id":  "game:blue_orchid",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0,
-                                     "resistance":  0,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "blue_orchid",
-                                                     "blue_orchid1"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "blue_orchid",
-                                                                   "blue_orchid1"
-                                                               ],
-                                                      "top":  [
-                                                                  "blue_orchid",
-                                                                  "blue_orchid1"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "blue_orchid",
-                                                                     "blue_orchid1"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#3c44aa",
-                                                      "top":  "#3c44aa",
-                                                      "bottom":  "#3c44aa",
-                                                      "default":  "#3c44aa"
-                                                  }
-                                 }
-                   }
+  "id": "game:blue_orchid",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0,
+      "resistance": 0,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "blue_orchid",
+        "blue_orchid1"
+      ],
+      "textures": {
+        "side": [
+          "blue_orchid",
+          "blue_orchid1"
+        ],
+        "top": [
+          "blue_orchid",
+          "blue_orchid1"
+        ],
+        "bottom": [
+          "blue_orchid",
+          "blue_orchid1"
+        ]
+      },
+      "fallback": {
+        "side": "#3c44aa",
+        "top": "#3c44aa",
+        "bottom": "#3c44aa",
+        "default": "#3c44aa"
+      }
+    }
+  }
 }

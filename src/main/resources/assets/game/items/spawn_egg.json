@@ -5,7 +5,10 @@
       "max": 64
     },
     "model": {
-      "texture": ["spawn_egg", "spawn_egg_overlay"],
+      "texture": [
+        "spawn_egg",
+        "spawn_egg_overlay"
+      ],
       "fallback": {
         "default": "#ffffff"
       }

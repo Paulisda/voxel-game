@@ -5,7 +5,11 @@
       "max": 64
     },
     "model": {
-      "texture": ["crossbow_pulling_0", "crossbow_pulling_1", "crossbow_pulling_2"],
+      "texture": [
+        "crossbow_pulling_0",
+        "crossbow_pulling_1",
+        "crossbow_pulling_2"
+      ],
       "fallback": {
         "default": "#808080"
       }

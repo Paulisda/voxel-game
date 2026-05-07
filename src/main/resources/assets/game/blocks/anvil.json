@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:anvil",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  5,
-                                     "resistance":  1200,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "anvil_top"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "anvil_top"
-                                                               ],
-                                                      "top":  [
-                                                                  "anvil_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "anvil_top"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:anvil",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 5,
+      "resistance": 1200,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "anvil_top"
+      ],
+      "textures": {
+        "side": [
+          "anvil_top"
+        ],
+        "top": [
+          "anvil_top"
+        ],
+        "bottom": [
+          "anvil_top"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

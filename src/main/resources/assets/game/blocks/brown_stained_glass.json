@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:brown_stained_glass",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.3,
-                                     "resistance":  0.3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "brown_stained_glass"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "brown_stained_glass"
-                                                               ],
-                                                      "top":  [
-                                                                  "brown_stained_glass"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "brown_stained_glass"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#835432",
-                                                      "top":  "#835432",
-                                                      "bottom":  "#835432",
-                                                      "default":  "#835432"
-                                                  }
-                                 }
-                   }
+  "id": "game:brown_stained_glass",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.3,
+      "resistance": 0.3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "brown_stained_glass"
+      ],
+      "textures": {
+        "side": [
+          "brown_stained_glass"
+        ],
+        "top": [
+          "brown_stained_glass"
+        ],
+        "bottom": [
+          "brown_stained_glass"
+        ]
+      },
+      "fallback": {
+        "side": "#835432",
+        "top": "#835432",
+        "bottom": "#835432",
+        "default": "#835432"
+      }
+    }
+  }
 }

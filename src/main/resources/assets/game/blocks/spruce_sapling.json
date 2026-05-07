@@ -1,40 +1,40 @@
 ﻿{
-    "id":  "game:spruce_sapling",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0,
-                                     "resistance":  0,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "spruce_sapling",
-                                                     "spruce_sapling1"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "spruce_sapling",
-                                                                   "spruce_sapling1"
-                                                               ],
-                                                      "top":  [
-                                                                  "spruce_sapling",
-                                                                  "spruce_sapling1"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "spruce_sapling",
-                                                                     "spruce_sapling1"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#4f8f35",
-                                                      "top":  "#4f8f35",
-                                                      "bottom":  "#4f8f35",
-                                                      "default":  "#4f8f35"
-                                                  }
-                                 }
-                   }
+  "id": "game:spruce_sapling",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0,
+      "resistance": 0,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "spruce_sapling",
+        "spruce_sapling1"
+      ],
+      "textures": {
+        "side": [
+          "spruce_sapling",
+          "spruce_sapling1"
+        ],
+        "top": [
+          "spruce_sapling",
+          "spruce_sapling1"
+        ],
+        "bottom": [
+          "spruce_sapling",
+          "spruce_sapling1"
+        ]
+      },
+      "fallback": {
+        "side": "#4f8f35",
+        "top": "#4f8f35",
+        "bottom": "#4f8f35",
+        "default": "#4f8f35"
+      }
+    }
+  }
 }

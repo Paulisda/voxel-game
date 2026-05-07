@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:pearlescent_froglight",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "pearlescent_froglight_side"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "pearlescent_froglight_side"
-                                                               ],
-                                                      "top":  [
-                                                                  "pearlescent_froglight_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "pearlescent_froglight_top"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:pearlescent_froglight",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "pearlescent_froglight_side"
+      ],
+      "textures": {
+        "side": [
+          "pearlescent_froglight_side"
+        ],
+        "top": [
+          "pearlescent_froglight_top"
+        ],
+        "bottom": [
+          "pearlescent_froglight_top"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

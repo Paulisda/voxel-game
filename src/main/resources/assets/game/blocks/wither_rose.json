@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:wither_rose",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "wither_rose"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "wither_rose"
-                                                               ],
-                                                      "top":  [
-                                                                  "wither_rose"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "wither_rose"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:wither_rose",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "wither_rose"
+      ],
+      "textures": {
+        "side": [
+          "wither_rose"
+        ],
+        "top": [
+          "wither_rose"
+        ],
+        "bottom": [
+          "wither_rose"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

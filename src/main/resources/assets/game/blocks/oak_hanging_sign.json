@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:oak_hanging_sign",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  2,
-                                     "resistance":  3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "oak_planks"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "oak_planks"
-                                                               ],
-                                                      "top":  [
-                                                                  "oak_planks"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "oak_planks"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#8b5a2b",
-                                                      "top":  "#8b5a2b",
-                                                      "bottom":  "#8b5a2b",
-                                                      "default":  "#8b5a2b"
-                                                  }
-                                 }
-                   }
+  "id": "game:oak_hanging_sign",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 2,
+      "resistance": 3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "oak_planks"
+      ],
+      "textures": {
+        "side": [
+          "oak_planks"
+        ],
+        "top": [
+          "oak_planks"
+        ],
+        "bottom": [
+          "oak_planks"
+        ]
+      },
+      "fallback": {
+        "side": "#8b5a2b",
+        "top": "#8b5a2b",
+        "bottom": "#8b5a2b",
+        "default": "#8b5a2b"
+      }
+    }
+  }
 }

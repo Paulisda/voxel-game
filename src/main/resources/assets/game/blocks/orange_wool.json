@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:orange_wool",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.8,
-                                     "resistance":  0.8,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "orange_wool"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "orange_wool"
-                                                               ],
-                                                      "top":  [
-                                                                  "orange_wool"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "orange_wool"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#f9801d",
-                                                      "top":  "#f9801d",
-                                                      "bottom":  "#f9801d",
-                                                      "default":  "#f9801d"
-                                                  }
-                                 }
-                   }
+  "id": "game:orange_wool",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.8,
+      "resistance": 0.8,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "orange_wool"
+      ],
+      "textures": {
+        "side": [
+          "orange_wool"
+        ],
+        "top": [
+          "orange_wool"
+        ],
+        "bottom": [
+          "orange_wool"
+        ]
+      },
+      "fallback": {
+        "side": "#f9801d",
+        "top": "#f9801d",
+        "bottom": "#f9801d",
+        "default": "#f9801d"
+      }
+    }
+  }
 }

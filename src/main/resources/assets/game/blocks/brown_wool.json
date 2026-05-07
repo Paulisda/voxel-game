@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:brown_wool",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.8,
-                                     "resistance":  0.8,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "brown_wool"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "brown_wool"
-                                                               ],
-                                                      "top":  [
-                                                                  "brown_wool"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "brown_wool"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#835432",
-                                                      "top":  "#835432",
-                                                      "bottom":  "#835432",
-                                                      "default":  "#835432"
-                                                  }
-                                 }
-                   }
+  "id": "game:brown_wool",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.8,
+      "resistance": 0.8,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "brown_wool"
+      ],
+      "textures": {
+        "side": [
+          "brown_wool"
+        ],
+        "top": [
+          "brown_wool"
+        ],
+        "bottom": [
+          "brown_wool"
+        ]
+      },
+      "fallback": {
+        "side": "#835432",
+        "top": "#835432",
+        "bottom": "#835432",
+        "default": "#835432"
+      }
+    }
+  }
 }

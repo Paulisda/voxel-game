@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:sculk_sensor",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "sculk_sensor_side"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "sculk_sensor_side"
-                                                               ],
-                                                      "top":  [
-                                                                  "sculk_sensor_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "sculk_sensor_bottom"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:sculk_sensor",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "sculk_sensor_side"
+      ],
+      "textures": {
+        "side": [
+          "sculk_sensor_side"
+        ],
+        "top": [
+          "sculk_sensor_top"
+        ],
+        "bottom": [
+          "sculk_sensor_bottom"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

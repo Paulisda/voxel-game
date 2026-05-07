@@ -1,40 +1,40 @@
 ﻿{
-    "id":  "game:command_block",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  -1,
-                                     "resistance":  3600000,
-                                     "breakable":  false
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "command_block1",
-                                                     "command_block2"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "command_block1",
-                                                                   "command_block2"
-                                                               ],
-                                                      "top":  [
-                                                                  "command_block1",
-                                                                  "command_block2"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "command_block1",
-                                                                     "command_block2"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:command_block",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": -1,
+      "resistance": 3600000,
+      "breakable": false
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "command_block1",
+        "command_block2"
+      ],
+      "textures": {
+        "side": [
+          "command_block1",
+          "command_block2"
+        ],
+        "top": [
+          "command_block1",
+          "command_block2"
+        ],
+        "bottom": [
+          "command_block1",
+          "command_block2"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

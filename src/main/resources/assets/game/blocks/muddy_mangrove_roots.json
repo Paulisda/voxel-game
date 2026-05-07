@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:muddy_mangrove_roots",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0,
-                                     "resistance":  0,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "muddy_mangrove_roots_side"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "muddy_mangrove_roots_side"
-                                                               ],
-                                                      "top":  [
-                                                                  "muddy_mangrove_roots_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "muddy_mangrove_roots_top"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#4f8f35",
-                                                      "top":  "#4f8f35",
-                                                      "bottom":  "#4f8f35",
-                                                      "default":  "#4f8f35"
-                                                  }
-                                 }
-                   }
+  "id": "game:muddy_mangrove_roots",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0,
+      "resistance": 0,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "muddy_mangrove_roots_side"
+      ],
+      "textures": {
+        "side": [
+          "muddy_mangrove_roots_side"
+        ],
+        "top": [
+          "muddy_mangrove_roots_top"
+        ],
+        "bottom": [
+          "muddy_mangrove_roots_top"
+        ]
+      },
+      "fallback": {
+        "side": "#4f8f35",
+        "top": "#4f8f35",
+        "bottom": "#4f8f35",
+        "default": "#4f8f35"
+      }
+    }
+  }
 }

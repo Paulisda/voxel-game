@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:crimson_sign",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  2,
-                                     "resistance":  3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "crimson_planks"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "crimson_planks"
-                                                               ],
-                                                      "top":  [
-                                                                  "crimson_planks"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "crimson_planks"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#8b5a2b",
-                                                      "top":  "#8b5a2b",
-                                                      "bottom":  "#8b5a2b",
-                                                      "default":  "#8b5a2b"
-                                                  }
-                                 }
-                   }
+  "id": "game:crimson_sign",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 2,
+      "resistance": 3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "crimson_planks"
+      ],
+      "textures": {
+        "side": [
+          "crimson_planks"
+        ],
+        "top": [
+          "crimson_planks"
+        ],
+        "bottom": [
+          "crimson_planks"
+        ]
+      },
+      "fallback": {
+        "side": "#8b5a2b",
+        "top": "#8b5a2b",
+        "bottom": "#8b5a2b",
+        "default": "#8b5a2b"
+      }
+    }
+  }
 }

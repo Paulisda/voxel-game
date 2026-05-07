@@ -1,60 +1,60 @@
 ﻿{
-    "id":  "game:birch_leaves",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.2,
-                                     "resistance":  0.2,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "birch_leaves",
-                                                     "birch_leaves0",
-                                                     "birch_leaves1",
-                                                     "birch_leaves2",
-                                                     "birch_leaves3",
-                                                     "birch_leaves4",
-                                                     "birch_leaves5"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "birch_leaves",
-                                                                   "birch_leaves0",
-                                                                   "birch_leaves1",
-                                                                   "birch_leaves2",
-                                                                   "birch_leaves3",
-                                                                   "birch_leaves4",
-                                                                   "birch_leaves5"
-                                                               ],
-                                                      "top":  [
-                                                                  "birch_leaves",
-                                                                  "birch_leaves0",
-                                                                  "birch_leaves1",
-                                                                  "birch_leaves2",
-                                                                  "birch_leaves3",
-                                                                  "birch_leaves4",
-                                                                  "birch_leaves5"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "birch_leaves",
-                                                                     "birch_leaves0",
-                                                                     "birch_leaves1",
-                                                                     "birch_leaves2",
-                                                                     "birch_leaves3",
-                                                                     "birch_leaves4",
-                                                                     "birch_leaves5"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#4f8f35",
-                                                      "top":  "#4f8f35",
-                                                      "bottom":  "#4f8f35",
-                                                      "default":  "#4f8f35"
-                                                  }
-                                 }
-                   }
+  "id": "game:birch_leaves",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.2,
+      "resistance": 0.2,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "birch_leaves",
+        "birch_leaves0",
+        "birch_leaves1",
+        "birch_leaves2",
+        "birch_leaves3",
+        "birch_leaves4",
+        "birch_leaves5"
+      ],
+      "textures": {
+        "side": [
+          "birch_leaves",
+          "birch_leaves0",
+          "birch_leaves1",
+          "birch_leaves2",
+          "birch_leaves3",
+          "birch_leaves4",
+          "birch_leaves5"
+        ],
+        "top": [
+          "birch_leaves",
+          "birch_leaves0",
+          "birch_leaves1",
+          "birch_leaves2",
+          "birch_leaves3",
+          "birch_leaves4",
+          "birch_leaves5"
+        ],
+        "bottom": [
+          "birch_leaves",
+          "birch_leaves0",
+          "birch_leaves1",
+          "birch_leaves2",
+          "birch_leaves3",
+          "birch_leaves4",
+          "birch_leaves5"
+        ]
+      },
+      "fallback": {
+        "side": "#4f8f35",
+        "top": "#4f8f35",
+        "bottom": "#4f8f35",
+        "default": "#4f8f35"
+      }
+    }
+  }
 }

@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:exposed_copper_trapdoor",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  3,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "exposed_copper"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "exposed_copper"
-                                                               ],
-                                                      "top":  [
-                                                                  "exposed_copper"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "exposed_copper"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#8b5a2b",
-                                                      "top":  "#8b5a2b",
-                                                      "bottom":  "#8b5a2b",
-                                                      "default":  "#8b5a2b"
-                                                  }
-                                 }
-                   }
+  "id": "game:exposed_copper_trapdoor",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 3,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "exposed_copper"
+      ],
+      "textures": {
+        "side": [
+          "exposed_copper"
+        ],
+        "top": [
+          "exposed_copper"
+        ],
+        "bottom": [
+          "exposed_copper"
+        ]
+      },
+      "fallback": {
+        "side": "#8b5a2b",
+        "top": "#8b5a2b",
+        "bottom": "#8b5a2b",
+        "default": "#8b5a2b"
+      }
+    }
+  }
 }

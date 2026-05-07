@@ -1,60 +1,60 @@
 ﻿{
-    "id":  "game:nether_wart_block",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "nether_wart_block",
-                                                     "nether_wart_block0",
-                                                     "nether_wart_block1",
-                                                     "nether_wart_block2",
-                                                     "nether_wart_block3",
-                                                     "nether_wart_block4",
-                                                     "nether_wart_block5"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "nether_wart_block",
-                                                                   "nether_wart_block0",
-                                                                   "nether_wart_block1",
-                                                                   "nether_wart_block2",
-                                                                   "nether_wart_block3",
-                                                                   "nether_wart_block4",
-                                                                   "nether_wart_block5"
-                                                               ],
-                                                      "top":  [
-                                                                  "nether_wart_block",
-                                                                  "nether_wart_block0",
-                                                                  "nether_wart_block1",
-                                                                  "nether_wart_block2",
-                                                                  "nether_wart_block3",
-                                                                  "nether_wart_block4",
-                                                                  "nether_wart_block5"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "nether_wart_block",
-                                                                     "nether_wart_block0",
-                                                                     "nether_wart_block1",
-                                                                     "nether_wart_block2",
-                                                                     "nether_wart_block3",
-                                                                     "nether_wart_block4",
-                                                                     "nether_wart_block5"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#6f2632",
-                                                      "top":  "#6f2632",
-                                                      "bottom":  "#6f2632",
-                                                      "default":  "#6f2632"
-                                                  }
-                                 }
-                   }
+  "id": "game:nether_wart_block",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "nether_wart_block",
+        "nether_wart_block0",
+        "nether_wart_block1",
+        "nether_wart_block2",
+        "nether_wart_block3",
+        "nether_wart_block4",
+        "nether_wart_block5"
+      ],
+      "textures": {
+        "side": [
+          "nether_wart_block",
+          "nether_wart_block0",
+          "nether_wart_block1",
+          "nether_wart_block2",
+          "nether_wart_block3",
+          "nether_wart_block4",
+          "nether_wart_block5"
+        ],
+        "top": [
+          "nether_wart_block",
+          "nether_wart_block0",
+          "nether_wart_block1",
+          "nether_wart_block2",
+          "nether_wart_block3",
+          "nether_wart_block4",
+          "nether_wart_block5"
+        ],
+        "bottom": [
+          "nether_wart_block",
+          "nether_wart_block0",
+          "nether_wart_block1",
+          "nether_wart_block2",
+          "nether_wart_block3",
+          "nether_wart_block4",
+          "nether_wart_block5"
+        ]
+      },
+      "fallback": {
+        "side": "#6f2632",
+        "top": "#6f2632",
+        "bottom": "#6f2632",
+        "default": "#6f2632"
+      }
+    }
+  }
 }

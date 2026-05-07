@@ -5,7 +5,10 @@
       "max": 64
     },
     "model": {
-      "texture": ["leather_horse_armor", "leather_horse_armor_overlay"],
+      "texture": [
+        "leather_horse_armor",
+        "leather_horse_armor_overlay"
+      ],
       "fallback": {
         "default": "#c0c0c0"
       }

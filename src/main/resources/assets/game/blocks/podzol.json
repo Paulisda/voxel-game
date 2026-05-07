@@ -1,50 +1,50 @@
 ﻿{
-    "id":  "game:podzol",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.5,
-                                     "resistance":  0.5,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "podzol_side",
-                                                     "podzol_side1",
-                                                     "podzol_side2",
-                                                     "podzol_side3"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "podzol_side",
-                                                                   "podzol_side1",
-                                                                   "podzol_side2",
-                                                                   "podzol_side3"
-                                                               ],
-                                                      "top":  [
-                                                                  "podzol_top",
-                                                                  "podzol_top1",
-                                                                  "podzol_top2",
-                                                                  "podzol_top3",
-                                                                  "podzol_top4"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "podzol_top",
-                                                                     "podzol_top1",
-                                                                     "podzol_top2",
-                                                                     "podzol_top3",
-                                                                     "podzol_top4"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#8a5a37",
-                                                      "top":  "#8a5a37",
-                                                      "bottom":  "#8a5a37",
-                                                      "default":  "#8a5a37"
-                                                  }
-                                 }
-                   }
+  "id": "game:podzol",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.5,
+      "resistance": 0.5,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "podzol_side",
+        "podzol_side1",
+        "podzol_side2",
+        "podzol_side3"
+      ],
+      "textures": {
+        "side": [
+          "podzol_side",
+          "podzol_side1",
+          "podzol_side2",
+          "podzol_side3"
+        ],
+        "top": [
+          "podzol_top",
+          "podzol_top1",
+          "podzol_top2",
+          "podzol_top3",
+          "podzol_top4"
+        ],
+        "bottom": [
+          "podzol_top",
+          "podzol_top1",
+          "podzol_top2",
+          "podzol_top3",
+          "podzol_top4"
+        ]
+      },
+      "fallback": {
+        "side": "#8a5a37",
+        "top": "#8a5a37",
+        "bottom": "#8a5a37",
+        "default": "#8a5a37"
+      }
+    }
+  }
 }

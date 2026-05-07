@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:coal_block",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  3,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "coal_block"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "coal_block"
-                                                               ],
-                                                      "top":  [
-                                                                  "coal_block"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "coal_block"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:coal_block",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 3,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "coal_block"
+      ],
+      "textures": {
+        "side": [
+          "coal_block"
+        ],
+        "top": [
+          "coal_block"
+        ],
+        "bottom": [
+          "coal_block"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

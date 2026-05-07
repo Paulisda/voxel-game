@@ -1,37 +1,37 @@
 ﻿{
-    "id":  "game:bubble_column",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  100,
-                                     "resistance":  100,
-                                     "breakable":  false
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "water_still"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "water_still"
-                                                               ],
-                                                      "top":  [
-                                                                  "water_still"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "water_still"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#3f76e4aa",
-                                                      "top":  "#3f76e4aa",
-                                                      "bottom":  "#3f76e4aa",
-                                                      "default":  "#3f76e4aa"
-                                                  },
-                                     "tint":  "water"
-                                 }
-                   }
+  "id": "game:bubble_column",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 100,
+      "resistance": 100,
+      "breakable": false
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "water_still"
+      ],
+      "textures": {
+        "side": [
+          "water_still"
+        ],
+        "top": [
+          "water_still"
+        ],
+        "bottom": [
+          "water_still"
+        ]
+      },
+      "fallback": {
+        "side": "#3f76e4aa",
+        "top": "#3f76e4aa",
+        "bottom": "#3f76e4aa",
+        "default": "#3f76e4aa"
+      },
+      "tint": "water"
+    }
+  }
 }

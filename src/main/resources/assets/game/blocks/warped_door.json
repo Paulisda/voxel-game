@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:warped_door",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  2,
-                                     "resistance":  3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "warped_door_bottom"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "warped_door_bottom"
-                                                               ],
-                                                      "top":  [
-                                                                  "warped_door_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "warped_door_bottom"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#8b5a2b",
-                                                      "top":  "#8b5a2b",
-                                                      "bottom":  "#8b5a2b",
-                                                      "default":  "#8b5a2b"
-                                                  }
-                                 }
-                   }
+  "id": "game:warped_door",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 2,
+      "resistance": 3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "warped_door_bottom"
+      ],
+      "textures": {
+        "side": [
+          "warped_door_bottom"
+        ],
+        "top": [
+          "warped_door_top"
+        ],
+        "bottom": [
+          "warped_door_bottom"
+        ]
+      },
+      "fallback": {
+        "side": "#8b5a2b",
+        "top": "#8b5a2b",
+        "bottom": "#8b5a2b",
+        "default": "#8b5a2b"
+      }
+    }
+  }
 }

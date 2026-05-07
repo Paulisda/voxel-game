@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:daylight_detector_inverted",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "daylight_detector_side"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "daylight_detector_side"
-                                                               ],
-                                                      "top":  [
-                                                                  "daylight_detector_inverted_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "daylight_detector_side"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:daylight_detector_inverted",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "daylight_detector_side"
+      ],
+      "textures": {
+        "side": [
+          "daylight_detector_side"
+        ],
+        "top": [
+          "daylight_detector_inverted_top"
+        ],
+        "bottom": [
+          "daylight_detector_side"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

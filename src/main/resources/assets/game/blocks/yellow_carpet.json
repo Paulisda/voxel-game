@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:yellow_carpet",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0.1,
-                                     "resistance":  0.1,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "yellow_wool"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "yellow_wool"
-                                                               ],
-                                                      "top":  [
-                                                                  "yellow_wool"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "yellow_wool"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#fed83d",
-                                                      "top":  "#fed83d",
-                                                      "bottom":  "#fed83d",
-                                                      "default":  "#fed83d"
-                                                  }
-                                 }
-                   }
+  "id": "game:yellow_carpet",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0.1,
+      "resistance": 0.1,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "yellow_wool"
+      ],
+      "textures": {
+        "side": [
+          "yellow_wool"
+        ],
+        "top": [
+          "yellow_wool"
+        ],
+        "bottom": [
+          "yellow_wool"
+        ]
+      },
+      "fallback": {
+        "side": "#fed83d",
+        "top": "#fed83d",
+        "bottom": "#fed83d",
+        "default": "#fed83d"
+      }
+    }
+  }
 }

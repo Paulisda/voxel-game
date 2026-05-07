@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:ice",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.3,
-                                     "resistance":  0.3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "ice"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "ice"
-                                                               ],
-                                                      "top":  [
-                                                                  "ice"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "ice"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#8eeeff",
-                                                      "top":  "#8eeeff",
-                                                      "bottom":  "#8eeeff",
-                                                      "default":  "#8eeeff"
-                                                  }
-                                 }
-                   }
+  "id": "game:ice",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.3,
+      "resistance": 0.3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "ice"
+      ],
+      "textures": {
+        "side": [
+          "ice"
+        ],
+        "top": [
+          "ice"
+        ],
+        "bottom": [
+          "ice"
+        ]
+      },
+      "fallback": {
+        "side": "#8eeeff",
+        "top": "#8eeeff",
+        "bottom": "#8eeeff",
+        "default": "#8eeeff"
+      }
+    }
+  }
 }

@@ -5,7 +5,10 @@
       "max": 64
     },
     "model": {
-      "texture": ["glass_bottle", "glass_bottle1"],
+      "texture": [
+        "glass_bottle",
+        "glass_bottle1"
+      ],
       "fallback": {
         "default": "#ffffff"
       }

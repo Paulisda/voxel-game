@@ -1,56 +1,56 @@
 ﻿{
-    "id":  "game:dirt",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.5,
-                                     "resistance":  0.5,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "dirt",
-                                                     "dirt0",
-                                                     "dirt1",
-                                                     "dirt2",
-                                                     "dirt3",
-                                                     "dirt4"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "dirt",
-                                                                   "dirt0",
-                                                                   "dirt1",
-                                                                   "dirt2",
-                                                                   "dirt3",
-                                                                   "dirt4"
-                                                               ],
-                                                      "top":  [
-                                                                  "dirt",
-                                                                  "dirt0",
-                                                                  "dirt1",
-                                                                  "dirt2",
-                                                                  "dirt3",
-                                                                  "dirt4"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "dirt",
-                                                                     "dirt0",
-                                                                     "dirt1",
-                                                                     "dirt2",
-                                                                     "dirt3",
-                                                                     "dirt4"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#8a5a37",
-                                                      "top":  "#8a5a37",
-                                                      "bottom":  "#8a5a37",
-                                                      "default":  "#8a5a37"
-                                                  }
-                                 }
-                   }
+  "id": "game:dirt",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.5,
+      "resistance": 0.5,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "dirt",
+        "dirt0",
+        "dirt1",
+        "dirt2",
+        "dirt3",
+        "dirt4"
+      ],
+      "textures": {
+        "side": [
+          "dirt",
+          "dirt0",
+          "dirt1",
+          "dirt2",
+          "dirt3",
+          "dirt4"
+        ],
+        "top": [
+          "dirt",
+          "dirt0",
+          "dirt1",
+          "dirt2",
+          "dirt3",
+          "dirt4"
+        ],
+        "bottom": [
+          "dirt",
+          "dirt0",
+          "dirt1",
+          "dirt2",
+          "dirt3",
+          "dirt4"
+        ]
+      },
+      "fallback": {
+        "side": "#8a5a37",
+        "top": "#8a5a37",
+        "bottom": "#8a5a37",
+        "default": "#8a5a37"
+      }
+    }
+  }
 }

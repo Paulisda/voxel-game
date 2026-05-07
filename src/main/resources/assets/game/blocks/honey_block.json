@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:honey_block",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.5,
-                                     "resistance":  0.5,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "honey_block_side"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "honey_block_side"
-                                                               ],
-                                                      "top":  [
-                                                                  "honey_block_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "honey_block_bottom"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#f0b43c",
-                                                      "top":  "#f0b43c",
-                                                      "bottom":  "#f0b43c",
-                                                      "default":  "#f0b43c"
-                                                  }
-                                 }
-                   }
+  "id": "game:honey_block",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.5,
+      "resistance": 0.5,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "honey_block_side"
+      ],
+      "textures": {
+        "side": [
+          "honey_block_side"
+        ],
+        "top": [
+          "honey_block_top"
+        ],
+        "bottom": [
+          "honey_block_bottom"
+        ]
+      },
+      "fallback": {
+        "side": "#f0b43c",
+        "top": "#f0b43c",
+        "bottom": "#f0b43c",
+        "default": "#f0b43c"
+      }
+    }
+  }
 }

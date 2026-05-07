@@ -1,60 +1,60 @@
 ﻿{
-    "id":  "game:azalea_leaves",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.2,
-                                     "resistance":  0.2,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "azalea_leaves",
-                                                     "azalea_leaves0",
-                                                     "azalea_leaves1",
-                                                     "azalea_leaves2",
-                                                     "azalea_leaves3",
-                                                     "azalea_leaves4",
-                                                     "azalea_leaves5"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "azalea_leaves",
-                                                                   "azalea_leaves0",
-                                                                   "azalea_leaves1",
-                                                                   "azalea_leaves2",
-                                                                   "azalea_leaves3",
-                                                                   "azalea_leaves4",
-                                                                   "azalea_leaves5"
-                                                               ],
-                                                      "top":  [
-                                                                  "azalea_leaves",
-                                                                  "azalea_leaves0",
-                                                                  "azalea_leaves1",
-                                                                  "azalea_leaves2",
-                                                                  "azalea_leaves3",
-                                                                  "azalea_leaves4",
-                                                                  "azalea_leaves5"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "azalea_leaves",
-                                                                     "azalea_leaves0",
-                                                                     "azalea_leaves1",
-                                                                     "azalea_leaves2",
-                                                                     "azalea_leaves3",
-                                                                     "azalea_leaves4",
-                                                                     "azalea_leaves5"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#4f8f35",
-                                                      "top":  "#4f8f35",
-                                                      "bottom":  "#4f8f35",
-                                                      "default":  "#4f8f35"
-                                                  }
-                                 }
-                   }
+  "id": "game:azalea_leaves",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.2,
+      "resistance": 0.2,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "azalea_leaves",
+        "azalea_leaves0",
+        "azalea_leaves1",
+        "azalea_leaves2",
+        "azalea_leaves3",
+        "azalea_leaves4",
+        "azalea_leaves5"
+      ],
+      "textures": {
+        "side": [
+          "azalea_leaves",
+          "azalea_leaves0",
+          "azalea_leaves1",
+          "azalea_leaves2",
+          "azalea_leaves3",
+          "azalea_leaves4",
+          "azalea_leaves5"
+        ],
+        "top": [
+          "azalea_leaves",
+          "azalea_leaves0",
+          "azalea_leaves1",
+          "azalea_leaves2",
+          "azalea_leaves3",
+          "azalea_leaves4",
+          "azalea_leaves5"
+        ],
+        "bottom": [
+          "azalea_leaves",
+          "azalea_leaves0",
+          "azalea_leaves1",
+          "azalea_leaves2",
+          "azalea_leaves3",
+          "azalea_leaves4",
+          "azalea_leaves5"
+        ]
+      },
+      "fallback": {
+        "side": "#4f8f35",
+        "top": "#4f8f35",
+        "bottom": "#4f8f35",
+        "default": "#4f8f35"
+      }
+    }
+  }
 }

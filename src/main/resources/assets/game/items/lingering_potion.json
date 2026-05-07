@@ -5,7 +5,10 @@
       "max": 64
     },
     "model": {
-      "texture": ["lingering_potion", "lingering_potion1"],
+      "texture": [
+        "lingering_potion",
+        "lingering_potion1"
+      ],
       "fallback": {
         "default": "#808080"
       }

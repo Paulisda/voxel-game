@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:verdant_froglight",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "verdant_froglight_side"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "verdant_froglight_side"
-                                                               ],
-                                                      "top":  [
-                                                                  "verdant_froglight_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "verdant_froglight_top"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:verdant_froglight",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "verdant_froglight_side"
+      ],
+      "textures": {
+        "side": [
+          "verdant_froglight_side"
+        ],
+        "top": [
+          "verdant_froglight_top"
+        ],
+        "bottom": [
+          "verdant_froglight_top"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

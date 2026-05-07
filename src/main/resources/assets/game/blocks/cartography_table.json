@@ -1,52 +1,52 @@
 ﻿{
-    "id":  "game:cartography_table",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  2,
-                                     "resistance":  3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "cartography_table_side",
-                                                     "cartography_table_side1",
-                                                     "cartography_table_side2",
-                                                     "cartography_table_side3",
-                                                     "cartography_table_side4",
-                                                     "cartography_table_side5"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "cartography_table_side",
-                                                                   "cartography_table_side1",
-                                                                   "cartography_table_side2",
-                                                                   "cartography_table_side3",
-                                                                   "cartography_table_side4",
-                                                                   "cartography_table_side5"
-                                                               ],
-                                                      "top":  [
-                                                                  "cartography_table_top",
-                                                                  "cartography_table_top0"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "cartography_table_side",
-                                                                     "cartography_table_side1",
-                                                                     "cartography_table_side2",
-                                                                     "cartography_table_side3",
-                                                                     "cartography_table_side4",
-                                                                     "cartography_table_side5"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:cartography_table",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 2,
+      "resistance": 3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "cartography_table_side",
+        "cartography_table_side1",
+        "cartography_table_side2",
+        "cartography_table_side3",
+        "cartography_table_side4",
+        "cartography_table_side5"
+      ],
+      "textures": {
+        "side": [
+          "cartography_table_side",
+          "cartography_table_side1",
+          "cartography_table_side2",
+          "cartography_table_side3",
+          "cartography_table_side4",
+          "cartography_table_side5"
+        ],
+        "top": [
+          "cartography_table_top",
+          "cartography_table_top0"
+        ],
+        "bottom": [
+          "cartography_table_side",
+          "cartography_table_side1",
+          "cartography_table_side2",
+          "cartography_table_side3",
+          "cartography_table_side4",
+          "cartography_table_side5"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

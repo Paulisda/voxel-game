@@ -5,7 +5,11 @@
       "max": 64
     },
     "model": {
-      "texture": ["bucket_parts", "bucket_parts1", "bucket_parts2"],
+      "texture": [
+        "bucket_parts",
+        "bucket_parts1",
+        "bucket_parts2"
+      ],
       "fallback": {
         "default": "#ffffff"
       }

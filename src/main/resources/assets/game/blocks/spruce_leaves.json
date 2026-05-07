@@ -1,60 +1,60 @@
 ﻿{
-    "id":  "game:spruce_leaves",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.2,
-                                     "resistance":  0.2,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "spruce_leaves",
-                                                     "spruce_leaves0",
-                                                     "spruce_leaves1",
-                                                     "spruce_leaves2",
-                                                     "spruce_leaves3",
-                                                     "spruce_leaves4",
-                                                     "spruce_leaves5"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "spruce_leaves",
-                                                                   "spruce_leaves0",
-                                                                   "spruce_leaves1",
-                                                                   "spruce_leaves2",
-                                                                   "spruce_leaves3",
-                                                                   "spruce_leaves4",
-                                                                   "spruce_leaves5"
-                                                               ],
-                                                      "top":  [
-                                                                  "spruce_leaves",
-                                                                  "spruce_leaves0",
-                                                                  "spruce_leaves1",
-                                                                  "spruce_leaves2",
-                                                                  "spruce_leaves3",
-                                                                  "spruce_leaves4",
-                                                                  "spruce_leaves5"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "spruce_leaves",
-                                                                     "spruce_leaves0",
-                                                                     "spruce_leaves1",
-                                                                     "spruce_leaves2",
-                                                                     "spruce_leaves3",
-                                                                     "spruce_leaves4",
-                                                                     "spruce_leaves5"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#4f8f35",
-                                                      "top":  "#4f8f35",
-                                                      "bottom":  "#4f8f35",
-                                                      "default":  "#4f8f35"
-                                                  }
-                                 }
-                   }
+  "id": "game:spruce_leaves",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.2,
+      "resistance": 0.2,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "spruce_leaves",
+        "spruce_leaves0",
+        "spruce_leaves1",
+        "spruce_leaves2",
+        "spruce_leaves3",
+        "spruce_leaves4",
+        "spruce_leaves5"
+      ],
+      "textures": {
+        "side": [
+          "spruce_leaves",
+          "spruce_leaves0",
+          "spruce_leaves1",
+          "spruce_leaves2",
+          "spruce_leaves3",
+          "spruce_leaves4",
+          "spruce_leaves5"
+        ],
+        "top": [
+          "spruce_leaves",
+          "spruce_leaves0",
+          "spruce_leaves1",
+          "spruce_leaves2",
+          "spruce_leaves3",
+          "spruce_leaves4",
+          "spruce_leaves5"
+        ],
+        "bottom": [
+          "spruce_leaves",
+          "spruce_leaves0",
+          "spruce_leaves1",
+          "spruce_leaves2",
+          "spruce_leaves3",
+          "spruce_leaves4",
+          "spruce_leaves5"
+        ]
+      },
+      "fallback": {
+        "side": "#4f8f35",
+        "top": "#4f8f35",
+        "bottom": "#4f8f35",
+        "default": "#4f8f35"
+      }
+    }
+  }
 }

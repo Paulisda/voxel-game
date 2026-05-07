@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:lily_of_the_valley",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "lily_of_the_valley"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "lily_of_the_valley"
-                                                               ],
-                                                      "top":  [
-                                                                  "lily_of_the_valley"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "lily_of_the_valley"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:lily_of_the_valley",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "lily_of_the_valley"
+      ],
+      "textures": {
+        "side": [
+          "lily_of_the_valley"
+        ],
+        "top": [
+          "lily_of_the_valley"
+        ],
+        "bottom": [
+          "lily_of_the_valley"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

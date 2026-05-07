@@ -5,7 +5,10 @@
       "max": 64
     },
     "model": {
-      "texture": ["splash_potion", "splash_potion1"],
+      "texture": [
+        "splash_potion",
+        "splash_potion1"
+      ],
       "fallback": {
         "default": "#808080"
       }

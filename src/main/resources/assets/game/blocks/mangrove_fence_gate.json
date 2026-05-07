@@ -1,40 +1,40 @@
 ﻿{
-    "id":  "game:mangrove_fence_gate",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  2,
-                                     "resistance":  3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "mangrove_planks",
-                                                     "mangrove_planks1"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "mangrove_planks",
-                                                                   "mangrove_planks1"
-                                                               ],
-                                                      "top":  [
-                                                                  "mangrove_planks",
-                                                                  "mangrove_planks1"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "mangrove_planks",
-                                                                     "mangrove_planks1"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#8b5a2b",
-                                                      "top":  "#8b5a2b",
-                                                      "bottom":  "#8b5a2b",
-                                                      "default":  "#8b5a2b"
-                                                  }
-                                 }
-                   }
+  "id": "game:mangrove_fence_gate",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 2,
+      "resistance": 3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "mangrove_planks",
+        "mangrove_planks1"
+      ],
+      "textures": {
+        "side": [
+          "mangrove_planks",
+          "mangrove_planks1"
+        ],
+        "top": [
+          "mangrove_planks",
+          "mangrove_planks1"
+        ],
+        "bottom": [
+          "mangrove_planks",
+          "mangrove_planks1"
+        ]
+      },
+      "fallback": {
+        "side": "#8b5a2b",
+        "top": "#8b5a2b",
+        "bottom": "#8b5a2b",
+        "default": "#8b5a2b"
+      }
+    }
+  }
 }

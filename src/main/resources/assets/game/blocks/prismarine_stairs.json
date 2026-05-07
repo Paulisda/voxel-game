@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:prismarine_stairs",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "prismarine"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "prismarine"
-                                                               ],
-                                                      "top":  [
-                                                                  "prismarine"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "prismarine"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#2f8f83",
-                                                      "top":  "#2f8f83",
-                                                      "bottom":  "#2f8f83",
-                                                      "default":  "#2f8f83"
-                                                  }
-                                 }
-                   }
+  "id": "game:prismarine_stairs",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "prismarine"
+      ],
+      "textures": {
+        "side": [
+          "prismarine"
+        ],
+        "top": [
+          "prismarine"
+        ],
+        "bottom": [
+          "prismarine"
+        ]
+      },
+      "fallback": {
+        "side": "#2f8f83",
+        "top": "#2f8f83",
+        "bottom": "#2f8f83",
+        "default": "#2f8f83"
+      }
+    }
+  }
 }

@@ -1,64 +1,64 @@
 ﻿{
-    "id":  "game:wheat_stage",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0,
-                                     "resistance":  0,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "wheat_stage0",
-                                                     "wheat_stage1",
-                                                     "wheat_stage2",
-                                                     "wheat_stage3",
-                                                     "wheat_stage4",
-                                                     "wheat_stage5",
-                                                     "wheat_stage6",
-                                                     "wheat_stage7"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "wheat_stage0",
-                                                                   "wheat_stage1",
-                                                                   "wheat_stage2",
-                                                                   "wheat_stage3",
-                                                                   "wheat_stage4",
-                                                                   "wheat_stage5",
-                                                                   "wheat_stage6",
-                                                                   "wheat_stage7"
-                                                               ],
-                                                      "top":  [
-                                                                  "wheat_stage0",
-                                                                  "wheat_stage1",
-                                                                  "wheat_stage2",
-                                                                  "wheat_stage3",
-                                                                  "wheat_stage4",
-                                                                  "wheat_stage5",
-                                                                  "wheat_stage6",
-                                                                  "wheat_stage7"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "wheat_stage0",
-                                                                     "wheat_stage1",
-                                                                     "wheat_stage2",
-                                                                     "wheat_stage3",
-                                                                     "wheat_stage4",
-                                                                     "wheat_stage5",
-                                                                     "wheat_stage6",
-                                                                     "wheat_stage7"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:wheat_stage",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0,
+      "resistance": 0,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "wheat_stage0",
+        "wheat_stage1",
+        "wheat_stage2",
+        "wheat_stage3",
+        "wheat_stage4",
+        "wheat_stage5",
+        "wheat_stage6",
+        "wheat_stage7"
+      ],
+      "textures": {
+        "side": [
+          "wheat_stage0",
+          "wheat_stage1",
+          "wheat_stage2",
+          "wheat_stage3",
+          "wheat_stage4",
+          "wheat_stage5",
+          "wheat_stage6",
+          "wheat_stage7"
+        ],
+        "top": [
+          "wheat_stage0",
+          "wheat_stage1",
+          "wheat_stage2",
+          "wheat_stage3",
+          "wheat_stage4",
+          "wheat_stage5",
+          "wheat_stage6",
+          "wheat_stage7"
+        ],
+        "bottom": [
+          "wheat_stage0",
+          "wheat_stage1",
+          "wheat_stage2",
+          "wheat_stage3",
+          "wheat_stage4",
+          "wheat_stage5",
+          "wheat_stage6",
+          "wheat_stage7"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

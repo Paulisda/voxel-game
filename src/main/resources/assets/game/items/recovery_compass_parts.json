@@ -5,7 +5,11 @@
       "max": 64
     },
     "model": {
-      "texture": ["recovery_compass_parts", "recovery_compass_parts1", "recovery_compass_parts2"],
+      "texture": [
+        "recovery_compass_parts",
+        "recovery_compass_parts1",
+        "recovery_compass_parts2"
+      ],
       "fallback": {
         "default": "#f0e6d2"
       }

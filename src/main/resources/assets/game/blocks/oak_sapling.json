@@ -1,44 +1,44 @@
 ﻿{
-    "id":  "game:oak_sapling",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0,
-                                     "resistance":  0,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "oak_sapling",
-                                                     "oak_sapling1",
-                                                     "oak_sapling2"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "oak_sapling",
-                                                                   "oak_sapling1",
-                                                                   "oak_sapling2"
-                                                               ],
-                                                      "top":  [
-                                                                  "oak_sapling",
-                                                                  "oak_sapling1",
-                                                                  "oak_sapling2"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "oak_sapling",
-                                                                     "oak_sapling1",
-                                                                     "oak_sapling2"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#4f8f35",
-                                                      "top":  "#4f8f35",
-                                                      "bottom":  "#4f8f35",
-                                                      "default":  "#4f8f35"
-                                                  }
-                                 }
-                   }
+  "id": "game:oak_sapling",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0,
+      "resistance": 0,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "oak_sapling",
+        "oak_sapling1",
+        "oak_sapling2"
+      ],
+      "textures": {
+        "side": [
+          "oak_sapling",
+          "oak_sapling1",
+          "oak_sapling2"
+        ],
+        "top": [
+          "oak_sapling",
+          "oak_sapling1",
+          "oak_sapling2"
+        ],
+        "bottom": [
+          "oak_sapling",
+          "oak_sapling1",
+          "oak_sapling2"
+        ]
+      },
+      "fallback": {
+        "side": "#4f8f35",
+        "top": "#4f8f35",
+        "bottom": "#4f8f35",
+        "default": "#4f8f35"
+      }
+    }
+  }
 }

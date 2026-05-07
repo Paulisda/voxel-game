@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:white_wool",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.8,
-                                     "resistance":  0.8,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "white_wool"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "white_wool"
-                                                               ],
-                                                      "top":  [
-                                                                  "white_wool"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "white_wool"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#f9fffe",
-                                                      "top":  "#f9fffe",
-                                                      "bottom":  "#f9fffe",
-                                                      "default":  "#f9fffe"
-                                                  }
-                                 }
-                   }
+  "id": "game:white_wool",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.8,
+      "resistance": 0.8,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "white_wool"
+      ],
+      "textures": {
+        "side": [
+          "white_wool"
+        ],
+        "top": [
+          "white_wool"
+        ],
+        "bottom": [
+          "white_wool"
+        ]
+      },
+      "fallback": {
+        "side": "#f9fffe",
+        "top": "#f9fffe",
+        "bottom": "#f9fffe",
+        "default": "#f9fffe"
+      }
+    }
+  }
 }

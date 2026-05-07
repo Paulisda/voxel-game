@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:polished_basalt",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "polished_basalt_side"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "polished_basalt_side"
-                                                               ],
-                                                      "top":  [
-                                                                  "polished_basalt_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "polished_basalt_top"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#25292f",
-                                                      "top":  "#25292f",
-                                                      "bottom":  "#25292f",
-                                                      "default":  "#25292f"
-                                                  }
-                                 }
-                   }
+  "id": "game:polished_basalt",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "polished_basalt_side"
+      ],
+      "textures": {
+        "side": [
+          "polished_basalt_side"
+        ],
+        "top": [
+          "polished_basalt_top"
+        ],
+        "bottom": [
+          "polished_basalt_top"
+        ]
+      },
+      "fallback": {
+        "side": "#25292f",
+        "top": "#25292f",
+        "bottom": "#25292f",
+        "default": "#25292f"
+      }
+    }
+  }
 }

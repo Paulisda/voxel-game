@@ -5,7 +5,10 @@
       "max": 64
     },
     "model": {
-      "texture": ["bundle", "bundle_filled"],
+      "texture": [
+        "bundle",
+        "bundle_filled"
+      ],
       "fallback": {
         "default": "#808080"
       }

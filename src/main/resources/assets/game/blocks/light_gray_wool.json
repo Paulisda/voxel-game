@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:light_gray_wool",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.8,
-                                     "resistance":  0.8,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "light_gray_wool"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "light_gray_wool"
-                                                               ],
-                                                      "top":  [
-                                                                  "light_gray_wool"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "light_gray_wool"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#9d9d97",
-                                                      "top":  "#9d9d97",
-                                                      "bottom":  "#9d9d97",
-                                                      "default":  "#9d9d97"
-                                                  }
-                                 }
-                   }
+  "id": "game:light_gray_wool",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.8,
+      "resistance": 0.8,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "light_gray_wool"
+      ],
+      "textures": {
+        "side": [
+          "light_gray_wool"
+        ],
+        "top": [
+          "light_gray_wool"
+        ],
+        "bottom": [
+          "light_gray_wool"
+        ]
+      },
+      "fallback": {
+        "side": "#9d9d97",
+        "top": "#9d9d97",
+        "bottom": "#9d9d97",
+        "default": "#9d9d97"
+      }
+    }
+  }
 }

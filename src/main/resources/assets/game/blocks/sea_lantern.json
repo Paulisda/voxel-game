@@ -1,40 +1,40 @@
 ﻿{
-    "id":  "game:sea_lantern",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0.5,
-                                     "resistance":  0.5,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "sea_lantern",
-                                                     "sea_lantern1"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "sea_lantern",
-                                                                   "sea_lantern1"
-                                                               ],
-                                                      "top":  [
-                                                                  "sea_lantern",
-                                                                  "sea_lantern1"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "sea_lantern",
-                                                                     "sea_lantern1"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:sea_lantern",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0.5,
+      "resistance": 0.5,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "sea_lantern",
+        "sea_lantern1"
+      ],
+      "textures": {
+        "side": [
+          "sea_lantern",
+          "sea_lantern1"
+        ],
+        "top": [
+          "sea_lantern",
+          "sea_lantern1"
+        ],
+        "bottom": [
+          "sea_lantern",
+          "sea_lantern1"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

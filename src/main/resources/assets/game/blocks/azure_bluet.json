@@ -1,44 +1,44 @@
 ﻿{
-    "id":  "game:azure_bluet",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "azure_bluet",
-                                                     "azure_bluet1",
-                                                     "azure_bluet2"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "azure_bluet",
-                                                                   "azure_bluet1",
-                                                                   "azure_bluet2"
-                                                               ],
-                                                      "top":  [
-                                                                  "azure_bluet",
-                                                                  "azure_bluet1",
-                                                                  "azure_bluet2"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "azure_bluet",
-                                                                     "azure_bluet1",
-                                                                     "azure_bluet2"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#345ec3",
-                                                      "top":  "#345ec3",
-                                                      "bottom":  "#345ec3",
-                                                      "default":  "#345ec3"
-                                                  }
-                                 }
-                   }
+  "id": "game:azure_bluet",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "azure_bluet",
+        "azure_bluet1",
+        "azure_bluet2"
+      ],
+      "textures": {
+        "side": [
+          "azure_bluet",
+          "azure_bluet1",
+          "azure_bluet2"
+        ],
+        "top": [
+          "azure_bluet",
+          "azure_bluet1",
+          "azure_bluet2"
+        ],
+        "bottom": [
+          "azure_bluet",
+          "azure_bluet1",
+          "azure_bluet2"
+        ]
+      },
+      "fallback": {
+        "side": "#345ec3",
+        "top": "#345ec3",
+        "bottom": "#345ec3",
+        "default": "#345ec3"
+      }
+    }
+  }
 }

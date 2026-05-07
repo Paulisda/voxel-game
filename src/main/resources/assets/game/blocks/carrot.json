@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:carrot",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0,
-                                     "resistance":  0,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "carrots_stage3"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "carrots_stage3"
-                                                               ],
-                                                      "top":  [
-                                                                  "carrots_stage3"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "carrots_stage3"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:carrot",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0,
+      "resistance": 0,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "carrots_stage3"
+      ],
+      "textures": {
+        "side": [
+          "carrots_stage3"
+        ],
+        "top": [
+          "carrots_stage3"
+        ],
+        "bottom": [
+          "carrots_stage3"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

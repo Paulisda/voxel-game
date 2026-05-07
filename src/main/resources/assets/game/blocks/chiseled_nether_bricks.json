@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:chiseled_nether_bricks",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "chiseled_nether_bricks"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "chiseled_nether_bricks"
-                                                               ],
-                                                      "top":  [
-                                                                  "chiseled_nether_bricks"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "chiseled_nether_bricks"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#6f2632",
-                                                      "top":  "#6f2632",
-                                                      "bottom":  "#6f2632",
-                                                      "default":  "#6f2632"
-                                                  }
-                                 }
-                   }
+  "id": "game:chiseled_nether_bricks",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "chiseled_nether_bricks"
+      ],
+      "textures": {
+        "side": [
+          "chiseled_nether_bricks"
+        ],
+        "top": [
+          "chiseled_nether_bricks"
+        ],
+        "bottom": [
+          "chiseled_nether_bricks"
+        ]
+      },
+      "fallback": {
+        "side": "#6f2632",
+        "top": "#6f2632",
+        "bottom": "#6f2632",
+        "default": "#6f2632"
+      }
+    }
+  }
 }

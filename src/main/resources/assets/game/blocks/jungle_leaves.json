@@ -1,60 +1,60 @@
 ﻿{
-    "id":  "game:jungle_leaves",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.2,
-                                     "resistance":  0.2,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "jungle_leaves",
-                                                     "jungle_leaves0",
-                                                     "jungle_leaves1",
-                                                     "jungle_leaves2",
-                                                     "jungle_leaves3",
-                                                     "jungle_leaves4",
-                                                     "jungle_leaves5"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "jungle_leaves",
-                                                                   "jungle_leaves0",
-                                                                   "jungle_leaves1",
-                                                                   "jungle_leaves2",
-                                                                   "jungle_leaves3",
-                                                                   "jungle_leaves4",
-                                                                   "jungle_leaves5"
-                                                               ],
-                                                      "top":  [
-                                                                  "jungle_leaves",
-                                                                  "jungle_leaves0",
-                                                                  "jungle_leaves1",
-                                                                  "jungle_leaves2",
-                                                                  "jungle_leaves3",
-                                                                  "jungle_leaves4",
-                                                                  "jungle_leaves5"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "jungle_leaves",
-                                                                     "jungle_leaves0",
-                                                                     "jungle_leaves1",
-                                                                     "jungle_leaves2",
-                                                                     "jungle_leaves3",
-                                                                     "jungle_leaves4",
-                                                                     "jungle_leaves5"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#4f8f35",
-                                                      "top":  "#4f8f35",
-                                                      "bottom":  "#4f8f35",
-                                                      "default":  "#4f8f35"
-                                                  }
-                                 }
-                   }
+  "id": "game:jungle_leaves",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.2,
+      "resistance": 0.2,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "jungle_leaves",
+        "jungle_leaves0",
+        "jungle_leaves1",
+        "jungle_leaves2",
+        "jungle_leaves3",
+        "jungle_leaves4",
+        "jungle_leaves5"
+      ],
+      "textures": {
+        "side": [
+          "jungle_leaves",
+          "jungle_leaves0",
+          "jungle_leaves1",
+          "jungle_leaves2",
+          "jungle_leaves3",
+          "jungle_leaves4",
+          "jungle_leaves5"
+        ],
+        "top": [
+          "jungle_leaves",
+          "jungle_leaves0",
+          "jungle_leaves1",
+          "jungle_leaves2",
+          "jungle_leaves3",
+          "jungle_leaves4",
+          "jungle_leaves5"
+        ],
+        "bottom": [
+          "jungle_leaves",
+          "jungle_leaves0",
+          "jungle_leaves1",
+          "jungle_leaves2",
+          "jungle_leaves3",
+          "jungle_leaves4",
+          "jungle_leaves5"
+        ]
+      },
+      "fallback": {
+        "side": "#4f8f35",
+        "top": "#4f8f35",
+        "bottom": "#4f8f35",
+        "default": "#4f8f35"
+      }
+    }
+  }
 }

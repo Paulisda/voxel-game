@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:deepslate_bricks",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  3,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "deepslate_bricks"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "deepslate_bricks"
-                                                               ],
-                                                      "top":  [
-                                                                  "deepslate_bricks"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "deepslate_bricks"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#25292f",
-                                                      "top":  "#25292f",
-                                                      "bottom":  "#25292f",
-                                                      "default":  "#25292f"
-                                                  }
-                                 }
-                   }
+  "id": "game:deepslate_bricks",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 3,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "deepslate_bricks"
+      ],
+      "textures": {
+        "side": [
+          "deepslate_bricks"
+        ],
+        "top": [
+          "deepslate_bricks"
+        ],
+        "bottom": [
+          "deepslate_bricks"
+        ]
+      },
+      "fallback": {
+        "side": "#25292f",
+        "top": "#25292f",
+        "bottom": "#25292f",
+        "default": "#25292f"
+      }
+    }
+  }
 }

@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:chiseled_deepslate",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  3,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "chiseled_deepslate"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "chiseled_deepslate"
-                                                               ],
-                                                      "top":  [
-                                                                  "chiseled_deepslate"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "chiseled_deepslate"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#25292f",
-                                                      "top":  "#25292f",
-                                                      "bottom":  "#25292f",
-                                                      "default":  "#25292f"
-                                                  }
-                                 }
-                   }
+  "id": "game:chiseled_deepslate",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 3,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "chiseled_deepslate"
+      ],
+      "textures": {
+        "side": [
+          "chiseled_deepslate"
+        ],
+        "top": [
+          "chiseled_deepslate"
+        ],
+        "bottom": [
+          "chiseled_deepslate"
+        ]
+      },
+      "fallback": {
+        "side": "#25292f",
+        "top": "#25292f",
+        "bottom": "#25292f",
+        "default": "#25292f"
+      }
+    }
+  }
 }

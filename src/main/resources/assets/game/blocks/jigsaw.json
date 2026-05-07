@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:jigsaw",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  -1,
-                                     "resistance":  3600000,
-                                     "breakable":  false
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "command_block_impulse0"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "command_block_impulse0"
-                                                               ],
-                                                      "top":  [
-                                                                  "command_block_impulse0"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "command_block_impulse0"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:jigsaw",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": -1,
+      "resistance": 3600000,
+      "breakable": false
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "command_block_impulse0"
+      ],
+      "textures": {
+        "side": [
+          "command_block_impulse0"
+        ],
+        "top": [
+          "command_block_impulse0"
+        ],
+        "bottom": [
+          "command_block_impulse0"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

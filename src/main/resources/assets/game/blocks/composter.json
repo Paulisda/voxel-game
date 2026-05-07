@@ -1,38 +1,38 @@
 ﻿{
-    "id":  "game:composter",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  2,
-                                     "resistance":  3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "composter_side",
-                                                     "composter_side1"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "composter_side",
-                                                                   "composter_side1"
-                                                               ],
-                                                      "top":  [
-                                                                  "composter_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "composter_bottom"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:composter",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 2,
+      "resistance": 3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "composter_side",
+        "composter_side1"
+      ],
+      "textures": {
+        "side": [
+          "composter_side",
+          "composter_side1"
+        ],
+        "top": [
+          "composter_top"
+        ],
+        "bottom": [
+          "composter_bottom"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

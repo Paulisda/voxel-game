@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:sugar_cane",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "sugar_cane"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "sugar_cane"
-                                                               ],
-                                                      "top":  [
-                                                                  "sugar_cane"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "sugar_cane"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#808080",
-                                                      "top":  "#808080",
-                                                      "bottom":  "#808080",
-                                                      "default":  "#808080"
-                                                  }
-                                 }
-                   }
+  "id": "game:sugar_cane",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "sugar_cane"
+      ],
+      "textures": {
+        "side": [
+          "sugar_cane"
+        ],
+        "top": [
+          "sugar_cane"
+        ],
+        "bottom": [
+          "sugar_cane"
+        ]
+      },
+      "fallback": {
+        "side": "#808080",
+        "top": "#808080",
+        "bottom": "#808080",
+        "default": "#808080"
+      }
+    }
+  }
 }

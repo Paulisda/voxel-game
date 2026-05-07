@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:reinforced_deepslate",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  3,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "reinforced_deepslate_side"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "reinforced_deepslate_side"
-                                                               ],
-                                                      "top":  [
-                                                                  "reinforced_deepslate_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "reinforced_deepslate_bottom"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#25292f",
-                                                      "top":  "#25292f",
-                                                      "bottom":  "#25292f",
-                                                      "default":  "#25292f"
-                                                  }
-                                 }
-                   }
+  "id": "game:reinforced_deepslate",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 3,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "reinforced_deepslate_side"
+      ],
+      "textures": {
+        "side": [
+          "reinforced_deepslate_side"
+        ],
+        "top": [
+          "reinforced_deepslate_top"
+        ],
+        "bottom": [
+          "reinforced_deepslate_bottom"
+        ]
+      },
+      "fallback": {
+        "side": "#25292f",
+        "top": "#25292f",
+        "bottom": "#25292f",
+        "default": "#25292f"
+      }
+    }
+  }
 }

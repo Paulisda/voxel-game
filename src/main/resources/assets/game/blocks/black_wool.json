@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:black_wool",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.8,
-                                     "resistance":  0.8,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "black_wool"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "black_wool"
-                                                               ],
-                                                      "top":  [
-                                                                  "black_wool"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "black_wool"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#1d1d21",
-                                                      "top":  "#1d1d21",
-                                                      "bottom":  "#1d1d21",
-                                                      "default":  "#1d1d21"
-                                                  }
-                                 }
-                   }
+  "id": "game:black_wool",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.8,
+      "resistance": 0.8,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "black_wool"
+      ],
+      "textures": {
+        "side": [
+          "black_wool"
+        ],
+        "top": [
+          "black_wool"
+        ],
+        "bottom": [
+          "black_wool"
+        ]
+      },
+      "fallback": {
+        "side": "#1d1d21",
+        "top": "#1d1d21",
+        "bottom": "#1d1d21",
+        "default": "#1d1d21"
+      }
+    }
+  }
 }

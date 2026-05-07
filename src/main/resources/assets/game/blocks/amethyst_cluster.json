@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:amethyst_cluster",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "amethyst_cluster"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "amethyst_cluster"
-                                                               ],
-                                                      "top":  [
-                                                                  "amethyst_cluster"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "amethyst_cluster"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#9b5ac8",
-                                                      "top":  "#9b5ac8",
-                                                      "bottom":  "#9b5ac8",
-                                                      "default":  "#9b5ac8"
-                                                  }
-                                 }
-                   }
+  "id": "game:amethyst_cluster",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "amethyst_cluster"
+      ],
+      "textures": {
+        "side": [
+          "amethyst_cluster"
+        ],
+        "top": [
+          "amethyst_cluster"
+        ],
+        "bottom": [
+          "amethyst_cluster"
+        ]
+      },
+      "fallback": {
+        "side": "#9b5ac8",
+        "top": "#9b5ac8",
+        "bottom": "#9b5ac8",
+        "default": "#9b5ac8"
+      }
+    }
+  }
 }

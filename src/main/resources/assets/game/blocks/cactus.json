@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:cactus",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0.4,
-                                     "resistance":  0.4,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "cactus_side"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "cactus_side"
-                                                               ],
-                                                      "top":  [
-                                                                  "cactus_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "cactus_bottom"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#4f8f35",
-                                                      "top":  "#4f8f35",
-                                                      "bottom":  "#4f8f35",
-                                                      "default":  "#4f8f35"
-                                                  }
-                                 }
-                   }
+  "id": "game:cactus",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0.4,
+      "resistance": 0.4,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "cactus_side"
+      ],
+      "textures": {
+        "side": [
+          "cactus_side"
+        ],
+        "top": [
+          "cactus_top"
+        ],
+        "bottom": [
+          "cactus_bottom"
+        ]
+      },
+      "fallback": {
+        "side": "#4f8f35",
+        "top": "#4f8f35",
+        "bottom": "#4f8f35",
+        "default": "#4f8f35"
+      }
+    }
+  }
 }

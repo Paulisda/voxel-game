@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:jungle_door",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  2,
-                                     "resistance":  3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "jungle_door_bottom"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "jungle_door_bottom"
-                                                               ],
-                                                      "top":  [
-                                                                  "jungle_door_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "jungle_door_bottom"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#8b5a2b",
-                                                      "top":  "#8b5a2b",
-                                                      "bottom":  "#8b5a2b",
-                                                      "default":  "#8b5a2b"
-                                                  }
-                                 }
-                   }
+  "id": "game:jungle_door",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 2,
+      "resistance": 3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "jungle_door_bottom"
+      ],
+      "textures": {
+        "side": [
+          "jungle_door_bottom"
+        ],
+        "top": [
+          "jungle_door_top"
+        ],
+        "bottom": [
+          "jungle_door_bottom"
+        ]
+      },
+      "fallback": {
+        "side": "#8b5a2b",
+        "top": "#8b5a2b",
+        "bottom": "#8b5a2b",
+        "default": "#8b5a2b"
+      }
+    }
+  }
 }

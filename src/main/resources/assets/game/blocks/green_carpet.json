@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:green_carpet",
-    "components":  {
-                       "block":  {
-                                     "solid":  false,
-                                     "hardness":  0.1,
-                                     "resistance":  0.1,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "green_wool"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "green_wool"
-                                                               ],
-                                                      "top":  [
-                                                                  "green_wool"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "green_wool"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#5e7c16",
-                                                      "top":  "#5e7c16",
-                                                      "bottom":  "#5e7c16",
-                                                      "default":  "#5e7c16"
-                                                  }
-                                 }
-                   }
+  "id": "game:green_carpet",
+  "components": {
+    "block": {
+      "solid": false,
+      "hardness": 0.1,
+      "resistance": 0.1,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "green_wool"
+      ],
+      "textures": {
+        "side": [
+          "green_wool"
+        ],
+        "top": [
+          "green_wool"
+        ],
+        "bottom": [
+          "green_wool"
+        ]
+      },
+      "fallback": {
+        "side": "#5e7c16",
+        "top": "#5e7c16",
+        "bottom": "#5e7c16",
+        "default": "#5e7c16"
+      }
+    }
+  }
 }

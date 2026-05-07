@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:chiseled_quartz_block",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  1.5,
-                                     "resistance":  6,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "chiseled_quartz_block_top"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "chiseled_quartz_block_top"
-                                                               ],
-                                                      "top":  [
-                                                                  "chiseled_quartz_block_top"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "chiseled_quartz_block_top"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#eeeeee",
-                                                      "top":  "#eeeeee",
-                                                      "bottom":  "#eeeeee",
-                                                      "default":  "#eeeeee"
-                                                  }
-                                 }
-                   }
+  "id": "game:chiseled_quartz_block",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 1.5,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "chiseled_quartz_block_top"
+      ],
+      "textures": {
+        "side": [
+          "chiseled_quartz_block_top"
+        ],
+        "top": [
+          "chiseled_quartz_block_top"
+        ],
+        "bottom": [
+          "chiseled_quartz_block_top"
+        ]
+      },
+      "fallback": {
+        "side": "#eeeeee",
+        "top": "#eeeeee",
+        "bottom": "#eeeeee",
+        "default": "#eeeeee"
+      }
+    }
+  }
 }

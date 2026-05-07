@@ -1,60 +1,60 @@
 ﻿{
-    "id":  "game:dark_oak_leaves",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.2,
-                                     "resistance":  0.2,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "dark_oak_leaves",
-                                                     "dark_oak_leaves0",
-                                                     "dark_oak_leaves1",
-                                                     "dark_oak_leaves2",
-                                                     "dark_oak_leaves3",
-                                                     "dark_oak_leaves4",
-                                                     "dark_oak_leaves5"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "dark_oak_leaves",
-                                                                   "dark_oak_leaves0",
-                                                                   "dark_oak_leaves1",
-                                                                   "dark_oak_leaves2",
-                                                                   "dark_oak_leaves3",
-                                                                   "dark_oak_leaves4",
-                                                                   "dark_oak_leaves5"
-                                                               ],
-                                                      "top":  [
-                                                                  "dark_oak_leaves",
-                                                                  "dark_oak_leaves0",
-                                                                  "dark_oak_leaves1",
-                                                                  "dark_oak_leaves2",
-                                                                  "dark_oak_leaves3",
-                                                                  "dark_oak_leaves4",
-                                                                  "dark_oak_leaves5"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "dark_oak_leaves",
-                                                                     "dark_oak_leaves0",
-                                                                     "dark_oak_leaves1",
-                                                                     "dark_oak_leaves2",
-                                                                     "dark_oak_leaves3",
-                                                                     "dark_oak_leaves4",
-                                                                     "dark_oak_leaves5"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#4f8f35",
-                                                      "top":  "#4f8f35",
-                                                      "bottom":  "#4f8f35",
-                                                      "default":  "#4f8f35"
-                                                  }
-                                 }
-                   }
+  "id": "game:dark_oak_leaves",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.2,
+      "resistance": 0.2,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "dark_oak_leaves",
+        "dark_oak_leaves0",
+        "dark_oak_leaves1",
+        "dark_oak_leaves2",
+        "dark_oak_leaves3",
+        "dark_oak_leaves4",
+        "dark_oak_leaves5"
+      ],
+      "textures": {
+        "side": [
+          "dark_oak_leaves",
+          "dark_oak_leaves0",
+          "dark_oak_leaves1",
+          "dark_oak_leaves2",
+          "dark_oak_leaves3",
+          "dark_oak_leaves4",
+          "dark_oak_leaves5"
+        ],
+        "top": [
+          "dark_oak_leaves",
+          "dark_oak_leaves0",
+          "dark_oak_leaves1",
+          "dark_oak_leaves2",
+          "dark_oak_leaves3",
+          "dark_oak_leaves4",
+          "dark_oak_leaves5"
+        ],
+        "bottom": [
+          "dark_oak_leaves",
+          "dark_oak_leaves0",
+          "dark_oak_leaves1",
+          "dark_oak_leaves2",
+          "dark_oak_leaves3",
+          "dark_oak_leaves4",
+          "dark_oak_leaves5"
+        ]
+      },
+      "fallback": {
+        "side": "#4f8f35",
+        "top": "#4f8f35",
+        "bottom": "#4f8f35",
+        "default": "#4f8f35"
+      }
+    }
+  }
 }

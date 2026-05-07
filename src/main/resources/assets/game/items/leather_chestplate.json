@@ -5,7 +5,10 @@
       "max": 64
     },
     "model": {
-      "texture": ["leather_chestplate", "leather_chestplate_overlay"],
+      "texture": [
+        "leather_chestplate",
+        "leather_chestplate_overlay"
+      ],
       "fallback": {
         "default": "#7a4a1a"
       }

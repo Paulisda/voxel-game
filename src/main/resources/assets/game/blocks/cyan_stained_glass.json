@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:cyan_stained_glass",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.3,
-                                     "resistance":  0.3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "cyan_stained_glass"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "cyan_stained_glass"
-                                                               ],
-                                                      "top":  [
-                                                                  "cyan_stained_glass"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "cyan_stained_glass"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#169c9c",
-                                                      "top":  "#169c9c",
-                                                      "bottom":  "#169c9c",
-                                                      "default":  "#169c9c"
-                                                  }
-                                 }
-                   }
+  "id": "game:cyan_stained_glass",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.3,
+      "resistance": 0.3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "cyan_stained_glass"
+      ],
+      "textures": {
+        "side": [
+          "cyan_stained_glass"
+        ],
+        "top": [
+          "cyan_stained_glass"
+        ],
+        "bottom": [
+          "cyan_stained_glass"
+        ]
+      },
+      "fallback": {
+        "side": "#169c9c",
+        "top": "#169c9c",
+        "bottom": "#169c9c",
+        "default": "#169c9c"
+      }
+    }
+  }
 }

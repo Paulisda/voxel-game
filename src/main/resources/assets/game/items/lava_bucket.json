@@ -5,7 +5,10 @@
       "max": 64
     },
     "model": {
-      "texture": ["lava_bucket", "lava_bucket_emissive"],
+      "texture": [
+        "lava_bucket",
+        "lava_bucket_emissive"
+      ],
       "fallback": {
         "default": "#ffffff"
       }

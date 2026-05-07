@@ -1,48 +1,48 @@
 ﻿{
-    "id":  "game:red_sand",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.5,
-                                     "resistance":  0.5,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "red_sand",
-                                                     "red_sand1",
-                                                     "red_sand2",
-                                                     "red_sand3"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "red_sand",
-                                                                   "red_sand1",
-                                                                   "red_sand2",
-                                                                   "red_sand3"
-                                                               ],
-                                                      "top":  [
-                                                                  "red_sand",
-                                                                  "red_sand1",
-                                                                  "red_sand2",
-                                                                  "red_sand3"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "red_sand",
-                                                                     "red_sand1",
-                                                                     "red_sand2",
-                                                                     "red_sand3"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#b02e26",
-                                                      "top":  "#b02e26",
-                                                      "bottom":  "#b02e26",
-                                                      "default":  "#b02e26"
-                                                  }
-                                 }
-                   }
+  "id": "game:red_sand",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.5,
+      "resistance": 0.5,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "red_sand",
+        "red_sand1",
+        "red_sand2",
+        "red_sand3"
+      ],
+      "textures": {
+        "side": [
+          "red_sand",
+          "red_sand1",
+          "red_sand2",
+          "red_sand3"
+        ],
+        "top": [
+          "red_sand",
+          "red_sand1",
+          "red_sand2",
+          "red_sand3"
+        ],
+        "bottom": [
+          "red_sand",
+          "red_sand1",
+          "red_sand2",
+          "red_sand3"
+        ]
+      },
+      "fallback": {
+        "side": "#b02e26",
+        "top": "#b02e26",
+        "bottom": "#b02e26",
+        "default": "#b02e26"
+      }
+    }
+  }
 }

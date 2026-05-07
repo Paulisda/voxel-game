@@ -1,36 +1,36 @@
 ﻿{
-    "id":  "game:lime_stained_glass",
-    "components":  {
-                       "block":  {
-                                     "solid":  true,
-                                     "hardness":  0.3,
-                                     "resistance":  0.3,
-                                     "breakable":  true
-                                 },
-                       "stack":  {
-                                     "max":  64
-                                 },
-                       "model":  {
-                                     "texture":  [
-                                                     "lime_stained_glass"
-                                                 ],
-                                     "textures":  {
-                                                      "side":  [
-                                                                   "lime_stained_glass"
-                                                               ],
-                                                      "top":  [
-                                                                  "lime_stained_glass"
-                                                              ],
-                                                      "bottom":  [
-                                                                     "lime_stained_glass"
-                                                                 ]
-                                                  },
-                                     "fallback":  {
-                                                      "side":  "#80c71f",
-                                                      "top":  "#80c71f",
-                                                      "bottom":  "#80c71f",
-                                                      "default":  "#80c71f"
-                                                  }
-                                 }
-                   }
+  "id": "game:lime_stained_glass",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 0.3,
+      "resistance": 0.3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "lime_stained_glass"
+      ],
+      "textures": {
+        "side": [
+          "lime_stained_glass"
+        ],
+        "top": [
+          "lime_stained_glass"
+        ],
+        "bottom": [
+          "lime_stained_glass"
+        ]
+      },
+      "fallback": {
+        "side": "#80c71f",
+        "top": "#80c71f",
+        "bottom": "#80c71f",
+        "default": "#80c71f"
+      }
+    }
+  }
 }
