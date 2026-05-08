@@ -1,9 +1,9 @@
 ﻿{
-  "id": "game:furnace",
+  "id": "game:diamond_ore",
   "components": {
     "block": {
       "solid": true,
-      "hardness": 3.5,
+      "hardness": 3,
       "resistance": 6,
       "breakable": true
     },
@@ -12,27 +12,24 @@
     },
     "model": {
       "texture": [
-        "furnace_front"
+        "diamond_ore"
       ],
       "textures": {
         "side": [
-          "furnace_side"
+          "diamond_ore"
         ],
         "top": [
-          "furnace_top"
+          "diamond_ore"
         ],
         "bottom": [
-          "furnace_top"
-        ],
-        "front": [
-          "furnace_front"
+          "diamond_ore"
         ]
       },
       "fallback": {
-        "side": "#808080",
-        "top": "#808080",
-        "bottom": "#808080",
-        "default": "#808080"
+        "side": "#8eeeff",
+        "top": "#8eeeff",
+        "bottom": "#8eeeff",
+        "default": "#8eeeff"
       }
     }
   }

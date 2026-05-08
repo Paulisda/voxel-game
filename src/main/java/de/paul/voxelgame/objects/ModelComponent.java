@@ -5,6 +5,7 @@ import java.util.Map;
 public record ModelComponent(
         String[] textureCandidates,
         String[] sideTextureCandidates,
+        String[] frontTextureCandidates,
         String[] topTextureCandidates,
         String[] bottomTextureCandidates,
         String tint,
@@ -12,12 +13,13 @@ public record ModelComponent(
         Map<String, Integer> fallbackColors
 ) implements Component {
     public ModelComponent(final String texturePath) {
-        this(new String[]{texturePath}, null, null, null, "", "cube", Map.of());
+        this(new String[]{texturePath}, null, null, null, null, "", "cube", Map.of());
     }
 
     public ModelComponent {
         textureCandidates = normalize(textureCandidates);
         sideTextureCandidates = normalize(sideTextureCandidates);
+        frontTextureCandidates = normalize(frontTextureCandidates);
         topTextureCandidates = normalize(topTextureCandidates);
         bottomTextureCandidates = normalize(bottomTextureCandidates);
         tint = tint == null ? "" : tint.trim().toLowerCase();
@@ -27,6 +29,14 @@ public record ModelComponent(
 
     public String[] sideCandidates() {
         return firstNonEmpty(sideTextureCandidates, textureCandidates);
+    }
+
+    public String[] frontCandidates() {
+        return firstNonEmpty(frontTextureCandidates, sideCandidates());
+    }
+
+    public boolean hasFrontCandidates() {
+        return frontTextureCandidates.length > 0;
     }
 
     public String[] topCandidates() {

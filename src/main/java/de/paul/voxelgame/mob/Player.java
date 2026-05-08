@@ -4,6 +4,7 @@ import de.paul.voxelgame.GameConfig;
 import de.paul.voxelgame.audio.SoundEffectManager;
 import de.paul.voxelgame.engine.InputState;
 import de.paul.voxelgame.map.Block;
+import de.paul.voxelgame.map.BlockFacing;
 import de.paul.voxelgame.map.World;
 import de.paul.voxelgame.math.HitBox;
 import de.paul.voxelgame.math.Vector3f;
@@ -260,9 +261,14 @@ public class Player extends Mob {
             return;
         }
 
-        if (world.placeBlock(hit.placeX, hit.placeY, hit.placeZ, blockItem.blockId())) {
+        if (world.placeBlock(hit.placeX, hit.placeY, hit.placeZ, blockItem.blockId(), placementFacing())) {
             soundEffectManager.play(TAP_EFFECT);
         }
+    }
+
+    private BlockFacing placementFacing() {
+        final Vector3f viewDirection = getViewDirection();
+        return BlockFacing.fromHorizontalVector(viewDirection.getX(), viewDirection.getZ()).opposite();
     }
 
     private RaycastHit raycastSolidBlock(final double reach, final double step) {

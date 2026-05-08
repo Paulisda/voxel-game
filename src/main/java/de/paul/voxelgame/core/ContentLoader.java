@@ -182,6 +182,7 @@ public class ContentLoader {
         return new ModelComponent(
                 stringArray(model.get("texture")),
                 stringArray(textures.get("side")),
+                stringArray(textures.get("front")),
                 stringArray(textures.get("top")),
                 stringArray(textures.get("bottom")),
                 string(model, "tint", ""),

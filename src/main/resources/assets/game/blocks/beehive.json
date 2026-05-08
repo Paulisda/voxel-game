@@ -12,7 +12,7 @@
     },
     "model": {
       "texture": [
-        "beehive_side"
+        "beehive_front"
       ],
       "textures": {
         "side": [
@@ -22,7 +22,13 @@
           "beehive_end"
         ],
         "bottom": [
-          "beehive_end"
+          "beehive_base"
+        ],
+        "front": [
+          "beehive_front"
+        ],
+        "back": [
+          "beehive_back"
         ]
       },
       "fallback": {

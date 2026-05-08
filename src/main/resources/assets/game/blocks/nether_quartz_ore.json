@@ -1,9 +1,9 @@
 ﻿{
-  "id": "game:furnace",
+  "id": "game:nether_quartz_ore",
   "components": {
     "block": {
       "solid": true,
-      "hardness": 3.5,
+      "hardness": 1.5,
       "resistance": 6,
       "breakable": true
     },
@@ -12,27 +12,24 @@
     },
     "model": {
       "texture": [
-        "furnace_front"
+        "nether_quartz_ore"
       ],
       "textures": {
         "side": [
-          "furnace_side"
+          "nether_quartz_ore"
         ],
         "top": [
-          "furnace_top"
+          "nether_quartz_ore"
         ],
         "bottom": [
-          "furnace_top"
-        ],
-        "front": [
-          "furnace_front"
+          "nether_quartz_ore"
         ]
       },
       "fallback": {
-        "side": "#808080",
-        "top": "#808080",
-        "bottom": "#808080",
-        "default": "#808080"
+        "side": "#6f2632",
+        "top": "#6f2632",
+        "bottom": "#6f2632",
+        "default": "#6f2632"
       }
     }
   }

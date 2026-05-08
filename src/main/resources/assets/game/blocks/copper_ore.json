@@ -1,9 +1,9 @@
 ﻿{
-  "id": "game:furnace",
+  "id": "game:copper_ore",
   "components": {
     "block": {
       "solid": true,
-      "hardness": 3.5,
+      "hardness": 3,
       "resistance": 6,
       "breakable": true
     },
@@ -12,27 +12,24 @@
     },
     "model": {
       "texture": [
-        "furnace_front"
+        "copper_ore"
       ],
       "textures": {
         "side": [
-          "furnace_side"
+          "copper_ore"
         ],
         "top": [
-          "furnace_top"
+          "copper_ore"
         ],
         "bottom": [
-          "furnace_top"
-        ],
-        "front": [
-          "furnace_front"
+          "copper_ore"
         ]
       },
       "fallback": {
-        "side": "#808080",
-        "top": "#808080",
-        "bottom": "#808080",
-        "default": "#808080"
+        "side": "#b66b45",
+        "top": "#b66b45",
+        "bottom": "#b66b45",
+        "default": "#b66b45"
       }
     }
   }

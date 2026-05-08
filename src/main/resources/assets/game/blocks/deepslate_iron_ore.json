@@ -1,9 +1,9 @@
 ﻿{
-  "id": "game:furnace",
+  "id": "game:deepslate_iron_ore",
   "components": {
     "block": {
       "solid": true,
-      "hardness": 3.5,
+      "hardness": 3,
       "resistance": 6,
       "breakable": true
     },
@@ -12,20 +12,17 @@
     },
     "model": {
       "texture": [
-        "furnace_front"
+        "deepslate_iron_ore"
       ],
       "textures": {
         "side": [
-          "furnace_side"
+          "deepslate_iron_ore"
         ],
         "top": [
-          "furnace_top"
+          "deepslate_iron_ore"
         ],
         "bottom": [
-          "furnace_top"
-        ],
-        "front": [
-          "furnace_front"
+          "deepslate_iron_ore"
         ]
       },
       "fallback": {

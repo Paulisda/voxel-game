@@ -1,9 +1,9 @@
 ﻿{
-  "id": "game:furnace",
+  "id": "game:emerald_ore",
   "components": {
     "block": {
       "solid": true,
-      "hardness": 3.5,
+      "hardness": 3,
       "resistance": 6,
       "breakable": true
     },
@@ -12,27 +12,24 @@
     },
     "model": {
       "texture": [
-        "furnace_front"
+        "emerald_ore"
       ],
       "textures": {
         "side": [
-          "furnace_side"
+          "emerald_ore"
         ],
         "top": [
-          "furnace_top"
+          "emerald_ore"
         ],
         "bottom": [
-          "furnace_top"
-        ],
-        "front": [
-          "furnace_front"
+          "emerald_ore"
         ]
       },
       "fallback": {
-        "side": "#808080",
-        "top": "#808080",
-        "bottom": "#808080",
-        "default": "#808080"
+        "side": "#37d567",
+        "top": "#37d567",
+        "bottom": "#37d567",
+        "default": "#37d567"
       }
     }
   }

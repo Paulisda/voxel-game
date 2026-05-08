@@ -640,7 +640,13 @@ public class HudRenderer {
 
     private BufferedImage loadItemIconImage(final GameObject item, final ModelComponent model) {
         if (item.has(BlockItemComponent.class)) {
-            BufferedImage icon = decodeImage(resourcePackLoader.loadBlockTexture(model.topCandidates()));
+            BufferedImage icon = decodeImage(resourcePackLoader.loadBlockTexture(model.textureCandidates()));
+            if (icon == null && model.hasFrontCandidates()) {
+                icon = decodeImage(resourcePackLoader.loadBlockTexture(model.frontCandidates()));
+            }
+            if (icon == null) {
+                icon = decodeImage(resourcePackLoader.loadBlockTexture(model.topCandidates()));
+            }
             if (icon == null) {
                 icon = decodeImage(resourcePackLoader.loadBlockTexture(model.sideCandidates()));
             }

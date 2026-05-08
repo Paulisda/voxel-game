@@ -5,6 +5,7 @@ import de.paul.voxelgame.assets.ResourcePackLoader;
 import de.paul.voxelgame.core.JsonParser;
 import de.paul.voxelgame.core.TextureLoader;
 import de.paul.voxelgame.map.Block;
+import de.paul.voxelgame.map.BlockFacing;
 import de.paul.voxelgame.map.World;
 import de.paul.voxelgame.mob.Player;
 import de.paul.voxelgame.objects.BlockComponent;
@@ -203,11 +204,12 @@ public class WorldRenderer {
         if (variants == null || variants.length == 0) {
             return;
         }
+        final boolean leafBlock = isLeafBlock(block.getTypeId());
         final int variantIndex = computeMaterialVariant(block.getTypeId(), x, y, z, variants.length);
         final BlockTextures textures = variants[variantIndex];
 
         final MinecraftBlockModel[] minecraftModels = minecraftBlockModels.get(block.getTypeId());
-        if (minecraftModels != null && minecraftModels.length > 0) {
+        if (minecraftModels != null && minecraftModels.length > 0 && !textures.generatedCube()) {
             final int modelIndex = computeMaterialVariant(block.getTypeId(), x, y, z, minecraftModels.length);
             glDisable(GL_BLEND);
             minecraftModels[modelIndex].render(minX, minY, minZ, size);
@@ -242,16 +244,16 @@ public class WorldRenderer {
         }
 
         if (isFaceVisible(x, y, z + 1)) {
-            drawFace(textures.side(), 0.88f, minX, minY, maxZ, maxX, minY, maxZ, maxX, maxY, maxZ, minX, maxY, maxZ);
+            drawFace(horizontalTexture(horizontalTextures(variants, block, BlockFacing.SOUTH), block, BlockFacing.SOUTH), 0.88f, minX, minY, maxZ, maxX, minY, maxZ, maxX, maxY, maxZ, minX, maxY, maxZ);
         }
         if (isFaceVisible(x, y, z - 1)) {
-            drawFace(textures.side(), 0.88f, maxX, minY, minZ, minX, minY, minZ, minX, maxY, minZ, maxX, maxY, minZ);
+            drawFace(horizontalTexture(horizontalTextures(variants, block, BlockFacing.NORTH), block, BlockFacing.NORTH), 0.88f, maxX, minY, minZ, minX, minY, minZ, minX, maxY, minZ, maxX, maxY, minZ);
         }
         if (isFaceVisible(x + 1, y, z)) {
-            drawFace(textures.side(), 0.83f, maxX, minY, maxZ, maxX, minY, minZ, maxX, maxY, minZ, maxX, maxY, maxZ);
+            drawFace(horizontalTexture(horizontalTextures(variants, block, BlockFacing.EAST), block, BlockFacing.EAST), 0.83f, maxX, minY, maxZ, maxX, minY, minZ, maxX, maxY, minZ, maxX, maxY, maxZ);
         }
         if (isFaceVisible(x - 1, y, z)) {
-            drawFace(textures.side(), 0.83f, minX, minY, minZ, minX, minY, maxZ, minX, maxY, maxZ, minX, maxY, minZ);
+            drawFace(horizontalTexture(horizontalTextures(variants, block, BlockFacing.WEST), block, BlockFacing.WEST), 0.83f, minX, minY, minZ, minX, minY, maxZ, minX, maxY, maxZ, minX, maxY, minZ);
         }
         if (isFaceVisible(x, y + 1, z)) {
             drawFace(textures.top(), 1.0f, minX, maxY, maxZ, maxX, maxY, maxZ, maxX, maxY, minZ, minX, maxY, minZ);
@@ -259,6 +261,30 @@ public class WorldRenderer {
         if (isFaceVisible(x, y - 1, z)) {
             drawFace(textures.bottom(), 0.72f, minX, minY, minZ, maxX, minY, minZ, maxX, minY, maxZ, minX, minY, maxZ);
         }
+
+        if (leafBlock && minecraftModels != null && minecraftModels.length > 0) {
+            final int modelIndex = computeMaterialVariant(block.getTypeId(), x, y, z, minecraftModels.length);
+            minecraftModels[modelIndex].render(minX, minY, minZ, size);
+        }
+    }
+
+    private int horizontalTexture(final BlockTextures textures, final Block block, final BlockFacing face) {
+        return textures.directional() && block.getFacing() == face ? textures.front() : textures.side();
+    }
+
+    private BlockTextures horizontalTextures(final BlockTextures[] variants, final Block block, final BlockFacing face) {
+        if (variants.length <= 1) {
+            return variants[0];
+        }
+        final int variantIndex = computeMaterialVariant(
+                block.getTypeId(),
+                block.getWorldX(),
+                block.getWorldY(),
+                block.getWorldZ(),
+                variants.length,
+                face.ordinal() + 1
+        );
+        return variants[variantIndex];
     }
 
     private void drawFace(
@@ -443,13 +469,23 @@ public class WorldRenderer {
                     minecraftBlockModels.put(type.id(), minecraftModels);
                 }
             }
-            final boolean skipFlatTexturePlaceholders = isLeafBlock(type);
-            final int variantCount = resolveVariantCount(model);
+            final boolean leafBlock = isLeafBlock(type);
+            final boolean generatedCube = leafBlock || model.hasFrontCandidates() || hasIndexedTextureCandidates(model);
+            final int variantCount = leafBlock ? 1 : resolveVariantCount(model);
             final BlockTextures[] variants = new BlockTextures[variantCount];
             for (int variant = 0; variant < variantCount; variant++) {
-                BufferedImage side = loadBlockImageForVariant(model.sideCandidates(), variant, skipFlatTexturePlaceholders);
-                BufferedImage top = loadBlockImageForVariant(model.topCandidates(), variant, skipFlatTexturePlaceholders);
-                BufferedImage bottom = loadBlockImageForVariant(model.bottomCandidates(), variant, skipFlatTexturePlaceholders);
+                BufferedImage side = leafBlock
+                        ? loadLeafBaseBlockImage(model.sideCandidates())
+                        : loadBlockImageForVariant(model.sideCandidates(), variant);
+                BufferedImage front = leafBlock || !model.hasFrontCandidates()
+                        ? side
+                        : loadBlockImageForVariant(model.frontCandidates(), variant);
+                BufferedImage top = leafBlock
+                        ? loadLeafBaseBlockImage(model.topCandidates())
+                        : loadBlockImageForVariant(model.topCandidates(), variant);
+                BufferedImage bottom = leafBlock
+                        ? loadLeafBaseBlockImage(model.bottomCandidates())
+                        : loadBlockImageForVariant(model.bottomCandidates(), variant);
 
                 if (model.hasTint("grass")) {
                     if (top != null) {
@@ -467,14 +503,18 @@ public class WorldRenderer {
                 }
                 if (model.hasTint("water")) {
                     side = tintOrSolid(side, waterTint);
+                    front = tintOrSolid(front, waterTint);
                     top = tintOrSolid(top, waterTint);
                     bottom = tintOrSolid(bottom, waterTint);
                 }
 
                 final int sideId = createTextureFromImageOrFallback(side, fallbackColor(type, model, Face.SIDE));
+                final int frontId = model.hasFrontCandidates()
+                        ? createTextureFromImageOrFallback(front, fallbackColor(type, model, Face.FRONT))
+                        : sideId;
                 final int topId = createTextureFromImageOrFallback(top, fallbackColor(type, model, Face.TOP));
                 final int bottomId = createTextureFromImageOrFallback(bottom, fallbackColor(type, model, Face.BOTTOM));
-                variants[variant] = new BlockTextures(sideId, topId, bottomId);
+                variants[variant] = new BlockTextures(sideId, frontId, topId, bottomId, model.hasFrontCandidates(), generatedCube);
             }
             blockTextureVariants.put(type.id(), variants);
             if (fallbackBlockTextures == null || DIRT_ID.equals(type.id())) {
@@ -485,6 +525,17 @@ public class WorldRenderer {
 
     private boolean isLeafBlock(final GameObject type) {
         return type != null && type.id().path().contains("leaves");
+    }
+
+    private boolean isLeafBlock(final ResourceId typeId) {
+        return typeId != null && typeId.path().contains("leaves");
+    }
+
+    private boolean hasIndexedTextureCandidates(final ModelComponent model) {
+        return hasIndexedVariantCandidate(model.sideCandidates())
+                || hasIndexedVariantCandidate(model.frontCandidates())
+                || hasIndexedVariantCandidate(model.topCandidates())
+                || hasIndexedVariantCandidate(model.bottomCandidates());
     }
 
     private MinecraftBlockModel[] loadMinecraftBlockModels(final GameObject type, final ModelComponent model, final Color grassTint) {
@@ -713,10 +764,6 @@ public class WorldRenderer {
     }
 
     private BufferedImage loadBlockImageForVariant(final String[] candidates, final int variant) {
-        return loadBlockImageForVariant(candidates, variant, false);
-    }
-
-    private BufferedImage loadBlockImageForVariant(final String[] candidates, final int variant, final boolean skipFlatTexturePlaceholders) {
         final String[] ordered = rotateCandidates(candidates, variant);
         BufferedImage firstImage = null;
         for (final String candidate : ordered) {
@@ -728,27 +775,24 @@ public class WorldRenderer {
             if (firstImage == null) {
                 firstImage = image;
             }
-            if (skipFlatTexturePlaceholders && isSingleColorImage(image)) {
-                continue;
-            }
             return image;
         }
         return firstImage;
     }
 
-    private boolean isSingleColorImage(final BufferedImage image) {
-        if (image == null || image.getWidth() <= 0 || image.getHeight() <= 0) {
-            return false;
-        }
-        final int first = image.getRGB(0, 0);
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) {
-                if (image.getRGB(x, y) != first) {
-                    return false;
+    private BufferedImage loadLeafBaseBlockImage(final String[] candidates) {
+        if (candidates != null) {
+            for (final String candidate : candidates) {
+                if (candidate == null || candidate.isBlank() || isIndexedVariantCandidate(candidate)) {
+                    continue;
+                }
+                final BufferedImage image = decodeImage(resourcePackLoader.loadBlockTexture(candidate));
+                if (image != null) {
+                    return image;
                 }
             }
         }
-        return true;
+        return loadBlockImageForVariant(candidates, 0);
     }
 
     private String[] rotateCandidates(final String[] candidates, final int variant) {
@@ -768,21 +812,28 @@ public class WorldRenderer {
             return false;
         }
         for (final String candidate : candidates) {
-            if (candidate == null || candidate.isBlank()) {
-                continue;
-            }
-            final char last = candidate.charAt(candidate.length() - 1);
-            if (last >= '0' && last <= '9') {
+            if (isIndexedVariantCandidate(candidate)) {
                 return true;
             }
         }
         return false;
     }
 
+    private boolean isIndexedVariantCandidate(final String candidate) {
+        if (candidate == null || candidate.isBlank()) {
+            return false;
+        }
+        final char last = candidate.charAt(candidate.length() - 1);
+        return last >= '0' && last <= '9';
+    }
+
     private int resolveVariantCount(final ModelComponent model) {
         int max = 1;
         if (hasIndexedVariantCandidate(model.sideCandidates())) {
             max = Math.max(max, model.sideCandidates().length);
+        }
+        if (hasIndexedVariantCandidate(model.frontCandidates())) {
+            max = Math.max(max, model.frontCandidates().length);
         }
         if (hasIndexedVariantCandidate(model.topCandidates())) {
             max = Math.max(max, model.topCandidates().length);
@@ -797,11 +848,16 @@ public class WorldRenderer {
     }
 
     private int computeMaterialVariant(final ResourceId typeId, final int worldX, final int worldY, final int worldZ, final int variantCount) {
+        return computeMaterialVariant(typeId, worldX, worldY, worldZ, variantCount, 0);
+    }
+
+    private int computeMaterialVariant(final ResourceId typeId, final int worldX, final int worldY, final int worldZ, final int variantCount, final int salt) {
         int hash = 17;
         hash = 31 * hash + typeId.hashCode();
         hash = 31 * hash + worldX;
         hash = 31 * hash + (worldY * 7);
         hash = 31 * hash + worldZ;
+        hash = 31 * hash + salt;
         hash ^= (worldX << 11);
         hash ^= (worldZ >>> 3);
         return Math.floorMod(hash, Math.max(1, variantCount));
@@ -1130,6 +1186,7 @@ public class WorldRenderer {
         final int defaultColor = switch (type.id().path()) {
             case "grass" -> switch (face) {
                 case SIDE -> rgba(110, 157, 74, 255);
+                case FRONT -> rgba(110, 157, 74, 255);
                 case TOP -> rgba(99, 178, 67, 255);
                 case BOTTOM -> rgba(138, 90, 51, 255);
             };
@@ -1162,6 +1219,7 @@ public class WorldRenderer {
 
     private enum Face {
         SIDE("side"),
+        FRONT("front"),
         TOP("top"),
         BOTTOM("bottom");
 
@@ -1172,7 +1230,7 @@ public class WorldRenderer {
         }
     }
 
-    private record BlockTextures(int side, int top, int bottom) {
+    private record BlockTextures(int side, int front, int top, int bottom, boolean directional, boolean generatedCube) {
     }
 
     private record MinecraftBlockModel(List<ModelQuad> quads) {

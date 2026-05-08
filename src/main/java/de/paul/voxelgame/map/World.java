@@ -101,20 +101,28 @@ public class World {
     }
 
     public boolean placeBlock(final int blockX, final int blockY, final int blockZ, final GameObject type) {
+        return placeBlock(blockX, blockY, blockZ, type, BlockFacing.NORTH);
+    }
+
+    public boolean placeBlock(final int blockX, final int blockY, final int blockZ, final GameObject type, final BlockFacing facing) {
         if (!isPlaceableBlock(type) || blockY < 0 || blockY >= GameConfig.CHUNK_HEIGHT) {
             return false;
         }
         if (getBlock(blockX, blockY, blockZ) != null) {
             return false;
         }
-        setBlock(blockX, blockY, blockZ, new Block(blockX, blockY, blockZ, type));
+        setBlock(blockX, blockY, blockZ, new Block(blockX, blockY, blockZ, type, facing));
         return true;
     }
 
     public boolean placeBlock(final int blockX, final int blockY, final int blockZ, final ResourceId typeId) {
+        return placeBlock(blockX, blockY, blockZ, typeId, BlockFacing.NORTH);
+    }
+
+    public boolean placeBlock(final int blockX, final int blockY, final int blockZ, final ResourceId typeId, final BlockFacing facing) {
         return registries.blocks()
                 .find(typeId)
-                .map(type -> placeBlock(blockX, blockY, blockZ, type))
+                .map(type -> placeBlock(blockX, blockY, blockZ, type, facing))
                 .orElse(false);
     }
 

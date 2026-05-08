@@ -1,9 +1,9 @@
 ﻿{
-  "id": "game:furnace",
+  "id": "game:redstone_ore",
   "components": {
     "block": {
       "solid": true,
-      "hardness": 3.5,
+      "hardness": 3,
       "resistance": 6,
       "breakable": true
     },
@@ -12,27 +12,24 @@
     },
     "model": {
       "texture": [
-        "furnace_front"
+        "redstone_ore"
       ],
       "textures": {
         "side": [
-          "furnace_side"
+          "redstone_ore"
         ],
         "top": [
-          "furnace_top"
+          "redstone_ore"
         ],
         "bottom": [
-          "furnace_top"
-        ],
-        "front": [
-          "furnace_front"
+          "redstone_ore"
         ]
       },
       "fallback": {
-        "side": "#808080",
-        "top": "#808080",
-        "bottom": "#808080",
-        "default": "#808080"
+        "side": "#b41818",
+        "top": "#b41818",
+        "bottom": "#b41818",
+        "default": "#b41818"
       }
     }
   }

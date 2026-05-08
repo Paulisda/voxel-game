@@ -16,7 +16,7 @@
       ],
       "textures": {
         "side": [
-          "birch_log"
+          "birch_log", "birch_log0", "birch_log1", "birch_log2", "birch_log3"
         ],
         "top": [
           "birch_log_top"

@@ -12,7 +12,7 @@
     },
     "model": {
       "texture": [
-        "bee_nest_side"
+        "bee_nest_front"
       ],
       "textures": {
         "side": [
@@ -23,6 +23,9 @@
         ],
         "bottom": [
           "bee_nest_bottom"
+        ],
+        "front": [
+          "bee_nest_front"
         ]
       },
       "fallback": {
