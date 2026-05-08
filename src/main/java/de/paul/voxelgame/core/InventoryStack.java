@@ -1,6 +1,7 @@
 package de.paul.voxelgame.core;
 
 import de.paul.voxelgame.objects.GameObject;
+import de.paul.voxelgame.objects.StackComponent;
 
 public final class InventoryStack {
     private final GameObject item;
@@ -61,6 +62,9 @@ public final class InventoryStack {
     }
 
     public static int maxStackSize(final GameObject item) {
+        if (item != null && item.has(StackComponent.class)) {
+            return Math.max(1, item.get(StackComponent.class).maxStackSize());
+        }
         return 64;
     }
 }

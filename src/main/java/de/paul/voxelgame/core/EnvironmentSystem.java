@@ -59,6 +59,24 @@ public final class EnvironmentSystem {
         rainTicksRemaining = MIN_RAIN_TICKS + random.nextInt(EXTRA_RAIN_TICKS + 1);
     }
 
+    public void setWeatherClear() {
+        rainTicksRemaining = 0;
+        clearTicksRemaining = MIN_CLEAR_TICKS + random.nextInt(EXTRA_CLEAR_TICKS + 1);
+        rainStrength = 0.0f;
+        tickAccumulator = 0.0;
+    }
+
+    public void setWeatherRain() {
+        startRain();
+        clearTicksRemaining = 0;
+        rainStrength = 1.0f;
+        tickAccumulator = 0.0;
+    }
+
+    public boolean isRaining() {
+        return rainTicksRemaining > 0 || rainStrength > 0.01f;
+    }
+
     public long totalTicks() {
         return totalTicks;
     }

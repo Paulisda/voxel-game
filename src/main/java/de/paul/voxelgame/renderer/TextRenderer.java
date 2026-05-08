@@ -32,8 +32,12 @@ public final class TextRenderer {
     private final Map<TextKey, TextTexture> cache = new HashMap<>();
 
     public void drawText(final String text, final float x, final float y, final int size, final Color color) {
+        drawText(text, x, y, size, color, 1.0f);
+    }
+
+    public void drawText(final String text, final float x, final float y, final int size, final Color color, final float alpha) {
         final TextTexture texture = texture(text, size, color, Font.PLAIN);
-        draw(texture, x, y);
+        draw(texture, x, y, alpha);
     }
 
     public void drawBoldText(final String text, final float x, final float y, final int size, final Color color) {
@@ -42,8 +46,12 @@ public final class TextRenderer {
     }
 
     public void drawCenteredText(final String text, final float centerX, final float y, final int size, final Color color) {
+        drawCenteredText(text, centerX, y, size, color, 1.0f);
+    }
+
+    public void drawCenteredText(final String text, final float centerX, final float y, final int size, final Color color, final float alpha) {
         final TextTexture texture = texture(text, size, color, Font.PLAIN);
-        draw(texture, centerX - texture.width() * 0.5f, y);
+        draw(texture, centerX - texture.width() * 0.5f, y, alpha);
     }
 
     public void drawCenteredBoldText(final String text, final float centerX, final float y, final int size, final Color color) {
@@ -59,7 +67,11 @@ public final class TextRenderer {
     }
 
     private void draw(final TextTexture texture, final float x, final float y) {
-        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        draw(texture, x, y, 1.0f);
+    }
+
+    private void draw(final TextTexture texture, final float x, final float y, final float alpha) {
+        glColor4f(1.0f, 1.0f, 1.0f, clampAlpha(alpha));
         glBindTexture(GL_TEXTURE_2D, texture.textureId());
         glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 1.0f);
@@ -71,6 +83,11 @@ public final class TextRenderer {
         glTexCoord2f(0.0f, 0.0f);
         glVertex2f(x, y + texture.height());
         glEnd();
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    }
+
+    private float clampAlpha(final float alpha) {
+        return Math.max(0.0f, Math.min(1.0f, alpha));
     }
 
     private TextTexture texture(final String rawText, final int size, final Color color, final int style) {

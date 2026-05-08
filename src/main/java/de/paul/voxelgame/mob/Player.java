@@ -2,6 +2,7 @@ package de.paul.voxelgame.mob;
 
 import de.paul.voxelgame.GameConfig;
 import de.paul.voxelgame.audio.SoundEffectManager;
+import de.paul.voxelgame.core.InventorySystem;
 import de.paul.voxelgame.core.InventoryStack;
 import de.paul.voxelgame.engine.InputState;
 import de.paul.voxelgame.map.Block;
@@ -11,6 +12,7 @@ import de.paul.voxelgame.math.HitBox;
 import de.paul.voxelgame.math.Vector3f;
 import de.paul.voxelgame.objects.BlockItemComponent;
 import de.paul.voxelgame.objects.GameObject;
+import de.paul.voxelgame.objects.RegistryManager;
 import de.paul.voxelgame.objects.ResourceId;
 import de.paul.voxelgame.objects.SpawnEntityComponent;
 
@@ -55,6 +57,7 @@ public class Player extends Mob {
     private static final double SPRINT_MULTIPLIER = 1.6;
     private static final double FLY_VERTICAL_SPEED = 7.0;
     private static final double FLIGHT_TOGGLE_TAP_SECONDS = 0.35;
+    private static final double VOID_DAMAGE_PER_SECOND = 4.0;
     private static final int[] HOTBAR_KEYS = {
             GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3, GLFW_KEY_4, GLFW_KEY_5,
             GLFW_KEY_6, GLFW_KEY_7, GLFW_KEY_8, GLFW_KEY_9
@@ -64,6 +67,8 @@ public class Player extends Mob {
 
     private final long window;
     private final SoundEffectManager soundEffectManager;
+    private final InventorySystem inventorySystem;
+    private final RegistryManager registries;
     private final InventoryStack[] hotbarItems;
     private int selectedHotbarSlot;
     private int healthPoints = 20;
@@ -76,12 +81,22 @@ public class Player extends Mob {
     private double mouseSensitivity = DEFAULT_MOUSE_SENSITIVITY;
     private double elapsedSeconds;
     private double lastCreativeSpaceTap = -10.0;
+    private double voidDamageAccumulator;
     private boolean creativeFlying;
 
-    public Player(final long window, final World world, final InventoryStack[] hotbarItems, final SoundEffectManager soundEffectManager) {
+    public Player(
+            final long window,
+            final World world,
+            final InventoryStack[] hotbarItems,
+            final InventorySystem inventorySystem,
+            final RegistryManager registries,
+            final SoundEffectManager soundEffectManager
+    ) {
         super(world);
         this.window = window;
         this.soundEffectManager = soundEffectManager;
+        this.inventorySystem = inventorySystem;
+        this.registries = registries;
         this.hotbarItems = hotbarItems == null ? new InventoryStack[HOTBAR_KEYS.length] : hotbarItems.clone();
 
         movementSpeed = SURVIVAL_SPEED;
@@ -111,6 +126,7 @@ public class Player extends Mob {
         final Vector3f movementPerSecond = calculateMovementVector(input, deltaSeconds);
         final Vector3f movementThisFrame = movementPerSecond.mul((float) deltaSeconds);
         move(movementThisFrame);
+        handleVoidDamage(deltaSeconds);
     }
 
     private void handleMouseCapture(final InputState input) {
@@ -254,11 +270,120 @@ public class Player extends Mob {
         return true;
     }
 
+    private void handleVoidDamage(final double deltaSeconds) {
+        if (!GameConfig.isSurvival() || getFeetY() >= 0.0) {
+            voidDamageAccumulator = 0.0;
+            return;
+        }
+
+        voidDamageAccumulator += Math.max(0.0, deltaSeconds) * VOID_DAMAGE_PER_SECOND;
+        final int damage = (int) voidDamageAccumulator;
+        if (damage <= 0) {
+            return;
+        }
+        voidDamageAccumulator -= damage;
+        applyDamage(damage);
+    }
+
+    private void applyDamage(final int damage) {
+        if (damage <= 0) {
+            return;
+        }
+        setHealthPoints(healthPoints - damage);
+        if (healthPoints <= 0) {
+            respawn();
+        }
+    }
+
+    private void respawn() {
+        final Vector3f spawnPoint = world.getSpawnPoint();
+        teleport(spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ(), -8.0, 225.0);
+        healthPoints = 20;
+        hungerPoints = 20;
+        voidDamageAccumulator = 0.0;
+        creativeFlying = false;
+    }
+
     public void destroyBlockInView() {
         final RaycastHit hit = raycastSolidBlock(BREAK_REACH, RAYCAST_STEP);
         if (hit != null) {
+            final Block block = world.getBlock(hit.hitX, hit.hitY, hit.hitZ);
             if (world.removeBlock(hit.hitX, hit.hitY, hit.hitZ)) {
+                collectBlockDrop(block == null ? null : block.getType());
                 soundEffectManager.play(TAP_EFFECT);
+            }
+        }
+    }
+
+    private void collectBlockDrop(final GameObject blockType) {
+        if (!GameConfig.isSurvival() || blockType == null || registries == null) {
+            return;
+        }
+
+        final GameObject item = registries.items().find(blockType.id()).orElse(blockType);
+        addStackToInventory(new InventoryStack(item, 1));
+    }
+
+    private void addStackToInventory(final InventoryStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return;
+        }
+
+        mergeStackIntoHotbar(stack);
+        mergeStackIntoInventory(stack);
+        if (stack.isEmpty()) {
+            return;
+        }
+        if (placeStackInEmptyHotbarSlot(stack)) {
+            return;
+        }
+        placeStackInEmptyInventorySlot(stack);
+    }
+
+    private void mergeStackIntoHotbar(final InventoryStack stack) {
+        for (final InventoryStack target : hotbarItems) {
+            if (stack.isEmpty()) {
+                return;
+            }
+            if (target != null && target.canMerge(stack)) {
+                target.mergeFrom(stack);
+            }
+        }
+    }
+
+    private void mergeStackIntoInventory(final InventoryStack stack) {
+        if (inventorySystem == null) {
+            return;
+        }
+        for (int i = 0; i < inventorySystem.inventorySlotCount(); i++) {
+            if (stack.isEmpty()) {
+                return;
+            }
+            final InventoryStack target = inventorySystem.inventorySlot(i);
+            if (target != null && target.canMerge(stack)) {
+                target.mergeFrom(stack);
+            }
+        }
+    }
+
+    private boolean placeStackInEmptyHotbarSlot(final InventoryStack stack) {
+        for (int i = 0; i < hotbarItems.length; i++) {
+            if (hotbarItems[i] == null) {
+                setHotbarStack(i, stack);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void placeStackInEmptyInventorySlot(final InventoryStack stack) {
+        if (inventorySystem == null) {
+            return;
+        }
+        for (int i = 0; i < inventorySystem.inventorySlotCount(); i++) {
+            if (inventorySystem.inventorySlot(i) == null) {
+                inventorySystem.setInventorySlot(i, stack);
+                return;
             }
         }
     }

@@ -81,7 +81,9 @@ public class Game {
             "/time set night",
             "/time set noon",
             "/time set midnight",
-            "/time set 6000"
+            "/time set 6000",
+            "/weather clear",
+            "/weather rain"
     };
 
     private final RegistryManager registries;
@@ -163,6 +165,8 @@ public class Game {
             lastFrameTime = now;
             deltaSeconds = Math.max(1.0 / 240.0, Math.min(0.05, deltaSeconds));
             environmentSystem.update(deltaSeconds);
+            chatSystem.update(deltaSeconds);
+            hudRenderer.update(deltaSeconds);
 
             if (!menuSystem.isOpen()
                     && !inventorySystem.isOpen()
@@ -301,7 +305,7 @@ public class Game {
     private java.util.List<String> commandSuggestions(final String rawInput) {
         final String input = rawInput == null ? "" : rawInput.trim().toLowerCase(java.util.Locale.ROOT);
         if (input.isEmpty()) {
-            return java.util.List.of("/gamemode creative", "/time set day", "/time set night");
+            return java.util.List.of("/gamemode creative", "/time set day", "/time set night", "/weather clear");
         }
         if (!input.startsWith("/")) {
             return java.util.List.of();
@@ -369,8 +373,31 @@ public class Game {
             handleTimeCommand(parts);
             return;
         }
+        if ("weather".equals(parts[0]) || "wetter".equals(parts[0])) {
+            handleWeatherCommand(parts);
+            return;
+        }
 
         chatSystem.addMessage("Unbekannter Befehl: /" + command);
+    }
+
+    private void handleWeatherCommand(final String[] parts) {
+        if (parts.length == 1) {
+            chatSystem.addMessage("Wetter: " + (environmentSystem.isRaining() ? "rain" : "clear"));
+            return;
+        }
+
+        switch (parts[1]) {
+            case "clear", "sun", "sonne" -> {
+                environmentSystem.setWeatherClear();
+                chatSystem.addMessage("Wetter auf clear gesetzt.");
+            }
+            case "rain", "regen" -> {
+                environmentSystem.setWeatherRain();
+                chatSystem.addMessage("Wetter auf rain gesetzt.");
+            }
+            default -> chatSystem.addMessage("Benutzung: /weather clear|rain");
+        }
     }
 
     private void handleTimeCommand(final String[] parts) {
@@ -418,6 +445,10 @@ public class Game {
             return false;
         }
 
+        if (inventorySystem.isOpen() && GameConfig.isCreative()) {
+            return false;
+        }
+
         inputState.consumeTypedText();
         if (inventorySystem.isOpen()) {
             cancelInventoryDrag();
@@ -425,6 +456,7 @@ public class Game {
             player.captureMouse();
         } else {
             inventorySystem.open();
+            inventorySystem.setSearchFocused(GameConfig.isCreative());
             player.releaseMouse();
         }
         return true;
@@ -514,6 +546,16 @@ public class Game {
             case SENSITIVITY_INCREASE -> {
                 soundEffectManager.play(UI_TAP_EFFECT);
                 player.adjustMouseSensitivity(0.01);
+                return true;
+            }
+            case HUD_SCALE_DECREASE -> {
+                soundEffectManager.play(UI_TAP_EFFECT);
+                hudRenderer.adjustHudScale(-1);
+                return true;
+            }
+            case HUD_SCALE_INCREASE -> {
+                soundEffectManager.play(UI_TAP_EFFECT);
+                hudRenderer.adjustHudScale(1);
                 return true;
             }
             case MUSIC_VOLUME_DECREASE -> {
@@ -762,7 +804,7 @@ public class Game {
 
     private void initScene(final World world) {
         inputState = new InputState(window);
-        player = new Player(window, world, inventorySystem.createDefaultHotbar(), soundEffectManager);
+        player = new Player(window, world, inventorySystem.createDefaultHotbar(), inventorySystem, registries, soundEffectManager);
         final Vector3f spawnPoint = world.getSpawnPoint();
         player.teleport(spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ(), -8.0, 225.0);
         player.captureMouse();

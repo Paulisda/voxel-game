@@ -7,8 +7,10 @@ import java.util.List;
 public final class ChatSystem {
     private static final int MAX_MESSAGES = 8;
     private static final int MAX_HISTORY = 32;
+    private static final double MESSAGE_HOLD_SECONDS = 5.0;
+    private static final double MESSAGE_FADE_SECONDS = 2.0;
 
-    private final List<String> messages = new ArrayList<>();
+    private final List<ChatMessage> messages = new ArrayList<>();
     private final List<String> history = new ArrayList<>();
     private List<String> suggestions = Collections.emptyList();
     private boolean open;
@@ -30,6 +32,22 @@ public final class ChatSystem {
     public void close() {
         open = false;
         input = "";
+    }
+
+    public void update(final double deltaSeconds) {
+        if (open || messages.isEmpty()) {
+            return;
+        }
+
+        final double delta = Math.max(0.0, deltaSeconds);
+        final double maxAge = MESSAGE_HOLD_SECONDS + MESSAGE_FADE_SECONDS;
+        for (int i = messages.size() - 1; i >= 0; i--) {
+            final ChatMessage message = messages.get(i);
+            message.ageSeconds += delta;
+            if (message.ageSeconds >= maxAge) {
+                messages.remove(i);
+            }
+        }
     }
 
     public boolean isOpen() {
@@ -103,14 +121,29 @@ public final class ChatSystem {
         if (message == null || message.isBlank()) {
             return;
         }
-        messages.add(message);
+        messages.add(new ChatMessage(message));
         while (messages.size() > MAX_MESSAGES) {
             messages.remove(0);
         }
     }
 
     public List<String> recentMessages() {
-        return Collections.unmodifiableList(messages);
+        final List<String> result = new ArrayList<>();
+        for (final ChatMessage message : messages) {
+            result.add(message.text);
+        }
+        return Collections.unmodifiableList(result);
+    }
+
+    public List<VisibleMessage> visibleMessages() {
+        final List<VisibleMessage> result = new ArrayList<>();
+        for (final ChatMessage message : messages) {
+            final float alpha = open ? 1.0f : alphaForAge(message.ageSeconds);
+            if (alpha > 0.0f) {
+                result.add(new VisibleMessage(message.text, alpha));
+            }
+        }
+        return Collections.unmodifiableList(result);
     }
 
     private void addHistoryEntry(final String submitted) {
@@ -123,6 +156,26 @@ public final class ChatSystem {
         history.add(submitted);
         while (history.size() > MAX_HISTORY) {
             history.remove(0);
+        }
+    }
+
+    private float alphaForAge(final double ageSeconds) {
+        if (ageSeconds <= MESSAGE_HOLD_SECONDS) {
+            return 1.0f;
+        }
+        final double fadeAge = ageSeconds - MESSAGE_HOLD_SECONDS;
+        return (float) Math.max(0.0, Math.min(1.0, 1.0 - fadeAge / MESSAGE_FADE_SECONDS));
+    }
+
+    public record VisibleMessage(String text, float alpha) {
+    }
+
+    private static final class ChatMessage {
+        private final String text;
+        private double ageSeconds;
+
+        private ChatMessage(final String text) {
+            this.text = text;
         }
     }
 }

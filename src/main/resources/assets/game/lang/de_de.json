@@ -6,6 +6,7 @@
     "ui.options.title":  "Einstellungen",
     "ui.options.back":  "Zurück",
     "ui.options.sensitivity":  "Maussensibilität",
+    "ui.options.hud_scale":  "HUD-Skalierung",
     "ui.options.music_volume":  "Musiklautstärke",
     "ui.options.effects_volume":  "Effektlautstärke",
     "ui.options.fullscreen":  "Vollbild",

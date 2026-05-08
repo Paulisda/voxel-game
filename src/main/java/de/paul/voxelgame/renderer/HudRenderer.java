@@ -60,7 +60,11 @@ public class HudRenderer {
     private static final ResourceId DIRT_ID = ResourceId.of("game:dirt");
     private static final int HUD_SLOT_COUNT = 9;
     private static final int STAT_PIP_COUNT = 10;
-    private static final float HUD_SCALE = 2.0f;
+    private static final int DEFAULT_HUD_SCALE = 2;
+    private static final int MIN_HUD_SCALE = 1;
+    private static final int MAX_HUD_SCALE = 8;
+    private static final double SELECTED_ITEM_LABEL_HOLD_SECONDS = 2.2;
+    private static final double SELECTED_ITEM_LABEL_FADE_SECONDS = 1.0;
     private static final float MIN_UI_SCALE = 1.0f;
     private static final float MAX_UI_SCALE = 2.0f;
 
@@ -145,6 +149,10 @@ public class HudRenderer {
     private int creativeInventorySearchTexture;
     private int optionsBackgroundTexture;
     private int menuButtonTexture;
+    private int hudScaleSetting = DEFAULT_HUD_SCALE;
+    private int selectedLabelSlot = -1;
+    private ResourceId selectedLabelItemId;
+    private double selectedLabelSeconds;
 
     public HudRenderer(
             final Player player,
@@ -168,6 +176,34 @@ public class HudRenderer {
         this.soundEffectManager = soundEffectManager;
         loadHudTextures();
         loadObjectIcons();
+    }
+
+    public void update(final double deltaSeconds) {
+        final int selectedSlot = player.getSelectedHotbarSlot();
+        final GameObject selectedItem = player.getHotbarItem(selectedSlot);
+        final ResourceId selectedItemId = selectedItem == null ? null : selectedItem.id();
+        final boolean selectionChanged = selectedSlot != selectedLabelSlot || !sameSelectedItem(selectedItemId);
+
+        if (selectionChanged) {
+            selectedLabelSlot = selectedSlot;
+            selectedLabelItemId = selectedItemId;
+            selectedLabelSeconds = selectedItemId == null
+                    ? 0.0
+                    : SELECTED_ITEM_LABEL_HOLD_SECONDS + SELECTED_ITEM_LABEL_FADE_SECONDS;
+            return;
+        }
+
+        if (selectedLabelSeconds > 0.0) {
+            selectedLabelSeconds = Math.max(0.0, selectedLabelSeconds - Math.max(0.0, deltaSeconds));
+        }
+    }
+
+    public int hudScaleSetting() {
+        return hudScaleSetting;
+    }
+
+    public void adjustHudScale(final int delta) {
+        hudScaleSetting = clampInt(hudScaleSetting + delta, MIN_HUD_SCALE, MAX_HUD_SCALE);
     }
 
     public void render(final int width, final int height, final double mouseX, final double mouseY) {
@@ -194,7 +230,8 @@ public class HudRenderer {
         glLoadIdentity();
 
         final float scale = uiScale(width, height);
-        final float hudScale = HUD_SCALE * scale;
+        final float hudScale = hudScale(width, height);
+        final float hudTextScale = hudTextScale(scale);
         final float hotbarWidth = HOTBAR_W * hudScale;
         final float hotbarHeight = HOTBAR_H * hudScale;
         final float hotbarX = (width - hotbarWidth) * 0.5f;
@@ -215,13 +252,13 @@ public class HudRenderer {
             }
             final float iconX = hotbarX + (3 + i * 20) * hudScale;
             final float iconY = hotbarY + 3.0f * hudScale;
-            drawStackIcon(stack, iconX, iconY, iconSize, font(11, scale));
+            drawStackIcon(stack, iconX, iconY, iconSize, font(11, hudTextScale));
         }
 
         final GameObject selectedItem = player.getHotbarItem(selected);
-        if (selectedItem != null) {
+        if (selectedItem != null && selectedLabelSeconds > 0.0) {
             final String selectedName = localization.translate("ui.hotbar.selected") + ": " + localization.objectName(selectedItem);
-            textRenderer.drawCenteredText(selectedName, width * 0.5f, hotbarY - s(42.0f, scale), font(14, scale), TEXT_COLOR);
+            textRenderer.drawCenteredText(selectedName, width * 0.5f, hotbarY - s(42.0f, hudTextScale), font(14, hudTextScale), TEXT_COLOR, selectedItemLabelAlpha());
         }
 
         final float pipSize = ICON_W * hudScale;
@@ -230,8 +267,10 @@ public class HudRenderer {
         final float heartsX = hotbarX;
         final float hungerX = hotbarX + hotbarWidth - (pipSize + pipStep * (STAT_PIP_COUNT - 1));
 
-        drawStatsRow(player.getHealthPoints(), heartsX, statsY, pipStep, pipSize, heartEmptyTexture, heartHalfTexture, heartFullTexture);
-        drawStatsRow(player.getHungerPoints(), hungerX, statsY, pipStep, pipSize, hungerEmptyTexture, hungerHalfTexture, hungerFullTexture);
+        if (GameConfig.isSurvival()) {
+            drawStatsRow(player.getHealthPoints(), heartsX, statsY, pipStep, pipSize, heartEmptyTexture, heartHalfTexture, heartFullTexture);
+            drawStatsRow(player.getHungerPoints(), hungerX, statsY, pipStep, pipSize, hungerEmptyTexture, hungerHalfTexture, hungerFullTexture);
+        }
 
         if (inventorySystem.isOpen()) {
             renderInventory(width, height);
@@ -239,7 +278,7 @@ public class HudRenderer {
         if (menuSystem.isOpen()) {
             renderMenu(width, height);
         }
-        renderChat(width, height, hotbarY, scale);
+        renderChat(width, height, hotbarY, hudTextScale);
         renderCarriedItem(mouseX, mouseY, scale);
 
         glPopMatrix();
@@ -374,8 +413,7 @@ public class HudRenderer {
     }
 
     private SlotRowLayout hudHotbarLayout(final int width, final int height) {
-        final float scale = uiScale(width, height);
-        final float hudScale = HUD_SCALE * scale;
+        final float hudScale = hudScale(width, height);
         final float hotbarWidth = HOTBAR_W * hudScale;
         final float hotbarHeight = HOTBAR_H * hudScale;
         final float hotbarX = (width - hotbarWidth) * 0.5f;
@@ -601,14 +639,15 @@ public class HudRenderer {
     }
 
     private void renderChat(final int width, final int height, final float hotbarY, final float scale) {
-        final List<String> messages = chatSystem.recentMessages();
+        final List<ChatSystem.VisibleMessage> messages = chatSystem.visibleMessages();
         final float left = s(10.0f, scale);
         final float lineHeight = s(18.0f, scale);
         float y = hotbarY - s(70.0f, scale) - lineHeight * Math.max(0, messages.size() - 1);
-        for (final String message : messages) {
-            final String text = shortName(message, Math.max(20, (int) (width / (s(8.0f, scale)))));
-            drawColoredQuad(left - s(4.0f, scale), y - s(2.0f, scale), Math.min(width * 0.55f, text.length() * s(8.2f, scale)), lineHeight, 0.0f, 0.0f, 0.0f, 0.38f);
-            textRenderer.drawText(text, left, y, font(12, scale), TEXT_COLOR);
+        for (final ChatSystem.VisibleMessage message : messages) {
+            final float alpha = message.alpha();
+            final String text = shortName(message.text(), Math.max(20, (int) (width / (s(8.0f, scale)))));
+            drawColoredQuad(left - s(4.0f, scale), y - s(2.0f, scale), Math.min(width * 0.55f, text.length() * s(8.2f, scale)), lineHeight, 0.0f, 0.0f, 0.0f, 0.38f * alpha);
+            textRenderer.drawText(text, left, y, font(12, scale), TEXT_COLOR, alpha);
             y += lineHeight;
         }
 
@@ -675,16 +714,18 @@ public class HudRenderer {
         final float centerX = panelX + panelWidth * 0.5f;
 
         textRenderer.drawCenteredBoldText(localization.translate("ui.options.title"), centerX, panelY + s(22.0f, scale), font(23, scale), TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.sensitivity"), labelX, panelY + s(72.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
-        textRenderer.drawCenteredBoldText(String.format(Locale.ROOT, "%.2f", player.getMouseSensitivity()), centerX, panelY + s(100.0f, scale), font(18, scale), TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.music_volume"), labelX, panelY + s(134.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
-        textRenderer.drawCenteredBoldText(percent(musicManager.getVolume()), centerX, panelY + s(162.0f, scale), font(18, scale), TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.effects_volume"), labelX, panelY + s(196.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
-        textRenderer.drawCenteredBoldText(percent(soundEffectManager.getVolume()), centerX, panelY + s(224.0f, scale), font(18, scale), TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.fullscreen"), labelX, panelY + s(258.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.resolution"), labelX, panelY + s(338.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
-        textRenderer.drawCenteredBoldText(displayManager.currentResolutionLabel(), centerX, panelY + s(366.0f, scale), font(18, scale), TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.language"), labelX, panelY + s(420.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.sensitivity"), labelX, panelY + s(58.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawCenteredBoldText(String.format(Locale.ROOT, "%.2f", player.getMouseSensitivity()), centerX, panelY + s(84.0f, scale), font(18, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.hud_scale"), labelX, panelY + s(118.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawCenteredBoldText(hudScaleSetting + "x", centerX, panelY + s(144.0f, scale), font(18, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.music_volume"), labelX, panelY + s(178.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawCenteredBoldText(percent(musicManager.getVolume()), centerX, panelY + s(204.0f, scale), font(18, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.effects_volume"), labelX, panelY + s(238.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawCenteredBoldText(percent(soundEffectManager.getVolume()), centerX, panelY + s(264.0f, scale), font(18, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.fullscreen"), labelX, panelY + s(298.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.resolution"), labelX, panelY + s(356.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawCenteredBoldText(displayManager.currentResolutionLabel(), centerX, panelY + s(384.0f, scale), font(18, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.language"), labelX, panelY + s(424.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
         for (final MenuButton button : menuButtonsForOptions(panelX, panelY, panelWidth, scale)) {
             drawMenuButton(button, labelFor(button.action()), scale);
         }
@@ -706,6 +747,8 @@ public class HudRenderer {
             case BACK -> localization.translate("ui.options.back");
             case SENSITIVITY_DECREASE -> "-";
             case SENSITIVITY_INCREASE -> "+";
+            case HUD_SCALE_DECREASE -> "-";
+            case HUD_SCALE_INCREASE -> "+";
             case MUSIC_VOLUME_DECREASE -> "-";
             case MUSIC_VOLUME_INCREASE -> "+";
             case EFFECTS_VOLUME_DECREASE -> "-";
@@ -751,22 +794,46 @@ public class HudRenderer {
         final float rightSmallX = centerX + s(68.0f, scale);
         final float wideButtonX = centerX - wideButtonWidth * 0.5f;
         return new MenuButton[]{
-                new MenuButton(MenuAction.SENSITIVITY_DECREASE, leftSmallX, panelY + s(92.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.SENSITIVITY_INCREASE, rightSmallX, panelY + s(92.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.MUSIC_VOLUME_DECREASE, leftSmallX, panelY + s(154.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.MUSIC_VOLUME_INCREASE, rightSmallX, panelY + s(154.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.EFFECTS_VOLUME_DECREASE, leftSmallX, panelY + s(216.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.EFFECTS_VOLUME_INCREASE, rightSmallX, panelY + s(216.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.FULLSCREEN_TOGGLE, wideButtonX, panelY + s(280.0f, scale), wideButtonWidth, wideButtonHeight),
-                new MenuButton(MenuAction.RESOLUTION_PREVIOUS, leftSmallX, panelY + s(358.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.RESOLUTION_NEXT, rightSmallX, panelY + s(358.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.LANGUAGE_TOGGLE, wideButtonX, panelY + s(442.0f, scale), wideButtonWidth, wideButtonHeight),
-                new MenuButton(MenuAction.BACK, wideButtonX, panelY + s(500.0f, scale), wideButtonWidth, wideButtonHeight)
+                new MenuButton(MenuAction.SENSITIVITY_DECREASE, leftSmallX, panelY + s(78.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.SENSITIVITY_INCREASE, rightSmallX, panelY + s(78.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.HUD_SCALE_DECREASE, leftSmallX, panelY + s(138.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.HUD_SCALE_INCREASE, rightSmallX, panelY + s(138.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.MUSIC_VOLUME_DECREASE, leftSmallX, panelY + s(198.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.MUSIC_VOLUME_INCREASE, rightSmallX, panelY + s(198.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.EFFECTS_VOLUME_DECREASE, leftSmallX, panelY + s(258.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.EFFECTS_VOLUME_INCREASE, rightSmallX, panelY + s(258.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.FULLSCREEN_TOGGLE, wideButtonX, panelY + s(318.0f, scale), wideButtonWidth, wideButtonHeight),
+                new MenuButton(MenuAction.RESOLUTION_PREVIOUS, leftSmallX, panelY + s(378.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.RESOLUTION_NEXT, rightSmallX, panelY + s(378.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.LANGUAGE_TOGGLE, wideButtonX, panelY + s(448.0f, scale), wideButtonWidth, wideButtonHeight),
+                new MenuButton(MenuAction.BACK, wideButtonX, panelY + s(508.0f, scale), wideButtonWidth, wideButtonHeight)
         };
     }
 
     private String percent(final float value) {
         return Math.round(value * 100.0f) + "%";
+    }
+
+    private boolean sameSelectedItem(final ResourceId currentItemId) {
+        return currentItemId == null ? selectedLabelItemId == null : currentItemId.equals(selectedLabelItemId);
+    }
+
+    private float selectedItemLabelAlpha() {
+        if (selectedLabelSeconds <= 0.0) {
+            return 0.0f;
+        }
+        if (selectedLabelSeconds >= SELECTED_ITEM_LABEL_FADE_SECONDS) {
+            return 1.0f;
+        }
+        return clamp((float) (selectedLabelSeconds / SELECTED_ITEM_LABEL_FADE_SECONDS), 0.0f, 1.0f);
+    }
+
+    private float hudScale(final int width, final int height) {
+        return hudScaleSetting * uiScale(width, height);
+    }
+
+    private float hudTextScale(final float scale) {
+        return Math.max(0.6f, scale * hudScaleSetting / (float) DEFAULT_HUD_SCALE);
     }
 
     private float uiScale(final int width, final int height) {
