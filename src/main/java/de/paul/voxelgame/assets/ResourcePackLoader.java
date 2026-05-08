@@ -17,6 +17,7 @@ public class ResourcePackLoader {
     private static final String GUI_TEXTURE_PREFIX = "assets/minecraft/textures/gui/";
     private static final String ITEM_TEXTURE_PREFIX = "assets/minecraft/textures/item/";
     private static final String BLOCK_MODEL_PREFIX = "assets/minecraft/models/block/";
+    private static final String BLOCK_STATE_PREFIX = "assets/minecraft/blockstates/";
     private static final String[] RESOURCE_PACK_DIRECTORIES = {
             "resourcepacks",
             "src/main/resources/resourcepacks"
@@ -46,6 +47,11 @@ public class ResourcePackLoader {
 
     public String loadBlockModel(final String... modelCandidates) {
         final byte[] data = loadResourceWithPrefix(BLOCK_MODEL_PREFIX, ".json", modelCandidates);
+        return data == null ? null : new String(data, java.nio.charset.StandardCharsets.UTF_8);
+    }
+
+    public String loadBlockState(final String... blockStateCandidates) {
+        final byte[] data = loadResourceWithPrefix(BLOCK_STATE_PREFIX, ".json", blockStateCandidates);
         return data == null ? null : new String(data, java.nio.charset.StandardCharsets.UTF_8);
     }
 

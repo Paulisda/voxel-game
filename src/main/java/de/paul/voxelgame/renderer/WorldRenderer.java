@@ -78,10 +78,11 @@ public class WorldRenderer {
     private final ResourcePackLoader resourcePackLoader = new ResourcePackLoader();
     private final TextureLoader textureLoader = new TextureLoader();
     private final Map<ResourceId, BlockTextures[]> blockTextureVariants = new LinkedHashMap<>();
-    private final Map<ResourceId, MinecraftBlockModel> minecraftBlockModels = new LinkedHashMap<>();
+    private final Map<ResourceId, MinecraftBlockModel[]> minecraftBlockModels = new LinkedHashMap<>();
     private final Map<ResourceId, String> blockShapes = new LinkedHashMap<>();
     private final Map<Integer, Integer> fallbackTextureCache = new HashMap<>();
     private final Map<String, Integer> modelTextureCache = new HashMap<>();
+    private final Map<String, ResolvedMinecraftModel> resolvedModelCache = new HashMap<>();
     private BlockTextures[] fallbackBlockTextures;
 
     private int displayListId;
@@ -143,6 +144,7 @@ public class WorldRenderer {
         blockShapes.clear();
         fallbackTextureCache.clear();
         modelTextureCache.clear();
+        resolvedModelCache.clear();
     }
 
     private void setupProjection(final double fovDeg, final int width, final int height, final double nearClip, final double farClip) {
@@ -204,10 +206,11 @@ public class WorldRenderer {
         final int variantIndex = computeMaterialVariant(block.getTypeId(), x, y, z, variants.length);
         final BlockTextures textures = variants[variantIndex];
 
-        final MinecraftBlockModel minecraftModel = minecraftBlockModels.get(block.getTypeId());
-        if (minecraftModel != null) {
+        final MinecraftBlockModel[] minecraftModels = minecraftBlockModels.get(block.getTypeId());
+        if (minecraftModels != null && minecraftModels.length > 0) {
+            final int modelIndex = computeMaterialVariant(block.getTypeId(), x, y, z, minecraftModels.length);
             glDisable(GL_BLEND);
-            minecraftModel.render(minX, minY, minZ, size);
+            minecraftModels[modelIndex].render(minX, minY, minZ, size);
             glEnable(GL_BLEND);
             return;
         }
@@ -435,17 +438,18 @@ public class WorldRenderer {
                     : new ModelComponent(type.id().path());
             blockShapes.put(type.id(), model.shape());
             if ("cube".equals(model.shape())) {
-                final MinecraftBlockModel minecraftModel = loadMinecraftBlockModel(type, model, grassTint);
-                if (minecraftModel != null) {
-                    minecraftBlockModels.put(type.id(), minecraftModel);
+                final MinecraftBlockModel[] minecraftModels = loadMinecraftBlockModels(type, model, grassTint);
+                if (minecraftModels.length > 0) {
+                    minecraftBlockModels.put(type.id(), minecraftModels);
                 }
             }
+            final boolean skipFlatTexturePlaceholders = isLeafBlock(type);
             final int variantCount = resolveVariantCount(model);
             final BlockTextures[] variants = new BlockTextures[variantCount];
             for (int variant = 0; variant < variantCount; variant++) {
-                BufferedImage side = loadBlockImageForVariant(model.sideCandidates(), variant);
-                BufferedImage top = loadBlockImageForVariant(model.topCandidates(), variant);
-                BufferedImage bottom = loadBlockImageForVariant(model.bottomCandidates(), variant);
+                BufferedImage side = loadBlockImageForVariant(model.sideCandidates(), variant, skipFlatTexturePlaceholders);
+                BufferedImage top = loadBlockImageForVariant(model.topCandidates(), variant, skipFlatTexturePlaceholders);
+                BufferedImage bottom = loadBlockImageForVariant(model.bottomCandidates(), variant, skipFlatTexturePlaceholders);
 
                 if (model.hasTint("grass")) {
                     if (top != null) {
@@ -479,22 +483,95 @@ public class WorldRenderer {
         }
     }
 
-    private MinecraftBlockModel loadMinecraftBlockModel(final GameObject type, final ModelComponent model, final Color grassTint) {
-        final String modelJson = resourcePackLoader.loadBlockModel(type.id().path());
-        if (modelJson == null || modelJson.isBlank()) {
+    private boolean isLeafBlock(final GameObject type) {
+        return type != null && type.id().path().contains("leaves");
+    }
+
+    private MinecraftBlockModel[] loadMinecraftBlockModels(final GameObject type, final ModelComponent model, final Color grassTint) {
+        final MinecraftBlockModel directModel = loadMinecraftBlockModel(
+                new ModelDefinition(type.id().path(), 0.0f, 0.0f, 0.0f),
+                model,
+                grassTint
+        );
+        if (directModel != null) {
+            return new MinecraftBlockModel[]{directModel};
+        }
+
+        final List<ModelDefinition> definitions = loadBlockStateModelDefinitions(type.id().path());
+        if (definitions.isEmpty()) {
+            return new MinecraftBlockModel[0];
+        }
+
+        final List<MinecraftBlockModel> models = new ArrayList<>();
+        for (final ModelDefinition definition : definitions) {
+            final MinecraftBlockModel resolvedModel = loadMinecraftBlockModel(definition, model, grassTint);
+            if (resolvedModel != null) {
+                models.add(resolvedModel);
+            }
+        }
+        return models.toArray(MinecraftBlockModel[]::new);
+    }
+
+    private List<ModelDefinition> loadBlockStateModelDefinitions(final String blockName) {
+        final String blockStateJson = resourcePackLoader.loadBlockState(blockName);
+        if (blockStateJson == null || blockStateJson.isBlank()) {
+            return List.of();
+        }
+
+        try {
+            final Map<String, Object> root = JsonParser.parseObject(blockStateJson);
+            final Map<String, Object> variants = object(root.get("variants"));
+            if (variants.isEmpty()) {
+                return List.of();
+            }
+
+            Object selectedVariant = variants.get("");
+            if (selectedVariant == null && variants.size() == 1) {
+                selectedVariant = variants.values().iterator().next();
+            }
+            return readModelDefinitions(selectedVariant);
+        } catch (RuntimeException ignored) {
+            return List.of();
+        }
+    }
+
+    private List<ModelDefinition> readModelDefinitions(final Object value) {
+        if (value == null) {
+            return List.of();
+        }
+
+        final List<ModelDefinition> definitions = new ArrayList<>();
+        if (value instanceof List<?> list) {
+            for (final Object item : list) {
+                definitions.addAll(readModelDefinitions(item));
+            }
+            return definitions;
+        }
+
+        final Map<String, Object> model = object(value);
+        final String modelPath = normalizeMinecraftModelPath(string(model, "model", ""));
+        if (modelPath.isBlank()) {
+            return List.of();
+        }
+
+        definitions.add(new ModelDefinition(
+                modelPath,
+                number(model.get("x"), 0.0f),
+                number(model.get("y"), 0.0f),
+                number(model.get("z"), 0.0f)
+        ));
+        return definitions;
+    }
+
+    private MinecraftBlockModel loadMinecraftBlockModel(final ModelDefinition definition, final ModelComponent model, final Color grassTint) {
+        final ResolvedMinecraftModel resolvedModel = resolveMinecraftBlockModel(definition.modelPath(), new HashSet<>());
+        if (resolvedModel == null || resolvedModel.elements().isEmpty()) {
             return null;
         }
 
         try {
-            final Map<String, Object> root = JsonParser.parseObject(modelJson);
-            final List<Object> elements = list(root.get("elements"));
-            if (elements.isEmpty()) {
-                return null;
-            }
-
-            final Map<String, Object> textures = object(root.get("textures"));
             final List<ModelQuad> quads = new ArrayList<>();
-            for (final Object rawElement : elements) {
+            for (final Object rawElement : resolvedModel.elements()) {
                 final Map<String, Object> element = object(rawElement);
                 final float[] from = vec3(element.get("from"));
                 final float[] to = vec3(element.get("to"));
@@ -505,26 +582,73 @@ public class WorldRenderer {
                     final String faceName = faceEntry.getKey();
                     final Map<String, Object> face = object(faceEntry.getValue());
                     final String textureReference = string(face, "texture", "");
-                    final String texturePath = resolveTexturePath(textureReference, textures);
+                    final String texturePath = resolveTexturePath(textureReference, resolvedModel.textures());
                     if (texturePath.isBlank()) {
                         continue;
                     }
                     final boolean tinted = face.containsKey("tintindex") || model.hasTint("grass");
                     final int textureId = loadModelTexture(texturePath, tinted ? grassTint : null);
-                    final float[] uv = uv(face.get("uv"));
+                    final float[][] uvs = faceUvs(face.get("uv"), Math.round(number(face.get("rotation"), 0.0f)));
                     final float[][] vertices = faceVertices(faceName, from, to);
                     if (vertices.length == 0) {
                         continue;
                     }
                     for (int i = 0; i < vertices.length; i++) {
                         vertices[i] = rotate(vertices[i], rotation);
+                        vertices[i] = rotateBlockState(vertices[i], definition);
                     }
-                    quads.add(new ModelQuad(textureId, shadeForFace(faceName, shade), uv, vertices));
+                    quads.add(new ModelQuad(textureId, shadeForFace(faceName, shade), uvs, vertices));
                 }
             }
             return quads.isEmpty() ? null : new MinecraftBlockModel(quads);
         } catch (RuntimeException ignored) {
             return null;
+        }
+    }
+
+    private ResolvedMinecraftModel resolveMinecraftBlockModel(final String rawModelPath, final Set<String> stack) {
+        final String modelPath = normalizeMinecraftModelPath(rawModelPath);
+        if (modelPath.isBlank()) {
+            return null;
+        }
+
+        final ResolvedMinecraftModel cached = resolvedModelCache.get(modelPath);
+        if (cached != null) {
+            return cached;
+        }
+        if (!stack.add(modelPath)) {
+            return null;
+        }
+
+        try {
+            final String modelJson = resourcePackLoader.loadBlockModel(modelPath);
+            if (modelJson == null || modelJson.isBlank()) {
+                return null;
+            }
+
+            final Map<String, Object> root = JsonParser.parseObject(modelJson);
+            final Map<String, Object> textures = new LinkedHashMap<>();
+            List<Object> elements = list(root.get("elements"));
+
+            final String parentPath = string(root, "parent", "");
+            if (!parentPath.isBlank()) {
+                final ResolvedMinecraftModel parent = resolveMinecraftBlockModel(parentPath, stack);
+                if (parent != null) {
+                    textures.putAll(parent.textures());
+                    if (elements.isEmpty()) {
+                        elements = parent.elements();
+                    }
+                }
+            }
+
+            textures.putAll(object(root.get("textures")));
+            final ResolvedMinecraftModel resolvedModel = new ResolvedMinecraftModel(elements, textures);
+            resolvedModelCache.put(modelPath, resolvedModel);
+            return resolvedModel;
+        } catch (RuntimeException ignored) {
+            return null;
+        } finally {
+            stack.remove(modelPath);
         }
     }
 
@@ -559,20 +683,72 @@ public class WorldRenderer {
         return path;
     }
 
+    private String normalizeMinecraftModelPath(final String modelPath) {
+        String path = modelPath == null ? "" : modelPath.trim();
+        final int namespaceIndex = path.indexOf(':');
+        if (namespaceIndex >= 0) {
+            path = path.substring(namespaceIndex + 1);
+        }
+        if (path.startsWith("block/")) {
+            path = path.substring("block/".length());
+        }
+        return path;
+    }
+
     private String resolveTexturePath(final String textureReference, final Map<String, Object> textures) {
         String key = textureReference == null ? "" : textureReference.trim();
-        if (key.startsWith("#")) {
+        final Set<String> seen = new HashSet<>();
+        while (key.startsWith("#")) {
             key = key.substring(1);
+            if (!seen.add(key)) {
+                return "";
+            }
             final Object resolved = textures.get(key);
-            return resolved == null ? "" : String.valueOf(resolved);
+            if (resolved == null) {
+                return "";
+            }
+            key = String.valueOf(resolved).trim();
         }
         return key;
     }
 
     private BufferedImage loadBlockImageForVariant(final String[] candidates, final int variant) {
+        return loadBlockImageForVariant(candidates, variant, false);
+    }
+
+    private BufferedImage loadBlockImageForVariant(final String[] candidates, final int variant, final boolean skipFlatTexturePlaceholders) {
         final String[] ordered = rotateCandidates(candidates, variant);
-        final byte[] data = resourcePackLoader.loadBlockTexture(ordered);
-        return decodeImage(data);
+        BufferedImage firstImage = null;
+        for (final String candidate : ordered) {
+            final byte[] data = resourcePackLoader.loadBlockTexture(candidate);
+            final BufferedImage image = decodeImage(data);
+            if (image == null) {
+                continue;
+            }
+            if (firstImage == null) {
+                firstImage = image;
+            }
+            if (skipFlatTexturePlaceholders && isSingleColorImage(image)) {
+                continue;
+            }
+            return image;
+        }
+        return firstImage;
+    }
+
+    private boolean isSingleColorImage(final BufferedImage image) {
+        if (image == null || image.getWidth() <= 0 || image.getHeight() <= 0) {
+            return false;
+        }
+        final int first = image.getRGB(0, 0);
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                if (image.getRGB(x, y) != first) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private String[] rotateCandidates(final String[] candidates, final int variant) {
@@ -812,6 +988,27 @@ public class WorldRenderer {
         };
     }
 
+    private float[][] faceUvs(final Object value, final int rotationDegrees) {
+        final float[] uv = uv(value);
+        final float[][] corners = new float[][]{
+                {uv[0], uv[1]},
+                {uv[2], uv[1]},
+                {uv[2], uv[3]},
+                {uv[0], uv[3]}
+        };
+
+        final int steps = Math.floorMod(rotationDegrees / 90, 4);
+        if (steps == 0) {
+            return corners;
+        }
+
+        final float[][] rotated = new float[4][2];
+        for (int i = 0; i < corners.length; i++) {
+            rotated[i] = corners[Math.floorMod(i - steps, corners.length)];
+        }
+        return rotated;
+    }
+
     private ModelRotation readRotation(final Map<String, Object> rotation) {
         if (rotation.isEmpty()) {
             return ModelRotation.NONE;
@@ -898,6 +1095,21 @@ public class WorldRenderer {
         };
     }
 
+    private float[] rotateBlockState(final float[] vertex, final ModelDefinition definition) {
+        float[] rotated = vertex;
+        final float[] origin = new float[]{8.0f, 8.0f, 8.0f};
+        if (definition.xRotation() != 0.0f) {
+            rotated = rotate(rotated, new ModelRotation("x", definition.xRotation(), origin));
+        }
+        if (definition.yRotation() != 0.0f) {
+            rotated = rotate(rotated, new ModelRotation("y", definition.yRotation(), origin));
+        }
+        if (definition.zRotation() != 0.0f) {
+            rotated = rotate(rotated, new ModelRotation("z", definition.zRotation(), origin));
+        }
+        return rotated;
+    }
+
     private float shadeForFace(final String faceName, final boolean shade) {
         if (!shade) {
             return 1.0f;
@@ -969,17 +1181,16 @@ public class WorldRenderer {
                 glBindTexture(GL_TEXTURE_2D, quad.textureId());
                 setStaticShade(quad.shade());
                 glBegin(GL_QUADS);
-                final float[] uv = quad.uv();
-                texVertex(uv[0], uv[1], quad.vertices()[0], baseX, baseY, baseZ, blockSize);
-                texVertex(uv[2], uv[1], quad.vertices()[1], baseX, baseY, baseZ, blockSize);
-                texVertex(uv[2], uv[3], quad.vertices()[2], baseX, baseY, baseZ, blockSize);
-                texVertex(uv[0], uv[3], quad.vertices()[3], baseX, baseY, baseZ, blockSize);
+                texVertex(quad.uvs()[0], quad.vertices()[0], baseX, baseY, baseZ, blockSize);
+                texVertex(quad.uvs()[1], quad.vertices()[1], baseX, baseY, baseZ, blockSize);
+                texVertex(quad.uvs()[2], quad.vertices()[2], baseX, baseY, baseZ, blockSize);
+                texVertex(quad.uvs()[3], quad.vertices()[3], baseX, baseY, baseZ, blockSize);
                 glEnd();
             }
         }
 
-        private static void texVertex(final float u, final float v, final float[] vertex, final float baseX, final float baseY, final float baseZ, final float blockSize) {
-            glTexCoord2f(u, v);
+        private static void texVertex(final float[] uv, final float[] vertex, final float baseX, final float baseY, final float baseZ, final float blockSize) {
+            glTexCoord2f(uv[0], uv[1]);
             glVertex3f(
                     baseX + (vertex[0] / 16.0f) * blockSize,
                     baseY + (vertex[1] / 16.0f) * blockSize,
@@ -993,7 +1204,13 @@ public class WorldRenderer {
         }
     }
 
-    private record ModelQuad(int textureId, float shade, float[] uv, float[][] vertices) {
+    private record ModelQuad(int textureId, float shade, float[][] uvs, float[][] vertices) {
+    }
+
+    private record ModelDefinition(String modelPath, float xRotation, float yRotation, float zRotation) {
+    }
+
+    private record ResolvedMinecraftModel(List<Object> elements, Map<String, Object> textures) {
     }
 
     private record ModelRotation(String axis, float angle, float[] origin) {
