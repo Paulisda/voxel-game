@@ -14,6 +14,8 @@ import java.util.zip.ZipFile;
 public class ResourcePackLoader {
     private static final String BLOCK_TEXTURE_PREFIX = "assets/minecraft/textures/block/";
     private static final String COLORMAP_TEXTURE_PREFIX = "assets/minecraft/textures/colormap/";
+    private static final String ENVIRONMENT_TEXTURE_PREFIX = "assets/minecraft/textures/environment/";
+    private static final String FONT_PREFIX = "assets/minecraft/font/";
     private static final String GUI_TEXTURE_PREFIX = "assets/minecraft/textures/gui/";
     private static final String ITEM_TEXTURE_PREFIX = "assets/minecraft/textures/item/";
     private static final String BLOCK_MODEL_PREFIX = "assets/minecraft/models/block/";
@@ -39,6 +41,14 @@ public class ResourcePackLoader {
 
     public byte[] loadGuiTexture(final String... textureCandidates) {
         return loadTextureWithPrefix(GUI_TEXTURE_PREFIX, textureCandidates);
+    }
+
+    public byte[] loadEnvironmentTexture(final String... textureCandidates) {
+        return loadTextureWithPrefix(ENVIRONMENT_TEXTURE_PREFIX, textureCandidates);
+    }
+
+    public byte[] loadFont(final String... fontCandidates) {
+        return loadResourceWithPrefix(FONT_PREFIX, ".ttf", fontCandidates);
     }
 
     public byte[] loadItemTexture(final String... textureCandidates) {

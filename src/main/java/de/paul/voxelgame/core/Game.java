@@ -9,6 +9,7 @@ import de.paul.voxelgame.engine.InputState;
 import de.paul.voxelgame.map.World;
 import de.paul.voxelgame.math.Vector3f;
 import de.paul.voxelgame.mob.Player;
+import de.paul.voxelgame.objects.GameObject;
 import de.paul.voxelgame.objects.RegistryManager;
 import de.paul.voxelgame.objects.ResourceId;
 import de.paul.voxelgame.renderer.HudRenderer;
@@ -20,8 +21,15 @@ import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DELETE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_F11;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_ENTER;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SLASH;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_TAB;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_T;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_ANY_PROFILE;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
@@ -67,6 +75,15 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Game {
     private static final ResourceId UI_TAP_EFFECT = ResourceId.of("game:tap");
+    private static final String[] COMMAND_EXAMPLES = {
+            "/gamemode creative",
+            "/gamemode survival",
+            "/time set day",
+            "/time set night",
+            "/time set noon",
+            "/time set midnight",
+            "/time set 6000"
+    };
 
     private final RegistryManager registries;
     private final ResourceManager resources;
@@ -74,7 +91,9 @@ public class Game {
     private final InventorySystem inventorySystem;
     private final LocalizationManager localization;
     private final MenuSystem menuSystem;
+    private final ChatSystem chatSystem;
     private final DisplayManager displayManager;
+    private final EnvironmentSystem environmentSystem;
     private final MusicManager musicManager;
     private final SoundEffectManager soundEffectManager;
     private final WorldSystem worldSystem;
@@ -84,6 +103,8 @@ public class Game {
     private HudRenderer hudRenderer;
     private WorldRenderer worldRenderer;
     private Player player;
+    private InventoryDragSource inventoryDragSource = InventoryDragSource.NONE;
+    private int inventoryDragSourceSlot = -1;
     private double lastFrameTime;
     private int[] frameWidth;
     private int[] frameHeight;
@@ -95,7 +116,9 @@ public class Game {
         this.inventorySystem = new InventorySystem(registries);
         this.localization = new LocalizationManager(resources);
         this.menuSystem = new MenuSystem();
+        this.chatSystem = new ChatSystem();
         this.displayManager = new DisplayManager();
+        this.environmentSystem = new EnvironmentSystem();
         this.musicManager = new MusicManager(resources);
         this.soundEffectManager = new SoundEffectManager(resources);
         this.worldSystem = new WorldSystem(registries);
@@ -124,22 +147,28 @@ public class Game {
             final int width = Math.max(1, frameWidth[0]);
             final int height = Math.max(1, frameHeight[0]);
 
-            final boolean consumedEscapeInput = handleEscapeInput();
-            final boolean consumedInventorySearchInput = handleInventorySearchInput();
-            final boolean consumedInventoryInput = handleInventoryInput();
-            final boolean consumedDisplayInput = handleDisplayInput();
-            final boolean consumedMenuClick = handleMenuClick(width, height);
-            final boolean consumedInventoryClick = handleInventoryClick(width, height);
-            handleInventoryScroll(width, height);
-            handleHotbarScroll();
+            final boolean consumedChatInput = handleChatInput();
+            final boolean consumedEscapeInput = consumedChatInput ? false : handleEscapeInput();
+            final boolean consumedInventorySearchInput = consumedChatInput ? false : handleInventorySearchInput();
+            final boolean consumedInventoryInput = (consumedChatInput || consumedInventorySearchInput) ? false : handleInventoryInput();
+            final boolean consumedDisplayInput = consumedChatInput ? false : handleDisplayInput();
+            final boolean consumedMenuClick = consumedChatInput ? false : handleMenuClick(width, height);
+            final boolean consumedInventoryClick = consumedChatInput ? false : handleInventoryClick(width, height);
+            if (!consumedChatInput) {
+                handleInventoryScroll(width, height);
+                handleHotbarScroll();
+            }
 
             final double now = glfwGetTime();
             double deltaSeconds = now - lastFrameTime;
             lastFrameTime = now;
             deltaSeconds = Math.max(1.0 / 240.0, Math.min(0.05, deltaSeconds));
+            environmentSystem.update(deltaSeconds);
 
             if (!menuSystem.isOpen()
                     && !inventorySystem.isOpen()
+                    && !chatSystem.isOpen()
+                    && !consumedChatInput
                     && !consumedEscapeInput
                     && !consumedInventorySearchInput
                     && !consumedInventoryInput
@@ -150,12 +179,12 @@ public class Game {
             }
 
             glViewport(0, 0, width, height);
-            glClearColor(0.53f, 0.77f, 1.0f, 1.0f);
+            glClearColor(environmentSystem.skyRed(), environmentSystem.skyGreen(), environmentSystem.skyBlue(), 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             worldRenderer.render(player, width, height);
-            hudRenderer.render(width, height);
-            if (!menuSystem.isOpen() && !inventorySystem.isOpen()) {
+            hudRenderer.render(width, height, inputState.getMouseX(), inputState.getMouseY());
+            if (!menuSystem.isOpen() && !inventorySystem.isOpen() && !chatSystem.isOpen()) {
                 drawCrosshair(width, height);
             }
 
@@ -164,11 +193,15 @@ public class Game {
     }
 
     private boolean handleEscapeInput() {
+        if (chatSystem.isOpen()) {
+            return false;
+        }
         if (!inputState.isKeyPressed(GLFW_KEY_ESCAPE)) {
             return false;
         }
 
         if (inventorySystem.isOpen()) {
+            cancelInventoryDrag();
             inventorySystem.close();
             player.captureMouse();
             return true;
@@ -189,19 +222,224 @@ public class Game {
         return true;
     }
 
-    private boolean handleInventoryInput() {
-        if (menuSystem.isOpen() || inventorySystem.isOpen() || !inputState.isKeyPressed(GLFW_KEY_E)) {
+    private boolean handleChatInput() {
+        if (!chatSystem.isOpen()) {
+            if (menuSystem.isOpen() || inventorySystem.isOpen()) {
+                return false;
+            }
+            if (inputState.isKeyPressed(GLFW_KEY_T)) {
+                chatSystem.openChat();
+                refreshChatSuggestions();
+                inputState.consumeTypedText();
+                player.releaseMouse();
+                return true;
+            }
+            if (inputState.isKeyPressed(GLFW_KEY_SLASH) || inputState.typedText().contains("/")) {
+                chatSystem.openCommand();
+                refreshChatSuggestions();
+                inputState.consumeTypedText();
+                player.releaseMouse();
+                return true;
+            }
             return false;
         }
 
-        inventorySystem.open();
+        boolean consumed = false;
+        final String typedText = inputState.consumeTypedText();
+        if (!typedText.isEmpty()) {
+            chatSystem.appendText(typedText);
+            consumed = true;
+        }
+        if (inputState.isKeyPressed(GLFW_KEY_BACKSPACE)) {
+            chatSystem.removeLastCharacter();
+            consumed = true;
+        }
+        if (inputState.isKeyPressed(GLFW_KEY_UP)) {
+            chatSystem.previousHistory();
+            consumed = true;
+        }
+        if (inputState.isKeyPressed(GLFW_KEY_DOWN)) {
+            chatSystem.nextHistory();
+            consumed = true;
+        }
+        if (inputState.isKeyPressed(GLFW_KEY_TAB)) {
+            completeChatInput();
+            consumed = true;
+        }
+        if (inputState.isKeyPressed(GLFW_KEY_ESCAPE)) {
+            chatSystem.close();
+            chatSystem.setSuggestions(java.util.List.of());
+            player.captureMouse();
+            return true;
+        }
+        if (inputState.isKeyPressed(GLFW_KEY_ENTER) || inputState.isKeyPressed(GLFW_KEY_KP_ENTER)) {
+            handleSubmittedChat(chatSystem.submit());
+            chatSystem.setSuggestions(java.util.List.of());
+            player.captureMouse();
+            return true;
+        }
+        refreshChatSuggestions();
+        return consumed;
+    }
+
+    private void completeChatInput() {
+        final java.util.List<String> suggestions = commandSuggestions(chatSystem.input());
+        if (suggestions.isEmpty()) {
+            return;
+        }
+        final String commonPrefix = commonPrefix(suggestions);
+        if (commonPrefix.length() > chatSystem.input().length()) {
+            chatSystem.setInput(commonPrefix);
+        } else {
+            chatSystem.setInput(suggestions.get(0));
+        }
+    }
+
+    private void refreshChatSuggestions() {
+        chatSystem.setSuggestions(commandSuggestions(chatSystem.input()));
+    }
+
+    private java.util.List<String> commandSuggestions(final String rawInput) {
+        final String input = rawInput == null ? "" : rawInput.trim().toLowerCase(java.util.Locale.ROOT);
+        if (input.isEmpty()) {
+            return java.util.List.of("/gamemode creative", "/time set day", "/time set night");
+        }
+        if (!input.startsWith("/")) {
+            return java.util.List.of();
+        }
+
+        final java.util.List<String> result = new java.util.ArrayList<>();
+        for (final String example : COMMAND_EXAMPLES) {
+            if (example.startsWith(input)) {
+                result.add(example);
+            }
+        }
+        return result;
+    }
+
+    private String commonPrefix(final java.util.List<String> values) {
+        if (values.isEmpty()) {
+            return "";
+        }
+        String prefix = values.get(0);
+        for (int i = 1; i < values.size(); i++) {
+            final String value = values.get(i);
+            int length = Math.min(prefix.length(), value.length());
+            int j = 0;
+            while (j < length && prefix.charAt(j) == value.charAt(j)) {
+                j++;
+            }
+            prefix = prefix.substring(0, j);
+        }
+        return prefix;
+    }
+
+    private void handleSubmittedChat(final String submittedText) {
+        if (submittedText == null || submittedText.isBlank()) {
+            return;
+        }
+        if (!submittedText.startsWith("/")) {
+            chatSystem.addMessage("<Player> " + submittedText);
+            return;
+        }
+
+        final String command = submittedText.substring(1).trim();
+        if (command.isEmpty()) {
+            return;
+        }
+        final String[] parts = command.toLowerCase(java.util.Locale.ROOT).split("\\s+");
+        if ("gamemode".equals(parts[0]) || "gm".equals(parts[0])) {
+            if (parts.length < 2) {
+                chatSystem.addMessage("Gamemode: " + (GameConfig.isCreative() ? "creative" : "survival"));
+                return;
+            }
+            switch (parts[1]) {
+                case "1", "creative", "creativ", "c" -> {
+                    GameConfig.setGameMode(GameConfig.GAMEMODE_CREATIVE);
+                    chatSystem.addMessage("Gamemode auf Creative gesetzt.");
+                }
+                case "0", "survival", "s" -> {
+                    GameConfig.setGameMode(GameConfig.GAMEMODE_SURVIVAL);
+                    chatSystem.addMessage("Gamemode auf Survival gesetzt.");
+                }
+                default -> chatSystem.addMessage("Unbekannter Gamemode: " + parts[1]);
+            }
+            return;
+        }
+        if ("time".equals(parts[0])) {
+            handleTimeCommand(parts);
+            return;
+        }
+
+        chatSystem.addMessage("Unbekannter Befehl: /" + command);
+    }
+
+    private void handleTimeCommand(final String[] parts) {
+        if (parts.length == 1) {
+            chatSystem.addMessage("Zeit: " + environmentSystem.dayTime());
+            return;
+        }
+        if (parts.length < 3 || !"set".equals(parts[1])) {
+            chatSystem.addMessage("Benutzung: /time set day|night|<ticks>");
+            return;
+        }
+
+        final Integer dayTime = parseDayTime(parts[2]);
+        if (dayTime == null) {
+            chatSystem.addMessage("Unbekannte Zeit: " + parts[2]);
+            return;
+        }
+        environmentSystem.setDayTime(dayTime);
+        chatSystem.addMessage("Zeit gesetzt: " + parts[2] + " (" + environmentSystem.dayTime() + ")");
+    }
+
+    private Integer parseDayTime(final String value) {
+        return switch (value) {
+            case "day" -> 1_000;
+            case "noon", "mittag" -> 6_000;
+            case "night", "nacht" -> 13_000;
+            case "midnight", "mitternacht" -> 18_000;
+            default -> parseTickTime(value);
+        };
+    }
+
+    private Integer parseTickTime(final String value) {
+        try {
+            return Math.floorMod(Integer.parseInt(value), EnvironmentSystem.DAY_LENGTH_TICKS);
+        } catch (NumberFormatException ignored) {
+            return null;
+        }
+    }
+
+    private boolean handleInventoryInput() {
+        if (chatSystem.isOpen()) {
+            return false;
+        }
+        if (menuSystem.isOpen() || !inputState.isKeyPressed(GLFW_KEY_E)) {
+            return false;
+        }
+
         inputState.consumeTypedText();
-        player.releaseMouse();
+        if (inventorySystem.isOpen()) {
+            cancelInventoryDrag();
+            inventorySystem.close();
+            player.captureMouse();
+        } else {
+            inventorySystem.open();
+            player.releaseMouse();
+        }
         return true;
     }
 
     private boolean handleInventorySearchInput() {
+        if (chatSystem.isOpen()) {
+            return false;
+        }
         if (!inventorySystem.isOpen()) {
+            inputState.consumeTypedText();
+            return false;
+        }
+        if (!GameConfig.isCreative()) {
             inputState.consumeTypedText();
             return false;
         }
@@ -224,18 +462,24 @@ public class Game {
     }
 
     private boolean handleDisplayInput() {
+        if (chatSystem.isOpen()) {
+            return false;
+        }
         if (!inputState.isKeyPressed(GLFW_KEY_F11)) {
             return false;
         }
 
         displayManager.toggleFullscreen(window);
-        if (!menuSystem.isOpen() && !inventorySystem.isOpen()) {
+        if (!menuSystem.isOpen() && !inventorySystem.isOpen() && !chatSystem.isOpen()) {
             player.captureMouse();
         }
         return true;
     }
 
     private boolean handleMenuClick(final int width, final int height) {
+        if (chatSystem.isOpen()) {
+            return false;
+        }
         if (!menuSystem.isOpen() || !inputState.isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
             return false;
         }
@@ -321,31 +565,145 @@ public class Game {
     }
 
     private boolean handleInventoryClick(final int width, final int height) {
-        if (!inventorySystem.isOpen() || !inputState.isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
+        if (chatSystem.isOpen()) {
+            return false;
+        }
+        if (!inventorySystem.isOpen()) {
             return false;
         }
 
-        final var pickedItem = hudRenderer.pickInventoryItem(inputState.getMouseX(), inputState.getMouseY(), width, height);
-        if (pickedItem == null) {
+        boolean consumed = false;
+        if (inputState.isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
+            consumed = beginInventoryDrag(width, height);
+        }
+        if (inputState.isMouseReleased(GLFW_MOUSE_BUTTON_LEFT) && inventorySystem.carriedItem() != null) {
+            finishInventoryDrag(width, height);
+            consumed = true;
+        }
+        return consumed;
+    }
+
+    private boolean beginInventoryDrag(final int width, final int height) {
+        if (inventorySystem.carriedItem() != null) {
             return false;
         }
 
-        player.setHotbarItem(player.getSelectedHotbarSlot(), pickedItem);
-        soundEffectManager.play(UI_TAP_EFFECT);
-        inventorySystem.close();
-        player.captureMouse();
+        final double mouseX = inputState.getMouseX();
+        final double mouseY = inputState.getMouseY();
+        int slot = hudRenderer.pickInventoryHotbarSlot(mouseX, mouseY, width, height);
+        if (slot < 0) {
+            slot = hudRenderer.pickHudHotbarSlot(mouseX, mouseY, width, height);
+        }
+        if (slot >= 0) {
+            final GameObject item = player.getHotbarItem(slot);
+            if (item == null) {
+                return false;
+            }
+            inventoryDragSource = InventoryDragSource.HOTBAR;
+            inventoryDragSourceSlot = slot;
+            inventorySystem.setCarriedItem(item);
+            player.setHotbarItem(slot, null);
+            return true;
+        }
+
+        slot = hudRenderer.pickInventoryStorageSlot(mouseX, mouseY, width, height);
+        if (slot >= 0) {
+            final GameObject item = inventorySystem.inventorySlot(slot);
+            if (item == null) {
+                return false;
+            }
+            inventoryDragSource = InventoryDragSource.INVENTORY;
+            inventoryDragSourceSlot = slot;
+            inventorySystem.setCarriedItem(item);
+            inventorySystem.setInventorySlot(slot, null);
+            return true;
+        }
+
+        final GameObject creativeItem = hudRenderer.pickInventoryItem(mouseX, mouseY, width, height);
+        if (creativeItem == null) {
+            return false;
+        }
+        inventoryDragSource = InventoryDragSource.CREATIVE;
+        inventoryDragSourceSlot = -1;
+        inventorySystem.setCarriedItem(creativeItem);
         return true;
     }
 
+    private void finishInventoryDrag(final int width, final int height) {
+        final GameObject carriedItem = inventorySystem.carriedItem();
+        if (carriedItem == null) {
+            clearInventoryDrag();
+            return;
+        }
+
+        final double mouseX = inputState.getMouseX();
+        final double mouseY = inputState.getMouseY();
+        int targetSlot = hudRenderer.pickInventoryHotbarSlot(mouseX, mouseY, width, height);
+        if (targetSlot < 0) {
+            targetSlot = hudRenderer.pickHudHotbarSlot(mouseX, mouseY, width, height);
+        }
+        if (targetSlot >= 0) {
+            final GameObject replaced = player.getHotbarItem(targetSlot);
+            player.setHotbarItem(targetSlot, carriedItem);
+            placeReplacedItemBack(replaced);
+            clearInventoryDrag();
+            soundEffectManager.play(UI_TAP_EFFECT);
+            return;
+        }
+
+        targetSlot = hudRenderer.pickInventoryStorageSlot(mouseX, mouseY, width, height);
+        if (targetSlot >= 0) {
+            final GameObject replaced = inventorySystem.inventorySlot(targetSlot);
+            inventorySystem.setInventorySlot(targetSlot, carriedItem);
+            placeReplacedItemBack(replaced);
+            clearInventoryDrag();
+            soundEffectManager.play(UI_TAP_EFFECT);
+            return;
+        }
+
+        cancelInventoryDrag();
+    }
+
+    private void placeReplacedItemBack(final GameObject replaced) {
+        if (replaced == null) {
+            return;
+        }
+        if (inventoryDragSource == InventoryDragSource.HOTBAR) {
+            player.setHotbarItem(inventoryDragSourceSlot, replaced);
+        } else if (inventoryDragSource == InventoryDragSource.INVENTORY) {
+            inventorySystem.setInventorySlot(inventoryDragSourceSlot, replaced);
+        }
+    }
+
+    private void cancelInventoryDrag() {
+        final GameObject carriedItem = inventorySystem.carriedItem();
+        if (carriedItem == null) {
+            clearInventoryDrag();
+            return;
+        }
+        if (inventoryDragSource == InventoryDragSource.HOTBAR) {
+            player.setHotbarItem(inventoryDragSourceSlot, carriedItem);
+        } else if (inventoryDragSource == InventoryDragSource.INVENTORY) {
+            inventorySystem.setInventorySlot(inventoryDragSourceSlot, carriedItem);
+        }
+        clearInventoryDrag();
+    }
+
+    private void clearInventoryDrag() {
+        inventorySystem.setCarriedItem(null);
+        inventoryDragSource = InventoryDragSource.NONE;
+        inventoryDragSourceSlot = -1;
+    }
+
     private void handleHotbarScroll() {
-        if (menuSystem.isOpen() || inventorySystem.isOpen()) {
+        if (menuSystem.isOpen() || inventorySystem.isOpen() || chatSystem.isOpen()) {
             return;
         }
         player.scrollHotbar(inputState.getScrollY());
     }
 
     private void handleInventoryScroll(final int width, final int height) {
-        if (!inventorySystem.isOpen()) {
+        if (!inventorySystem.isOpen() || chatSystem.isOpen() || inventorySystem.carriedItem() != null) {
             return;
         }
 
@@ -373,8 +731,8 @@ public class Game {
         player.teleport(spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ(), -8.0, 225.0);
         player.captureMouse();
 
-        worldRenderer = new WorldRenderer(world, registries);
-        hudRenderer = new HudRenderer(player, registries, inventorySystem, menuSystem, localization, displayManager, musicManager, soundEffectManager);
+        worldRenderer = new WorldRenderer(world, registries, environmentSystem);
+        hudRenderer = new HudRenderer(player, registries, inventorySystem, menuSystem, chatSystem, localization, displayManager, musicManager, soundEffectManager);
 
         lastFrameTime = glfwGetTime();
         frameWidth = new int[1];
@@ -456,5 +814,12 @@ public class Game {
         final float scaleByWidth = width / 1920.0f;
         final float scaleByHeight = height / 1080.0f;
         return Math.max(1.0f, Math.min(2.0f, Math.min(scaleByWidth, scaleByHeight)));
+    }
+
+    private enum InventoryDragSource {
+        NONE,
+        CREATIVE,
+        HOTBAR,
+        INVENTORY
     }
 }

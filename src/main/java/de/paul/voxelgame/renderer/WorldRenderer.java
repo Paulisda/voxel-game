@@ -2,6 +2,7 @@ package de.paul.voxelgame.renderer;
 
 import de.paul.voxelgame.GameConfig;
 import de.paul.voxelgame.assets.ResourcePackLoader;
+import de.paul.voxelgame.core.EnvironmentSystem;
 import de.paul.voxelgame.core.JsonParser;
 import de.paul.voxelgame.core.TextureLoader;
 import de.paul.voxelgame.map.Block;
@@ -31,6 +32,7 @@ import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COMPILE;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_GREATER;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
@@ -44,6 +46,7 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glCallList;
 import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glColor4f;
 import static org.lwjgl.opengl.GL11.glDeleteLists;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
@@ -54,9 +57,11 @@ import static org.lwjgl.opengl.GL11.glGenLists;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glNewList;
+import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 
 public class WorldRenderer {
@@ -73,9 +78,12 @@ public class WorldRenderer {
     private static final Color DEFAULT_GRASS_TINT = new Color(0x7F, 0xB2, 0x38);
     private static final Color DEFAULT_WATER_TINT = new Color(62, 128, 216, 200);
     private static final int MATERIAL_VARIANT_BUCKETS = Math.max(1, Integer.getInteger("voxel.texture.variants", 16));
+    private static final float CELESTIAL_DISTANCE = 700.0f;
+    private static final float CELESTIAL_SIZE = 64.0f;
 
     private final World world;
     private final RegistryManager registries;
+    private final EnvironmentSystem environment;
     private final ResourcePackLoader resourcePackLoader = new ResourcePackLoader();
     private final TextureLoader textureLoader = new TextureLoader();
     private final Map<ResourceId, BlockTextures[]> blockTextureVariants = new LinkedHashMap<>();
@@ -85,13 +93,18 @@ public class WorldRenderer {
     private final Map<String, Integer> modelTextureCache = new HashMap<>();
     private final Map<String, ResolvedMinecraftModel> resolvedModelCache = new HashMap<>();
     private BlockTextures[] fallbackBlockTextures;
+    private int sunTexture;
+    private int moonTexture;
+    private int rainTexture;
 
     private int displayListId;
     private long builtRevision = -1;
 
-    public WorldRenderer(final World world, final RegistryManager registries) {
+    public WorldRenderer(final World world, final RegistryManager registries, final EnvironmentSystem environment) {
         this.world = world;
         this.registries = registries;
+        this.environment = environment;
+        initializeEnvironmentTextures();
         initializeTextures();
     }
 
@@ -101,6 +114,8 @@ public class WorldRenderer {
         }
 
         setupProjection(player.getFieldOfView(), width, height, 0.05, 1200.0);
+        setupSkyCamera(player);
+        renderSky();
         setupCamera(player);
 
         glEnable(GL_TEXTURE_2D);
@@ -115,6 +130,8 @@ public class WorldRenderer {
         glDisable(GL_ALPHA_TEST);
         glDisable(GL_BLEND);
         glDisable(GL_TEXTURE_2D);
+
+        renderRainOverlay(width, height);
     }
 
     public void destroy() {
@@ -132,10 +149,14 @@ public class WorldRenderer {
                     continue;
                 }
                 textureIds.add(textures.side());
+                textureIds.add(textures.front());
                 textureIds.add(textures.top());
                 textureIds.add(textures.bottom());
             }
         }
+        textureIds.add(sunTexture);
+        textureIds.add(moonTexture);
+        textureIds.add(rainTexture);
         textureIds.addAll(modelTextureCache.values());
         for (final Integer textureId : textureIds) {
             textureLoader.deleteTexture(textureId == null ? 0 : textureId);
@@ -164,6 +185,145 @@ public class WorldRenderer {
         glRotatef((float) -player.getPitchDegrees(), 1.0f, 0.0f, 0.0f);
         glRotatef((float) -player.getYawDegrees(), 0.0f, 1.0f, 0.0f);
         glTranslatef((float) -player.getCameraX(), (float) -player.getCameraY(), (float) -player.getCameraZ());
+    }
+
+    private void setupSkyCamera(final Player player) {
+        glLoadIdentity();
+        glRotatef((float) -player.getPitchDegrees(), 1.0f, 0.0f, 0.0f);
+        glRotatef((float) -player.getYawDegrees(), 0.0f, 1.0f, 0.0f);
+    }
+
+    private void initializeEnvironmentTextures() {
+        sunTexture = loadEnvironmentTexture("sun", new Color(255, 238, 143, 255));
+        moonTexture = loadEnvironmentTexture("moon_phases", new Color(220, 224, 232, 255));
+        rainTexture = loadEnvironmentTexture("rain", new Color(165, 188, 220, 150));
+    }
+
+    private int loadEnvironmentTexture(final String name, final Color fallbackColor) {
+        final BufferedImage image = decodeImage(resourcePackLoader.loadEnvironmentTexture(name));
+        return uploadTexture(image == null ? createSolidImage(16, 16, fallbackColor) : image);
+    }
+
+    private void renderSky() {
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        final double angle = environment.dayProgress() * Math.PI * 2.0;
+        final float sunX = (float) Math.cos(angle);
+        final float sunY = (float) Math.sin(angle);
+        final float sunZ = -0.18f;
+        final float[] sunDirection = normalize(sunX, sunY, sunZ);
+        final float[] moonDirection = new float[]{-sunDirection[0], -sunDirection[1], -sunDirection[2]};
+
+        final float rainDim = 1.0f - environment.rainStrength() * 0.45f;
+        final float sunAlpha = environment.sunVisibility() * rainDim;
+        if (sunAlpha > 0.01f) {
+            renderCelestialQuad(sunTexture, sunDirection, CELESTIAL_SIZE, sunAlpha, 0.0f, 0.0f, 1.0f, 1.0f);
+        }
+
+        final float moonAlpha = environment.moonVisibility() * rainDim;
+        if (moonAlpha > 0.01f) {
+            final int phase = environment.moonPhase();
+            final int column = phase % 4;
+            final int row = phase / 4;
+            final float u1 = column / 4.0f;
+            final float u2 = (column + 1) / 4.0f;
+            final float v1 = row / 2.0f;
+            final float v2 = (row + 1) / 2.0f;
+            renderCelestialQuad(moonTexture, moonDirection, CELESTIAL_SIZE * 0.82f, moonAlpha, u1, v1, u2, v2);
+        }
+
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
+    }
+
+    private void renderCelestialQuad(
+            final int textureId,
+            final float[] direction,
+            final float size,
+            final float alpha,
+            final float u1,
+            final float v1,
+            final float u2,
+            final float v2
+    ) {
+        final float[] center = new float[]{
+                direction[0] * CELESTIAL_DISTANCE,
+                direction[1] * CELESTIAL_DISTANCE,
+                direction[2] * CELESTIAL_DISTANCE
+        };
+        float[] right = new float[]{direction[2], 0.0f, -direction[0]};
+        if (lengthSquared(right) < 0.0001f) {
+            right = new float[]{1.0f, 0.0f, 0.0f};
+        } else {
+            right = normalize(right);
+        }
+        final float[] up = normalize(cross(direction, right));
+
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        glColor4f(1.0f, 1.0f, 1.0f, clampFloat(alpha, 0.0f, 1.0f));
+        glBegin(GL_QUADS);
+        glTexCoord2f(u1, v2);
+        skyVertex(center, right, up, -size, -size);
+        glTexCoord2f(u2, v2);
+        skyVertex(center, right, up, size, -size);
+        glTexCoord2f(u2, v1);
+        skyVertex(center, right, up, size, size);
+        glTexCoord2f(u1, v1);
+        skyVertex(center, right, up, -size, size);
+        glEnd();
+    }
+
+    private void skyVertex(final float[] center, final float[] right, final float[] up, final float rx, final float uy) {
+        glVertex3f(
+                center[0] + right[0] * rx + up[0] * uy,
+                center[1] + right[1] * rx + up[1] * uy,
+                center[2] + right[2] * rx + up[2] * uy
+        );
+    }
+
+    private void renderRainOverlay(final int width, final int height) {
+        final float rain = environment.rainStrength();
+        if (rain <= 0.01f) {
+            return;
+        }
+
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0, width, height, 0, -1, 1);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+
+        final float tile = 128.0f;
+        final float u2 = width / tile;
+        final float scroll = (environment.totalTicks() % 80) / 80.0f;
+        final float v1 = scroll * 2.0f;
+        final float v2 = v1 + height / tile;
+
+        glBindTexture(GL_TEXTURE_2D, rainTexture);
+        glColor4f(0.78f, 0.86f, 1.0f, 0.34f * rain);
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, v1);
+        glVertex2f(0.0f, 0.0f);
+        glTexCoord2f(u2, v1);
+        glVertex2f(width, 0.0f);
+        glTexCoord2f(u2, v2);
+        glVertex2f(width, height);
+        glTexCoord2f(0.0f, v2);
+        glVertex2f(0.0f, height);
+        glEnd();
+
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        glDisable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
     }
 
     private void rebuildDisplayListIfNeeded() {
@@ -1207,6 +1367,30 @@ public class WorldRenderer {
     private void setShade(final float shade) {
         final float s = clampFloat(shade, 0.0f, 1.0f);
         glColor3f(s, s, s);
+    }
+
+    private float[] normalize(final float x, final float y, final float z) {
+        final float length = (float) Math.sqrt(x * x + y * y + z * z);
+        if (length <= 0.0001f) {
+            return new float[]{0.0f, 1.0f, 0.0f};
+        }
+        return new float[]{x / length, y / length, z / length};
+    }
+
+    private float[] normalize(final float[] vector) {
+        return normalize(vector[0], vector[1], vector[2]);
+    }
+
+    private float[] cross(final float[] a, final float[] b) {
+        return new float[]{
+                a[1] * b[2] - a[2] * b[1],
+                a[2] * b[0] - a[0] * b[2],
+                a[0] * b[1] - a[1] * b[0]
+        };
+    }
+
+    private float lengthSquared(final float[] vector) {
+        return vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2];
     }
 
     private float clampFloat(final float value, final float min, final float max) {

@@ -87,6 +87,13 @@ public class InputState {
         return currentMouseButtons[button] && !previousMouseButtons[button];
     }
 
+    public boolean isMouseReleased(final int button) {
+        if (button < 0 || button >= MOUSE_BUTTON_COUNT) {
+            return false;
+        }
+        return !currentMouseButtons[button] && previousMouseButtons[button];
+    }
+
     public double getMouseX() {
         return mouseX;
     }
@@ -103,5 +110,9 @@ public class InputState {
         final String result = typedText;
         typedText = "";
         return result;
+    }
+
+    public String typedText() {
+        return typedText;
     }
 }

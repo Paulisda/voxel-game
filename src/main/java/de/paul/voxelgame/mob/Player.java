@@ -80,7 +80,7 @@ public class Player extends Mob {
         this.hotbarItems = hotbarItems == null ? new GameObject[HOTBAR_KEYS.length] : hotbarItems.clone();
 
         movementSpeed = SURVIVAL_SPEED;
-        gravityOn = GameConfig.GAMEMODE == 0;
+        gravityOn = GameConfig.isSurvival();
 
         halfWidth = (float) (GameConfig.BLOCK_SIZE * 0.3);
         bodyHeight = (float) (GameConfig.BLOCK_SIZE * 1.8);
@@ -184,7 +184,7 @@ public class Player extends Mob {
             movement = movement.sub(right);
         }
 
-        double speed = GameConfig.GAMEMODE == 0 ? SURVIVAL_SPEED : CREATIVE_SPEED;
+        double speed = GameConfig.isSurvival() ? SURVIVAL_SPEED : CREATIVE_SPEED;
         if (input.isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
             speed *= SPRINT_MULTIPLIER;
         }
@@ -193,7 +193,7 @@ public class Player extends Mob {
             movement = movement.normalized().mul((float) speed);
         }
 
-        if (GameConfig.GAMEMODE == 0) {
+        if (GameConfig.isSurvival()) {
             if (input.isKeyDown(GLFW_KEY_SPACE) && isOnGround) {
                 fallVelocity = jumpVelocity;
                 isOnGround = false;
@@ -348,7 +348,7 @@ public class Player extends Mob {
     }
 
     public void setHotbarItem(final int slotIndex, final GameObject item) {
-        if (slotIndex < 0 || slotIndex >= hotbarItems.length || item == null) {
+        if (slotIndex < 0 || slotIndex >= hotbarItems.length) {
             return;
         }
         hotbarItems[slotIndex] = item;

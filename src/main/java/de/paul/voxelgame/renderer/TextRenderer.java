@@ -1,13 +1,17 @@
 package de.paul.voxelgame.renderer;
 
+import de.paul.voxelgame.assets.ResourcePackLoader;
 import de.paul.voxelgame.core.TextureLoader;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +26,8 @@ import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
 public final class TextRenderer {
+    private static final Font BASE_FONT = loadBaseFont();
+
     private final TextureLoader textureLoader = new TextureLoader();
     private final Map<TextKey, TextTexture> cache = new HashMap<>();
 
@@ -76,7 +82,7 @@ public final class TextRenderer {
             return cached;
         }
 
-        final Font font = new Font(Font.SANS_SERIF, style, size);
+        final Font font = BASE_FONT.deriveFont(style, (float) size);
         final BufferedImage measureImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D measureGraphics = measureImage.createGraphics();
         measureGraphics.setFont(font);
@@ -96,6 +102,17 @@ public final class TextRenderer {
         final TextTexture texture = new TextTexture(textureLoader.uploadTexture(image), width, height);
         cache.put(key, texture);
         return texture;
+    }
+
+    private static Font loadBaseFont() {
+        final byte[] data = new ResourcePackLoader().loadFont("font");
+        if (data != null && data.length > 0) {
+            try {
+                return Font.createFont(Font.TRUETYPE_FONT, new ByteArrayInputStream(data));
+            } catch (FontFormatException | IOException ignored) {
+            }
+        }
+        return new Font(Font.SANS_SERIF, Font.PLAIN, 12);
     }
 
     private record TextKey(String text, int size, int rgba, int style) {
