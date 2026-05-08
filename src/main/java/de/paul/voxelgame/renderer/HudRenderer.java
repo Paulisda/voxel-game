@@ -8,6 +8,7 @@ import de.paul.voxelgame.audio.SoundEffectManager;
 import de.paul.voxelgame.core.DisplayManager;
 import de.paul.voxelgame.core.InventorySystem;
 import de.paul.voxelgame.core.InventoryStack;
+import de.paul.voxelgame.core.JsonParser;
 import de.paul.voxelgame.core.LocalizationManager;
 import de.paul.voxelgame.core.MenuAction;
 import de.paul.voxelgame.core.MenuSystem;
@@ -24,6 +25,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,7 +35,10 @@ import java.util.Set;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_FUNC;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_LEQUAL;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
@@ -43,18 +48,26 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glColor4f;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glDepthFunc;
+import static org.lwjgl.opengl.GL11.glGetInteger;
 import static org.lwjgl.opengl.GL11.glIsEnabled;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
+import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex2f;
+import static org.lwjgl.opengl.GL11.glVertex3f;
 
 public class HudRenderer {
     private static final ResourceId DIRT_ID = ResourceId.of("game:dirt");
@@ -134,7 +147,13 @@ public class HudRenderer {
     private final TextureLoader textureLoader = new TextureLoader();
     private final TextRenderer textRenderer = new TextRenderer();
     private final Map<ResourceId, Integer> objectIcons = new LinkedHashMap<>();
+    private final Map<ResourceId, GuiItemModel> objectGuiModels = new LinkedHashMap<>();
+    private final Map<String, ResolvedModelTextures> resolvedModelTextureCache = new LinkedHashMap<>();
+    private final Map<String, ResolvedGuiModel> resolvedGuiModelCache = new LinkedHashMap<>();
+    private final Map<String, Integer> guiModelTextureCache = new LinkedHashMap<>();
     private int fallbackIcon;
+    private int viewportWidth;
+    private int viewportHeight;
 
     private int hotbarBackgroundTexture;
     private int hotbarSelectorTexture;
@@ -210,6 +229,8 @@ public class HudRenderer {
         if (width <= 0 || height <= 0) {
             return;
         }
+        viewportWidth = width;
+        viewportHeight = height;
 
         final boolean cullWasEnabled = glIsEnabled(GL_CULL_FACE);
 
@@ -310,11 +331,16 @@ public class HudRenderer {
         textureIds.add(optionsBackgroundTexture);
         textureIds.add(menuButtonTexture);
         textureIds.addAll(objectIcons.values());
+        textureIds.addAll(guiModelTextureCache.values());
 
         for (final Integer textureId : textureIds) {
             textureLoader.deleteTexture(textureId == null ? 0 : textureId);
         }
         objectIcons.clear();
+        objectGuiModels.clear();
+        resolvedModelTextureCache.clear();
+        resolvedGuiModelCache.clear();
+        guiModelTextureCache.clear();
         textRenderer.destroy();
     }
 
@@ -501,7 +527,7 @@ public class HudRenderer {
 
             final float iconX = slotX + (layout.slotSize() - layout.iconSize()) * 0.5f;
             final float iconY = slotY + (layout.slotSize() - layout.iconSize()) * 0.5f;
-            drawTexturedQuad(iconFor(entry), iconX, iconY, layout.iconSize(), layout.iconSize());
+            drawItemIcon(entry, iconX, iconY, layout.iconSize());
         }
         renderHotbarItems(layout.hotbarStartX(), layout.hotbarStartY(), layout.slotSize(), layout.slotGap(), layout.iconSize());
     }
@@ -548,7 +574,7 @@ public class HudRenderer {
     }
 
     private void drawStackIcon(final InventoryStack stack, final float iconX, final float iconY, final float iconSize, final int countFont) {
-        drawTexturedQuad(iconFor(stack.item()), iconX, iconY, iconSize, iconSize);
+        drawItemIcon(stack.item(), iconX, iconY, iconSize);
         if (stack.count() <= 1) {
             return;
         }
@@ -557,6 +583,12 @@ public class HudRenderer {
         final float labelY = iconY + iconSize - countFont * 0.82f;
         drawColoredQuad(labelX - 1.0f, labelY - 1.0f, count.length() * countFont * 0.55f + 2.0f, countFont + 2.0f, 0.0f, 0.0f, 0.0f, 0.48f);
         textRenderer.drawText(count, labelX, labelY, countFont, TEXT_COLOR);
+    }
+
+    private void drawItemIcon(final GameObject item, final float iconX, final float iconY, final float iconSize) {
+        if (!drawGuiModelIcon(item, iconX, iconY, iconSize)) {
+            drawTexturedQuad(iconFor(item), iconX, iconY, iconSize, iconSize);
+        }
     }
 
     private CreativeInventoryLayout creativeInventoryLayout(final int entryCount, final int width, final int height) {
@@ -972,6 +1004,11 @@ public class HudRenderer {
                     ? item.get(ModelComponent.class)
                     : new ModelComponent(item.id().path());
 
+            final GuiItemModel guiModel = loadMinecraftItemGuiModel(item.id().path(), grassTint);
+            if (guiModel != null) {
+                objectGuiModels.put(item.id(), guiModel);
+            }
+
             BufferedImage icon = loadItemIconImage(item, model);
             if (icon == null) {
                 icon = createSolidImage(16, 16, fallbackColor(item, model));
@@ -989,8 +1026,13 @@ public class HudRenderer {
     }
 
     private BufferedImage loadItemIconImage(final GameObject item, final ModelComponent model) {
+        BufferedImage icon = loadMinecraftItemModelIcon(item.id().path());
+        if (icon != null) {
+            return icon;
+        }
+
         if (item.has(BlockItemComponent.class)) {
-            BufferedImage icon = decodeImage(resourcePackLoader.loadBlockTexture(model.textureCandidates()));
+            icon = decodeImage(resourcePackLoader.loadBlockTexture(model.textureCandidates()));
             if (icon == null && model.hasFrontCandidates()) {
                 icon = decodeImage(resourcePackLoader.loadBlockTexture(model.frontCandidates()));
             }
@@ -1004,6 +1046,509 @@ public class HudRenderer {
         }
 
         return decodeImage(resourcePackLoader.loadItemTexture(model.textureCandidates()));
+    }
+
+    private boolean drawGuiModelIcon(final GameObject item, final float iconX, final float iconY, final float iconSize) {
+        if (item == null || viewportWidth <= 0 || viewportHeight <= 0) {
+            return false;
+        }
+
+        final GuiItemModel model = objectGuiModels.get(item.id());
+        if (model == null || model.quads().isEmpty()) {
+            return false;
+        }
+
+        final boolean depthWasEnabled = glIsEnabled(GL_DEPTH_TEST);
+        final int previousDepthFunc = glGetInteger(GL_DEPTH_FUNC);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+        glLoadIdentity();
+        glOrtho(0, viewportWidth, viewportHeight, 0, -1000.0, 1000.0);
+
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glLoadIdentity();
+
+        final GuiDisplay display = model.display();
+        final float baseScale = iconSize / 16.0f;
+        glTranslatef(
+                iconX + iconSize * 0.5f + display.translation()[0] * baseScale,
+                iconY + iconSize * 0.5f - display.translation()[1] * baseScale,
+                display.translation()[2] * baseScale
+        );
+        glScalef(
+                baseScale * display.scale()[0],
+                -baseScale * display.scale()[1],
+                baseScale * display.scale()[2]
+        );
+        glRotatef(display.rotation()[2], 0.0f, 0.0f, 1.0f);
+        glRotatef(display.rotation()[1], 0.0f, 1.0f, 0.0f);
+        glRotatef(display.rotation()[0], 1.0f, 0.0f, 0.0f);
+        glTranslatef(-8.0f, -8.0f, -8.0f);
+
+        for (final GuiQuad quad : model.quads()) {
+            glBindTexture(GL_TEXTURE_2D, quad.textureId());
+            final float shade = clamp(quad.shade(), 0.0f, 1.0f);
+            glColor3f(shade, shade, shade);
+            glBegin(GL_QUADS);
+            for (int i = 0; i < quad.vertices().length; i++) {
+                glTexCoord2f(quad.uvs()[i][0], quad.uvs()[i][1]);
+                glVertex3f(quad.vertices()[i][0], quad.vertices()[i][1], quad.vertices()[i][2]);
+            }
+            glEnd();
+        }
+
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        glPopMatrix();
+        glMatrixMode(GL_PROJECTION);
+        glPopMatrix();
+        glMatrixMode(GL_MODELVIEW);
+        glDepthFunc(previousDepthFunc);
+
+        if (!depthWasEnabled) {
+            glDisable(GL_DEPTH_TEST);
+        }
+        return true;
+    }
+
+    private GuiItemModel loadMinecraftItemGuiModel(final String itemName, final Color grassTint) {
+        final ResolvedGuiModel model = resolveGuiModel("item/" + itemName, new HashSet<>());
+        if (model == null || model.elements().isEmpty()) {
+            return null;
+        }
+
+        final List<GuiQuad> quads = new ArrayList<>();
+        try {
+            for (final Object rawElement : model.elements()) {
+                final Map<String, Object> element = object(rawElement);
+                final float[] from = vec3(element.get("from"));
+                final float[] to = vec3(element.get("to"));
+                final ModelRotation rotation = readRotation(object(element.get("rotation")));
+                final boolean shade = bool(element, "shade", true);
+                final Map<String, Object> faces = object(element.get("faces"));
+                for (final Map.Entry<String, Object> faceEntry : faces.entrySet()) {
+                    final String faceName = faceEntry.getKey();
+                    final Map<String, Object> face = object(faceEntry.getValue());
+                    final String texturePath = resolveTexturePath(string(face, "texture", ""), model.textures());
+                    if (texturePath.isBlank()) {
+                        continue;
+                    }
+
+                    final int textureId = loadGuiModelTexture(texturePath, face.containsKey("tintindex") ? grassTint : null);
+                    final float[][] vertices = faceVertices(faceName, from, to);
+                    if (vertices.length == 0) {
+                        continue;
+                    }
+                    for (int i = 0; i < vertices.length; i++) {
+                        vertices[i] = rotate(vertices[i], rotation);
+                    }
+                    quads.add(new GuiQuad(
+                            textureId,
+                            shadeForFace(faceName, shade),
+                            faceUvs(face.get("uv"), Math.round(number(face.get("rotation"), 0.0f))),
+                            vertices
+                    ));
+                }
+            }
+        } catch (RuntimeException ignored) {
+            return null;
+        }
+
+        return quads.isEmpty() ? null : new GuiItemModel(quads, model.display());
+    }
+
+    private ResolvedGuiModel resolveGuiModel(final String rawModelPath, final Set<String> stack) {
+        final ModelReference reference = parseMinecraftModelReference(rawModelPath);
+        if (reference.path().isBlank()) {
+            return null;
+        }
+
+        final String cacheKey = reference.family() + "/" + reference.path();
+        final ResolvedGuiModel cached = resolvedGuiModelCache.get(cacheKey);
+        if (cached != null) {
+            return cached;
+        }
+        if (!stack.add(cacheKey)) {
+            return null;
+        }
+
+        try {
+            final String modelJson = "block".equals(reference.family())
+                    ? resourcePackLoader.loadBlockModel(reference.path())
+                    : resourcePackLoader.loadItemModel(reference.path());
+            if (modelJson == null || modelJson.isBlank()) {
+                return null;
+            }
+
+            final Map<String, Object> root = JsonParser.parseObject(modelJson);
+            final Map<String, Object> textures = new LinkedHashMap<>();
+            List<Object> elements = list(root.get("elements"));
+            GuiDisplay display = GuiDisplay.DEFAULT;
+
+            final String parentPath = string(root, "parent", "");
+            if (!parentPath.isBlank()) {
+                final ResolvedGuiModel parent = resolveGuiModel(parentPath, stack);
+                if (parent != null) {
+                    textures.putAll(parent.textures());
+                    display = parent.display();
+                    if (elements.isEmpty()) {
+                        elements = parent.elements();
+                    }
+                }
+            }
+
+            textures.putAll(object(root.get("textures")));
+            final Map<String, Object> guiDisplay = object(object(root.get("display")).get("gui"));
+            if (!guiDisplay.isEmpty()) {
+                display = readGuiDisplay(guiDisplay, display);
+            }
+
+            final ResolvedGuiModel resolved = new ResolvedGuiModel(elements, textures, display);
+            resolvedGuiModelCache.put(cacheKey, resolved);
+            return resolved;
+        } catch (RuntimeException ignored) {
+            return null;
+        } finally {
+            stack.remove(cacheKey);
+        }
+    }
+
+    private GuiDisplay readGuiDisplay(final Map<String, Object> guiDisplay, final GuiDisplay fallback) {
+        return new GuiDisplay(
+                vec3(guiDisplay.getOrDefault("rotation", fallback.rotation())),
+                vec3(guiDisplay.getOrDefault("translation", fallback.translation())),
+                vec3(guiDisplay.getOrDefault("scale", fallback.scale()))
+        );
+    }
+
+    private int loadGuiModelTexture(final String texturePath, final Color tint) {
+        final String normalizedPath = normalizeMinecraftTexturePath(texturePath);
+        final String cacheKey = normalizedPath + "|" + (tint == null ? "" : tint.getRGB());
+        final Integer cached = guiModelTextureCache.get(cacheKey);
+        if (cached != null) {
+            return cached;
+        }
+
+        BufferedImage image = decodeImage(resourcePackLoader.loadMinecraftTexture(normalizedPath));
+        if (image == null) {
+            image = createSolidImage(16, 16, tint == null ? new Color(185, 82, 124, 255) : tint);
+        } else if (tint != null) {
+            image = multiplyTint(image, tint);
+        }
+        final int textureId = uploadTexture(image);
+        guiModelTextureCache.put(cacheKey, textureId);
+        return textureId;
+    }
+
+    private BufferedImage loadMinecraftItemModelIcon(final String itemName) {
+        final ResolvedModelTextures model = resolveMinecraftModelTextures("item/" + itemName, new HashSet<>());
+        if (model == null || model.textures().isEmpty()) {
+            return null;
+        }
+
+        final String texturePath = firstIconTexturePath(model.textures());
+        if (texturePath.isBlank()) {
+            return null;
+        }
+        return decodeImage(resourcePackLoader.loadMinecraftTexture(normalizeMinecraftTexturePath(texturePath)));
+    }
+
+    private ResolvedModelTextures resolveMinecraftModelTextures(final String rawModelPath, final Set<String> stack) {
+        final ModelReference reference = parseMinecraftModelReference(rawModelPath);
+        if (reference.path().isBlank()) {
+            return null;
+        }
+
+        final String cacheKey = reference.family() + "/" + reference.path();
+        final ResolvedModelTextures cached = resolvedModelTextureCache.get(cacheKey);
+        if (cached != null) {
+            return cached;
+        }
+        if (!stack.add(cacheKey)) {
+            return null;
+        }
+
+        try {
+            final String modelJson = "block".equals(reference.family())
+                    ? resourcePackLoader.loadBlockModel(reference.path())
+                    : resourcePackLoader.loadItemModel(reference.path());
+            if (modelJson == null || modelJson.isBlank()) {
+                return null;
+            }
+
+            final Map<String, Object> root = JsonParser.parseObject(modelJson);
+            final Map<String, Object> textures = new LinkedHashMap<>();
+
+            final String parentPath = string(root, "parent", "");
+            if (!parentPath.isBlank()) {
+                final ResolvedModelTextures parent = resolveMinecraftModelTextures(parentPath, stack);
+                if (parent != null) {
+                    textures.putAll(parent.textures());
+                }
+            }
+
+            textures.putAll(object(root.get("textures")));
+            final ResolvedModelTextures resolved = new ResolvedModelTextures(textures);
+            resolvedModelTextureCache.put(cacheKey, resolved);
+            return resolved;
+        } catch (RuntimeException ignored) {
+            return null;
+        } finally {
+            stack.remove(cacheKey);
+        }
+    }
+
+    private String firstIconTexturePath(final Map<String, Object> textures) {
+        final String[] preferredKeys = {
+                "layer0", "particle", "all", "front", "side", "north", "south", "east", "west", "top", "up", "bottom", "down"
+        };
+        for (final String key : preferredKeys) {
+            final Object value = textures.get(key);
+            final String resolved = resolveTexturePath(value == null ? "" : String.valueOf(value), textures);
+            if (!resolved.isBlank()) {
+                return resolved;
+            }
+        }
+
+        for (final Object value : textures.values()) {
+            final String resolved = resolveTexturePath(value == null ? "" : String.valueOf(value), textures);
+            if (!resolved.isBlank()) {
+                return resolved;
+            }
+        }
+        return "";
+    }
+
+    private String resolveTexturePath(final String textureReference, final Map<String, Object> textures) {
+        String key = textureReference == null ? "" : textureReference.trim();
+        final Set<String> seen = new HashSet<>();
+        while (key.startsWith("#")) {
+            key = key.substring(1);
+            if (!seen.add(key)) {
+                return "";
+            }
+            final Object resolved = textures.get(key);
+            if (resolved == null) {
+                return "";
+            }
+            key = String.valueOf(resolved).trim();
+        }
+        return key;
+    }
+
+    private ModelReference parseMinecraftModelReference(final String modelPath) {
+        String path = modelPath == null ? "" : modelPath.trim();
+        final int namespaceIndex = path.indexOf(':');
+        if (namespaceIndex >= 0) {
+            path = path.substring(namespaceIndex + 1);
+        }
+
+        String family = "item";
+        if (path.startsWith("block/")) {
+            family = "block";
+            path = path.substring("block/".length());
+        } else if (path.startsWith("item/")) {
+            path = path.substring("item/".length());
+        }
+        return new ModelReference(family, path);
+    }
+
+    private String normalizeMinecraftTexturePath(final String texturePath) {
+        String path = texturePath == null ? "" : texturePath.trim();
+        final int namespaceIndex = path.indexOf(':');
+        if (namespaceIndex >= 0) {
+            path = path.substring(namespaceIndex + 1);
+        }
+        return path;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> object(final Object value) {
+        if (value == null) {
+            return Map.of();
+        }
+        if (!(value instanceof Map<?, ?> map)) {
+            return Map.of();
+        }
+        return (Map<String, Object>) map;
+    }
+
+    private List<Object> list(final Object value) {
+        if (value instanceof List<?> rawList) {
+            return new ArrayList<>(rawList);
+        }
+        return List.of();
+    }
+
+    private String string(final Map<String, Object> object, final String key, final String defaultValue) {
+        final Object value = object.get(key);
+        return value == null ? defaultValue : String.valueOf(value);
+    }
+
+    private boolean bool(final Map<String, Object> object, final String key, final boolean defaultValue) {
+        final Object value = object.get(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        if (value instanceof Boolean bool) {
+            return bool;
+        }
+        return Boolean.parseBoolean(String.valueOf(value));
+    }
+
+    private float number(final Object value, final float defaultValue) {
+        if (value == null) {
+            return defaultValue;
+        }
+        if (value instanceof Number number) {
+            return number.floatValue();
+        }
+        return Float.parseFloat(String.valueOf(value));
+    }
+
+    private float[] vec3(final Object value) {
+        if (value instanceof float[] values && values.length >= 3) {
+            return new float[]{values[0], values[1], values[2]};
+        }
+        final List<Object> values = list(value);
+        return new float[]{
+                number(values.size() > 0 ? values.get(0) : null, 0.0f),
+                number(values.size() > 1 ? values.get(1) : null, 0.0f),
+                number(values.size() > 2 ? values.get(2) : null, 0.0f)
+        };
+    }
+
+    private float[] uv(final Object value) {
+        final List<Object> values = list(value);
+        return new float[]{
+                number(values.size() > 0 ? values.get(0) : null, 0.0f) / 16.0f,
+                number(values.size() > 1 ? values.get(1) : null, 0.0f) / 16.0f,
+                number(values.size() > 2 ? values.get(2) : null, 16.0f) / 16.0f,
+                number(values.size() > 3 ? values.get(3) : null, 16.0f) / 16.0f
+        };
+    }
+
+    private float[][] faceUvs(final Object value, final int rotationDegrees) {
+        final float[] uv = uv(value);
+        final float[][] corners = new float[][]{
+                {uv[0], uv[1]},
+                {uv[2], uv[1]},
+                {uv[2], uv[3]},
+                {uv[0], uv[3]}
+        };
+
+        final int steps = Math.floorMod(rotationDegrees / 90, 4);
+        if (steps == 0) {
+            return corners;
+        }
+
+        final float[][] rotated = new float[4][2];
+        for (int i = 0; i < corners.length; i++) {
+            rotated[i] = corners[Math.floorMod(i + steps, corners.length)];
+        }
+        return rotated;
+    }
+
+    private ModelRotation readRotation(final Map<String, Object> rotation) {
+        if (rotation.isEmpty()) {
+            return ModelRotation.NONE;
+        }
+        return new ModelRotation(
+                string(rotation, "axis", ""),
+                number(rotation.get("angle"), 0.0f),
+                vec3(rotation.get("origin"))
+        );
+    }
+
+    private float[][] faceVertices(final String faceName, final float[] from, final float[] to) {
+        return switch (faceName) {
+            case "north" -> new float[][]{
+                    {to[0], from[1], from[2]},
+                    {from[0], from[1], from[2]},
+                    {from[0], to[1], from[2]},
+                    {to[0], to[1], from[2]}
+            };
+            case "south" -> new float[][]{
+                    {from[0], from[1], to[2]},
+                    {to[0], from[1], to[2]},
+                    {to[0], to[1], to[2]},
+                    {from[0], to[1], to[2]}
+            };
+            case "east" -> new float[][]{
+                    {to[0], from[1], to[2]},
+                    {to[0], from[1], from[2]},
+                    {to[0], to[1], from[2]},
+                    {to[0], to[1], to[2]}
+            };
+            case "west" -> new float[][]{
+                    {from[0], from[1], from[2]},
+                    {from[0], from[1], to[2]},
+                    {from[0], to[1], to[2]},
+                    {from[0], to[1], from[2]}
+            };
+            case "up" -> new float[][]{
+                    {from[0], to[1], to[2]},
+                    {to[0], to[1], to[2]},
+                    {to[0], to[1], from[2]},
+                    {from[0], to[1], from[2]}
+            };
+            case "down" -> new float[][]{
+                    {from[0], from[1], from[2]},
+                    {to[0], from[1], from[2]},
+                    {to[0], from[1], to[2]},
+                    {from[0], from[1], to[2]}
+            };
+            default -> new float[0][0];
+        };
+    }
+
+    private float[] rotate(final float[] vertex, final ModelRotation rotation) {
+        if (rotation == ModelRotation.NONE || rotation.axis().isBlank() || rotation.angle() == 0.0f) {
+            return vertex;
+        }
+
+        final double radians = Math.toRadians(rotation.angle());
+        final double sin = Math.sin(radians);
+        final double cos = Math.cos(radians);
+        final float[] origin = rotation.origin();
+        final float x = vertex[0] - origin[0];
+        final float y = vertex[1] - origin[1];
+        final float z = vertex[2] - origin[2];
+
+        return switch (rotation.axis()) {
+            case "x" -> new float[]{
+                    origin[0] + x,
+                    origin[1] + (float) (y * cos - z * sin),
+                    origin[2] + (float) (y * sin + z * cos)
+            };
+            case "y" -> new float[]{
+                    origin[0] + (float) (x * cos + z * sin),
+                    origin[1] + y,
+                    origin[2] + (float) (-x * sin + z * cos)
+            };
+            case "z" -> new float[]{
+                    origin[0] + (float) (x * cos - y * sin),
+                    origin[1] + (float) (x * sin + y * cos),
+                    origin[2] + z
+            };
+            default -> vertex;
+        };
+    }
+
+    private float shadeForFace(final String faceName, final boolean shade) {
+        if (!shade) {
+            return 1.0f;
+        }
+        return switch (faceName) {
+            case "down" -> 0.72f;
+            case "east", "west" -> 0.83f;
+            case "north", "south" -> 0.88f;
+            default -> 1.0f;
+        };
     }
 
     private int iconFor(final GameObject type) {
@@ -1169,5 +1714,32 @@ public class HudRenderer {
     }
 
     private record MenuButton(MenuAction action, float x, float y, float width, float height) {
+    }
+
+    private record GuiItemModel(List<GuiQuad> quads, GuiDisplay display) {
+    }
+
+    private record GuiQuad(int textureId, float shade, float[][] uvs, float[][] vertices) {
+    }
+
+    private record ResolvedGuiModel(List<Object> elements, Map<String, Object> textures, GuiDisplay display) {
+    }
+
+    private record GuiDisplay(float[] rotation, float[] translation, float[] scale) {
+        private static final GuiDisplay DEFAULT = new GuiDisplay(
+                new float[]{30.0f, 225.0f, 0.0f},
+                new float[]{0.0f, 0.0f, 0.0f},
+                new float[]{0.625f, 0.625f, 0.625f}
+        );
+    }
+
+    private record ModelRotation(String axis, float angle, float[] origin) {
+        private static final ModelRotation NONE = new ModelRotation("", 0.0f, new float[]{0.0f, 0.0f, 0.0f});
+    }
+
+    private record ModelReference(String family, String path) {
+    }
+
+    private record ResolvedModelTextures(Map<String, Object> textures) {
     }
 }

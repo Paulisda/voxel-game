@@ -14,12 +14,14 @@ import de.paul.voxelgame.objects.GameObject;
 import de.paul.voxelgame.objects.ModelComponent;
 import de.paul.voxelgame.objects.RegistryManager;
 import de.paul.voxelgame.objects.ResourceId;
+import org.lwjgl.BufferUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,13 +35,28 @@ import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COMPILE;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_DIFFUSE;
+import static org.lwjgl.opengl.GL11.GL_AMBIENT;
+import static org.lwjgl.opengl.GL11.GL_AMBIENT_AND_DIFFUSE;
+import static org.lwjgl.opengl.GL11.GL_COLOR_MATERIAL;
+import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
 import static org.lwjgl.opengl.GL11.GL_GREATER;
+import static org.lwjgl.opengl.GL11.GL_LEQUAL;
+import static org.lwjgl.opengl.GL11.GL_LESS;
+import static org.lwjgl.opengl.GL11.GL_LIGHT0;
+import static org.lwjgl.opengl.GL11.GL_LIGHT1;
+import static org.lwjgl.opengl.GL11.GL_LIGHTING;
+import static org.lwjgl.opengl.GL11.GL_LIGHT_MODEL_AMBIENT;
+import static org.lwjgl.opengl.GL11.GL_LIGHT_MODEL_TWO_SIDE;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_POSITION;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_SPECULAR;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glAlphaFunc;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glBindTexture;
@@ -47,16 +64,22 @@ import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glCallList;
 import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glColorMaterial;
 import static org.lwjgl.opengl.GL11.glDeleteLists;
 import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glDepthFunc;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glEndList;
 import static org.lwjgl.opengl.GL11.glFrustum;
 import static org.lwjgl.opengl.GL11.glGenLists;
+import static org.lwjgl.opengl.GL11.glLightModelfv;
+import static org.lwjgl.opengl.GL11.glLightModeli;
+import static org.lwjgl.opengl.GL11.glLightfv;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glNewList;
+import static org.lwjgl.opengl.GL11.glNormal3f;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
@@ -78,6 +101,8 @@ public class WorldRenderer {
     private static final Color DEFAULT_GRASS_TINT = new Color(0x7F, 0xB2, 0x38);
     private static final Color DEFAULT_WATER_TINT = new Color(62, 128, 216, 200);
     private static final int MATERIAL_VARIANT_BUCKETS = Math.max(1, Integer.getInteger("voxel.texture.variants", 16));
+    private static final int MOON_PHASE_COLUMNS = 4;
+    private static final int MOON_PHASE_ROWS = 2;
     private static final float CELESTIAL_DISTANCE = 700.0f;
     private static final float CELESTIAL_SIZE = 64.0f;
 
@@ -87,11 +112,12 @@ public class WorldRenderer {
     private final ResourcePackLoader resourcePackLoader = new ResourcePackLoader();
     private final TextureLoader textureLoader = new TextureLoader();
     private final Map<ResourceId, BlockTextures[]> blockTextureVariants = new LinkedHashMap<>();
-    private final Map<ResourceId, MinecraftBlockModel[]> minecraftBlockModels = new LinkedHashMap<>();
+    private final Map<BlockModelKey, MinecraftBlockModel[]> minecraftBlockModels = new LinkedHashMap<>();
     private final Map<ResourceId, String> blockShapes = new LinkedHashMap<>();
     private final Map<Integer, Integer> fallbackTextureCache = new HashMap<>();
     private final Map<String, Integer> modelTextureCache = new HashMap<>();
     private final Map<String, ResolvedMinecraftModel> resolvedModelCache = new HashMap<>();
+    private Color grassTint = DEFAULT_GRASS_TINT;
     private BlockTextures[] fallbackBlockTextures;
     private int sunTexture;
     private int moonTexture;
@@ -124,8 +150,10 @@ public class WorldRenderer {
         glEnable(GL_ALPHA_TEST);
         glAlphaFunc(GL_GREATER, 0.1f);
 
+        setupWorldLighting();
         rebuildDisplayListIfNeeded();
         glCallList(displayListId);
+        teardownWorldLighting();
 
         glDisable(GL_ALPHA_TEST);
         glDisable(GL_BLEND);
@@ -195,13 +223,145 @@ public class WorldRenderer {
 
     private void initializeEnvironmentTextures() {
         sunTexture = loadEnvironmentTexture("sun", new Color(255, 238, 143, 255));
-        moonTexture = loadEnvironmentTexture("moon_phases", new Color(220, 224, 232, 255));
+        moonTexture = loadMoonTexture();
         rainTexture = loadEnvironmentTexture("rain", new Color(165, 188, 220, 150));
     }
 
     private int loadEnvironmentTexture(final String name, final Color fallbackColor) {
         final BufferedImage image = decodeImage(resourcePackLoader.loadEnvironmentTexture(name));
         return uploadTexture(image == null ? createSolidImage(16, 16, fallbackColor) : image);
+    }
+
+    private int loadMoonTexture() {
+        BufferedImage image = decodeImage(resourcePackLoader.loadEnvironmentTexture("moon_phases"));
+        if (image == null) {
+            image = createProceduralMoonAtlas(256, 128);
+        }
+        return uploadTexture(createGlowingMoonAtlas(image));
+    }
+
+    private BufferedImage createGlowingMoonAtlas(final BufferedImage source) {
+        final BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        final int cellWidth = Math.max(1, source.getWidth() / MOON_PHASE_COLUMNS);
+        final int cellHeight = Math.max(1, source.getHeight() / MOON_PHASE_ROWS);
+
+        for (int row = 0; row < MOON_PHASE_ROWS; row++) {
+            for (int column = 0; column < MOON_PHASE_COLUMNS; column++) {
+                final int startX = column * cellWidth;
+                final int startY = row * cellHeight;
+                final int endX = column == MOON_PHASE_COLUMNS - 1 ? source.getWidth() : startX + cellWidth;
+                final int endY = row == MOON_PHASE_ROWS - 1 ? source.getHeight() : startY + cellHeight;
+                final float phaseGlow = moonCellGlowStrength(source, startX, startY, endX, endY);
+                final float centerX = (startX + endX) * 0.5f;
+                final float centerY = (startY + endY) * 0.5f;
+                final float radius = Math.max(1.0f, Math.min(endX - startX, endY - startY) * 0.58f);
+
+                for (int y = startY; y < endY; y++) {
+                    for (int x = startX; x < endX; x++) {
+                        final float dx = (x + 0.5f - centerX) / radius;
+                        final float dy = (y + 0.5f - centerY) / radius;
+                        final float falloff = clampFloat(1.0f - (float) Math.sqrt(dx * dx + dy * dy), 0.0f, 1.0f);
+                        final int glowAlpha = clampInt(Math.round(88.0f * phaseGlow * falloff * falloff), 0, 255);
+                        if (glowAlpha > 0) {
+                            blendPixel(out, x, y, 174, 200, 255, glowAlpha);
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int y = 0; y < source.getHeight(); y++) {
+            for (int x = 0; x < source.getWidth(); x++) {
+                final int argb = source.getRGB(x, y);
+                int alpha = (argb >>> 24) & 0xff;
+                final int red = (argb >>> 16) & 0xff;
+                final int green = (argb >>> 8) & 0xff;
+                final int blue = argb & 0xff;
+                if (alpha == 255 && luminance(red, green, blue) < 4.0f) {
+                    alpha = 0;
+                }
+                if (alpha > 0) {
+                    blendPixel(out, x, y, red, green, blue, alpha);
+                }
+            }
+        }
+        return out;
+    }
+
+    private float moonCellGlowStrength(final BufferedImage source, final int startX, final int startY, final int endX, final int endY) {
+        float total = 0.0f;
+        int count = 0;
+        for (int y = startY; y < endY; y++) {
+            for (int x = startX; x < endX; x++) {
+                final int argb = source.getRGB(x, y);
+                int alpha = (argb >>> 24) & 0xff;
+                final int red = (argb >>> 16) & 0xff;
+                final int green = (argb >>> 8) & 0xff;
+                final int blue = argb & 0xff;
+                final float lum = luminance(red, green, blue);
+                if (alpha == 255 && lum < 4.0f) {
+                    alpha = 0;
+                }
+                if (alpha > 8 && lum > 12.0f) {
+                    total += (alpha / 255.0f) * (lum / 255.0f);
+                    count++;
+                }
+            }
+        }
+        if (count == 0) {
+            return 0.20f;
+        }
+        return clampFloat(0.25f + (total / count) * 1.05f, 0.25f, 1.0f);
+    }
+
+    private BufferedImage createProceduralMoonAtlas(final int width, final int height) {
+        final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        final int cellWidth = Math.max(1, width / MOON_PHASE_COLUMNS);
+        final int cellHeight = Math.max(1, height / MOON_PHASE_ROWS);
+        for (int phase = 0; phase < MOON_PHASE_COLUMNS * MOON_PHASE_ROWS; phase++) {
+            final int column = phase % MOON_PHASE_COLUMNS;
+            final int row = phase / MOON_PHASE_COLUMNS;
+            final float centerX = column * cellWidth + cellWidth * 0.5f;
+            final float centerY = row * cellHeight + cellHeight * 0.5f;
+            final float radius = Math.min(cellWidth, cellHeight) * 0.28f;
+            final float litOffset = (phase - 3.5f) / 3.5f;
+            for (int y = row * cellHeight; y < Math.min(height, (row + 1) * cellHeight); y++) {
+                for (int x = column * cellWidth; x < Math.min(width, (column + 1) * cellWidth); x++) {
+                    final float dx = x + 0.5f - centerX;
+                    final float dy = y + 0.5f - centerY;
+                    if (dx * dx + dy * dy > radius * radius) {
+                        continue;
+                    }
+                    final float phaseMask = clampFloat(0.55f + litOffset * (dx / radius), 0.12f, 1.0f);
+                    final int alpha = clampInt(Math.round(230.0f * phaseMask), 0, 255);
+                    blendPixel(image, x, y, 219, 226, 244, alpha);
+                }
+            }
+        }
+        return image;
+    }
+
+    private void blendPixel(final BufferedImage image, final int x, final int y, final int red, final int green, final int blue, final int alpha) {
+        final int destination = image.getRGB(x, y);
+        final float srcAlpha = clampInt(alpha, 0, 255) / 255.0f;
+        final float dstAlpha = ((destination >>> 24) & 0xff) / 255.0f;
+        final float outAlpha = srcAlpha + dstAlpha * (1.0f - srcAlpha);
+        if (outAlpha <= 0.0001f) {
+            return;
+        }
+
+        final float dstRed = (destination >>> 16) & 0xff;
+        final float dstGreen = (destination >>> 8) & 0xff;
+        final float dstBlue = destination & 0xff;
+        final int outRed = clampInt(Math.round((red * srcAlpha + dstRed * dstAlpha * (1.0f - srcAlpha)) / outAlpha), 0, 255);
+        final int outGreen = clampInt(Math.round((green * srcAlpha + dstGreen * dstAlpha * (1.0f - srcAlpha)) / outAlpha), 0, 255);
+        final int outBlue = clampInt(Math.round((blue * srcAlpha + dstBlue * dstAlpha * (1.0f - srcAlpha)) / outAlpha), 0, 255);
+        final int outA = clampInt(Math.round(outAlpha * 255.0f), 0, 255);
+        image.setRGB(x, y, (outA << 24) | (outRed << 16) | (outGreen << 8) | outBlue);
+    }
+
+    private float luminance(final int red, final int green, final int blue) {
+        return red * 0.2126f + green * 0.7152f + blue * 0.0722f;
     }
 
     private void renderSky() {
@@ -227,18 +387,71 @@ public class WorldRenderer {
         final float moonAlpha = environment.moonVisibility() * rainDim;
         if (moonAlpha > 0.01f) {
             final int phase = environment.moonPhase();
-            final int column = phase % 4;
-            final int row = phase / 4;
-            final float u1 = column / 4.0f;
-            final float u2 = (column + 1) / 4.0f;
-            final float v1 = row / 2.0f;
-            final float v2 = (row + 1) / 2.0f;
-            renderCelestialQuad(moonTexture, moonDirection, CELESTIAL_SIZE * 0.82f, moonAlpha, u1, v1, u2, v2);
+            final int column = phase % MOON_PHASE_COLUMNS;
+            final int row = phase / MOON_PHASE_COLUMNS;
+            final float u1 = column / (float) MOON_PHASE_COLUMNS;
+            final float u2 = (column + 1) / (float) MOON_PHASE_COLUMNS;
+            final float v1 = row / (float) MOON_PHASE_ROWS;
+            final float v2 = (row + 1) / (float) MOON_PHASE_ROWS;
+            renderCelestialQuad(moonTexture, moonDirection, CELESTIAL_SIZE * 1.05f, moonAlpha, u1, v1, u2, v2);
         }
 
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
+    }
+
+    private void setupWorldLighting() {
+        final LightingState lighting = computeLightingState();
+        glEnable(GL_LIGHTING);
+        glEnable(GL_COLOR_MATERIAL);
+        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+        glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lightBuffer(lighting.ambient(), lighting.ambient(), lighting.ambient(), 1.0f));
+
+        glEnable(GL_LIGHT0);
+        glLightfv(GL_LIGHT0, GL_AMBIENT, lightBuffer(0.0f, 0.0f, 0.0f, 1.0f));
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, lightBuffer(lighting.sunDiffuse() * 1.00f, lighting.sunDiffuse() * 0.94f, lighting.sunDiffuse() * 0.82f, 1.0f));
+        glLightfv(GL_LIGHT0, GL_SPECULAR, lightBuffer(0.0f, 0.0f, 0.0f, 1.0f));
+        glLightfv(GL_LIGHT0, GL_POSITION, lightBuffer(lighting.sunDirection()[0], lighting.sunDirection()[1], lighting.sunDirection()[2], 0.0f));
+
+        glEnable(GL_LIGHT1);
+        glLightfv(GL_LIGHT1, GL_AMBIENT, lightBuffer(0.0f, 0.0f, 0.0f, 1.0f));
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, lightBuffer(lighting.moonDiffuse() * 0.54f, lighting.moonDiffuse() * 0.66f, lighting.moonDiffuse(), 1.0f));
+        glLightfv(GL_LIGHT1, GL_SPECULAR, lightBuffer(0.0f, 0.0f, 0.0f, 1.0f));
+        glLightfv(GL_LIGHT1, GL_POSITION, lightBuffer(lighting.moonDirection()[0], lighting.moonDirection()[1], lighting.moonDirection()[2], 0.0f));
+    }
+
+    private void teardownWorldLighting() {
+        glDisable(GL_LIGHT1);
+        glDisable(GL_LIGHT0);
+        glDisable(GL_COLOR_MATERIAL);
+        glDisable(GL_LIGHTING);
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    }
+
+    private LightingState computeLightingState() {
+        final double angle = environment.dayProgress() * Math.PI * 2.0;
+        final float sunX = (float) Math.cos(angle);
+        final float sunY = (float) Math.sin(angle);
+        final float sunZ = -0.18f;
+        final float[] sunDirection = normalize(sunX, sunY, sunZ);
+        final float[] moonDirection = new float[]{-sunDirection[0], -sunDirection[1], -sunDirection[2]};
+
+        final float rain = environment.rainStrength();
+        final float skyLight = clampFloat((environment.sunAltitude() + 0.20f) / 1.05f, 0.0f, 1.0f);
+        final float rainAmbient = 1.0f - rain * 0.28f;
+        final float rainDirect = 1.0f - rain * 0.45f;
+        final float ambient = Math.max(0.12f, (0.18f + skyLight * 0.56f + environment.moonVisibility() * 0.05f) * rainAmbient);
+        final float sunDiffuse = 0.42f * environment.sunVisibility() * rainDirect;
+        final float moonDiffuse = 0.12f * environment.moonVisibility() * (1.0f - rain * 0.20f);
+        return new LightingState(ambient, sunDiffuse, moonDiffuse, sunDirection, moonDirection);
+    }
+
+    private FloatBuffer lightBuffer(final float r, final float g, final float b, final float a) {
+        final FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
+        buffer.put(r).put(g).put(b).put(a).flip();
+        return buffer;
     }
 
     private void renderCelestialQuad(
@@ -368,8 +581,8 @@ public class WorldRenderer {
         final int variantIndex = computeMaterialVariant(block.getTypeId(), x, y, z, variants.length);
         final BlockTextures textures = variants[variantIndex];
 
-        final MinecraftBlockModel[] minecraftModels = minecraftBlockModels.get(block.getTypeId());
-        if (minecraftModels != null && minecraftModels.length > 0 && !textures.generatedCube()) {
+        final MinecraftBlockModel[] minecraftModels = minecraftModelsFor(block);
+        if (minecraftModels != null && minecraftModels.length > 0) {
             final int modelIndex = computeMaterialVariant(block.getTypeId(), x, y, z, minecraftModels.length);
             glDisable(GL_BLEND);
             minecraftModels[modelIndex].render(minX, minY, minZ, size);
@@ -456,7 +669,13 @@ public class WorldRenderer {
             final float x4, final float y4, final float z4
     ) {
         glBindTexture(GL_TEXTURE_2D, textureId);
+        final float[] normal = normalFromQuad(
+                x1, y1, z1,
+                x2, y2, z2,
+                x3, y3, z3
+        );
         setShade(shade);
+        glNormal3f(normal[0], normal[1], normal[2]);
         glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f);
         glVertex3f(x1, y1, z1);
@@ -585,7 +804,13 @@ public class WorldRenderer {
             final float u1, final float v1, final float u2, final float v2
     ) {
         glBindTexture(GL_TEXTURE_2D, textureId);
+        final float[] normal = normalFromQuad(
+                x1, y1, z1,
+                x2, y2, z2,
+                x3, y3, z3
+        );
         setShade(shade);
+        glNormal3f(normal[0], normal[1], normal[2]);
         glBegin(GL_QUADS);
         glTexCoord2f(u1, v1);
         glVertex3f(x1, y1, z1);
@@ -612,7 +837,7 @@ public class WorldRenderer {
     }
 
     private void initializeTextures() {
-        final Color grassTint = resolveGrassTint();
+        grassTint = resolveGrassTint();
         final Color waterTint = DEFAULT_WATER_TINT;
         for (final GameObject type : registries.blocks().values()) {
             if (!type.has(BlockComponent.class)) {
@@ -623,14 +848,11 @@ public class WorldRenderer {
                     ? type.get(ModelComponent.class)
                     : new ModelComponent(type.id().path());
             blockShapes.put(type.id(), model.shape());
-            if ("cube".equals(model.shape())) {
-                final MinecraftBlockModel[] minecraftModels = loadMinecraftBlockModels(type, model, grassTint);
-                if (minecraftModels.length > 0) {
-                    minecraftBlockModels.put(type.id(), minecraftModels);
-                }
+            final MinecraftBlockModel[] minecraftModels = loadMinecraftBlockModels(type, model, grassTint, BlockFacing.NORTH);
+            if (minecraftModels.length > 0) {
+                minecraftBlockModels.put(new BlockModelKey(type.id(), BlockFacing.NORTH), minecraftModels);
             }
             final boolean leafBlock = isLeafBlock(type);
-            final boolean generatedCube = leafBlock || model.hasFrontCandidates() || hasIndexedTextureCandidates(model);
             final int variantCount = leafBlock ? 1 : resolveVariantCount(model);
             final BlockTextures[] variants = new BlockTextures[variantCount];
             for (int variant = 0; variant < variantCount; variant++) {
@@ -674,7 +896,7 @@ public class WorldRenderer {
                         : sideId;
                 final int topId = createTextureFromImageOrFallback(top, fallbackColor(type, model, Face.TOP));
                 final int bottomId = createTextureFromImageOrFallback(bottom, fallbackColor(type, model, Face.BOTTOM));
-                variants[variant] = new BlockTextures(sideId, frontId, topId, bottomId, model.hasFrontCandidates(), generatedCube);
+                variants[variant] = new BlockTextures(sideId, frontId, topId, bottomId, model.hasFrontCandidates());
             }
             blockTextureVariants.put(type.id(), variants);
             if (fallbackBlockTextures == null || DIRT_ID.equals(type.id())) {
@@ -698,32 +920,49 @@ public class WorldRenderer {
                 || hasIndexedVariantCandidate(model.bottomCandidates());
     }
 
-    private MinecraftBlockModel[] loadMinecraftBlockModels(final GameObject type, final ModelComponent model, final Color grassTint) {
-        final MinecraftBlockModel directModel = loadMinecraftBlockModel(
-                new ModelDefinition(type.id().path(), 0.0f, 0.0f, 0.0f),
-                model,
-                grassTint
-        );
-        if (directModel != null) {
-            return new MinecraftBlockModel[]{directModel};
+    private MinecraftBlockModel[] minecraftModelsFor(final Block block) {
+        final BlockFacing facing = block.getFacing() == null ? BlockFacing.NORTH : block.getFacing();
+        final BlockModelKey key = new BlockModelKey(block.getTypeId(), facing);
+        final MinecraftBlockModel[] cached = minecraftBlockModels.get(key);
+        if (cached != null) {
+            return cached;
         }
 
-        final List<ModelDefinition> definitions = loadBlockStateModelDefinitions(type.id().path());
-        if (definitions.isEmpty()) {
-            return new MinecraftBlockModel[0];
-        }
-
-        final List<MinecraftBlockModel> models = new ArrayList<>();
-        for (final ModelDefinition definition : definitions) {
-            final MinecraftBlockModel resolvedModel = loadMinecraftBlockModel(definition, model, grassTint);
-            if (resolvedModel != null) {
-                models.add(resolvedModel);
-            }
-        }
-        return models.toArray(MinecraftBlockModel[]::new);
+        final GameObject type = block.getType();
+        final ModelComponent model = type.has(ModelComponent.class)
+                ? type.get(ModelComponent.class)
+                : new ModelComponent(type.id().path());
+        final MinecraftBlockModel[] models = loadMinecraftBlockModels(type, model, grassTint, facing);
+        minecraftBlockModels.put(key, models);
+        return models;
     }
 
-    private List<ModelDefinition> loadBlockStateModelDefinitions(final String blockName) {
+    private MinecraftBlockModel[] loadMinecraftBlockModels(final GameObject type, final ModelComponent model, final Color grassTint, final BlockFacing facing) {
+        final List<MinecraftBlockModel> models = loadMinecraftBlockModels(loadBlockStateModelDefinitionGroups(type.id().path(), facing), model, grassTint);
+        if (!models.isEmpty()) {
+            return models.toArray(MinecraftBlockModel[]::new);
+        }
+
+        final ModelDefinition directDefinition = new ModelDefinition(type.id().path(), 0.0f, 0.0f, 0.0f);
+        return loadMinecraftBlockModels(List.of(new ModelDefinitionGroup(List.of(directDefinition), 1)), model, grassTint)
+                .toArray(MinecraftBlockModel[]::new);
+    }
+
+    private List<MinecraftBlockModel> loadMinecraftBlockModels(final List<ModelDefinitionGroup> groups, final ModelComponent model, final Color grassTint) {
+        final List<MinecraftBlockModel> models = new ArrayList<>();
+        for (final ModelDefinitionGroup group : groups) {
+            final MinecraftBlockModel resolvedModel = loadMinecraftBlockModel(group, model, grassTint);
+            if (resolvedModel != null) {
+                final int weight = clampInt(group.weight(), 1, 64);
+                for (int i = 0; i < weight; i++) {
+                    models.add(resolvedModel);
+                }
+            }
+        }
+        return models;
+    }
+
+    private List<ModelDefinitionGroup> loadBlockStateModelDefinitionGroups(final String blockName, final BlockFacing facing) {
         final String blockStateJson = resourcePackLoader.loadBlockState(blockName);
         if (blockStateJson == null || blockStateJson.isBlank()) {
             return List.of();
@@ -732,31 +971,69 @@ public class WorldRenderer {
         try {
             final Map<String, Object> root = JsonParser.parseObject(blockStateJson);
             final Map<String, Object> variants = object(root.get("variants"));
-            if (variants.isEmpty()) {
-                return List.of();
+            if (!variants.isEmpty()) {
+                return readModelDefinitionGroups(selectDefaultVariant(variants, facing));
             }
 
-            Object selectedVariant = variants.get("");
-            if (selectedVariant == null && variants.size() == 1) {
-                selectedVariant = variants.values().iterator().next();
+            final List<Object> multipart = list(root.get("multipart"));
+            if (!multipart.isEmpty()) {
+                final List<ModelDefinition> composite = new ArrayList<>();
+                for (final Object rawPart : multipart) {
+                    final Map<String, Object> part = object(rawPart);
+                    if (!matchesDefaultState(part.get("when"), facing)) {
+                        continue;
+                    }
+
+                    final ModelDefinitionGroup selectedApply = selectMultipartApplyGroup(part.get("apply"));
+                    if (selectedApply != null) {
+                        composite.addAll(selectedApply.definitions());
+                    }
+                }
+                return composite.isEmpty() ? List.of() : List.of(new ModelDefinitionGroup(composite, 1));
             }
-            return readModelDefinitions(selectedVariant);
+            return List.of();
         } catch (RuntimeException ignored) {
             return List.of();
         }
     }
 
-    private List<ModelDefinition> readModelDefinitions(final Object value) {
+    private Object selectDefaultVariant(final Map<String, Object> variants, final BlockFacing facing) {
+        final Object emptyVariant = variants.get("");
+        if (emptyVariant != null) {
+            return emptyVariant;
+        }
+        if (variants.size() == 1) {
+            return variants.values().iterator().next();
+        }
+
+        String bestKey = null;
+        int bestScore = Integer.MAX_VALUE;
+        for (final String key : variants.keySet()) {
+            final int score = scoreVariantKey(key, facing);
+            if (score < bestScore || (score == bestScore && (bestKey == null || key.compareTo(bestKey) < 0))) {
+                bestKey = key;
+                bestScore = score;
+            }
+        }
+        return bestKey == null ? null : variants.get(bestKey);
+    }
+
+    private ModelDefinitionGroup selectMultipartApplyGroup(final Object apply) {
+        final List<ModelDefinitionGroup> groups = readModelDefinitionGroups(apply);
+        return groups.isEmpty() ? null : groups.get(0);
+    }
+
+    private List<ModelDefinitionGroup> readModelDefinitionGroups(final Object value) {
         if (value == null) {
             return List.of();
         }
 
-        final List<ModelDefinition> definitions = new ArrayList<>();
         if (value instanceof List<?> list) {
+            final List<ModelDefinitionGroup> groups = new ArrayList<>();
             for (final Object item : list) {
-                definitions.addAll(readModelDefinitions(item));
+                groups.addAll(readModelDefinitionGroups(item));
             }
-            return definitions;
+            return groups;
         }
 
         final Map<String, Object> model = object(value);
@@ -765,23 +1042,205 @@ public class WorldRenderer {
             return List.of();
         }
 
-        definitions.add(new ModelDefinition(
+        final ModelDefinition definition = new ModelDefinition(
                 modelPath,
                 number(model.get("x"), 0.0f),
                 number(model.get("y"), 0.0f),
                 number(model.get("z"), 0.0f)
-        ));
-        return definitions;
+        );
+        final int weight = clampInt(Math.round(number(model.get("weight"), 1.0f)), 1, 64);
+        return List.of(new ModelDefinitionGroup(List.of(definition), weight));
     }
 
-    private MinecraftBlockModel loadMinecraftBlockModel(final ModelDefinition definition, final ModelComponent model, final Color grassTint) {
+    private boolean matchesDefaultState(final Object rawWhen, final BlockFacing facing) {
+        if (rawWhen == null) {
+            return true;
+        }
+
+        final Map<String, Object> when = object(rawWhen);
+        if (when.isEmpty()) {
+            return true;
+        }
+
+        for (final Map.Entry<String, Object> entry : when.entrySet()) {
+            final String key = entry.getKey();
+            final Object value = entry.getValue();
+            if ("OR".equalsIgnoreCase(key)) {
+                if (!matchesAnyDefaultState(value, facing)) {
+                    return false;
+                }
+                continue;
+            }
+            if ("AND".equalsIgnoreCase(key)) {
+                if (!matchesAllDefaultStates(value, facing)) {
+                    return false;
+                }
+                continue;
+            }
+            if (!conditionAllowsDefault(key, value, facing)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean matchesAnyDefaultState(final Object value, final BlockFacing facing) {
+        for (final Object item : list(value)) {
+            if (matchesDefaultState(item, facing)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean matchesAllDefaultStates(final Object value, final BlockFacing facing) {
+        final List<Object> conditions = list(value);
+        if (conditions.isEmpty()) {
+            return true;
+        }
+        for (final Object item : conditions) {
+            if (!matchesDefaultState(item, facing)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean conditionAllowsDefault(final String property, final Object expectedValue, final BlockFacing facing) {
+        final String expected = String.valueOf(expectedValue).trim().toLowerCase();
+        final String defaultValue = defaultBlockStateValue(property, expected, facing);
+        if (defaultValue.isBlank()) {
+            return false;
+        }
+        for (final String option : expected.split("\\|")) {
+            if (defaultValue.equals(option.trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String defaultBlockStateValue(final String rawProperty, final String expected, final BlockFacing facing) {
+        final String property = rawProperty == null ? "" : rawProperty.trim().toLowerCase();
+        return switch (property) {
+            case "age", "charges", "delay", "distance", "eggs", "hatch", "layers", "level", "moisture",
+                    "pickles", "power", "rotation", "stage" -> "0";
+            case "axis" -> "y";
+            case "face", "vertical_direction" -> "floor";
+            case "facing" -> blockStateFacing(facing);
+            case "half" -> containsOption(expected, "lower") ? "lower" : "bottom";
+            case "hinge" -> "left";
+            case "mode" -> "compare";
+            case "north", "east", "south", "west", "up", "down" -> "false";
+            case "part" -> "foot";
+            case "shape" -> "straight";
+            case "type" -> containsOption(expected, "single") ? "single" : "bottom";
+            case "attachment" -> "floor";
+            case "attached", "bottom", "conditional", "disarmed", "drag", "enabled", "extended", "eye",
+                    "falling", "hanging", "has_book", "in_wall", "inverted", "lit", "locked", "occupied",
+                    "open", "persistent", "powered", "short", "signal_fire", "snowy", "triggered",
+                    "unstable", "waterlogged" -> "false";
+            default -> {
+                if (containsOption(expected, "false")) {
+                    yield "false";
+                }
+                if (containsOption(expected, "0")) {
+                    yield "0";
+                }
+                if (containsOption(expected, "none")) {
+                    yield "none";
+                }
+                yield "";
+            }
+        };
+    }
+
+    private String blockStateFacing(final BlockFacing facing) {
+        final BlockFacing normalized = facing == null ? BlockFacing.NORTH : facing;
+        return normalized.name().toLowerCase();
+    }
+
+    private boolean containsOption(final String expected, final String option) {
+        for (final String value : expected.split("\\|")) {
+            if (option.equals(value.trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private int scoreVariantKey(final String variantKey, final BlockFacing facing) {
+        if (variantKey == null || variantKey.isBlank()) {
+            return 0;
+        }
+
+        int score = 0;
+        for (final String rawPart : variantKey.split(",")) {
+            final int equalsIndex = rawPart.indexOf('=');
+            if (equalsIndex <= 0) {
+                continue;
+            }
+            final String property = rawPart.substring(0, equalsIndex).trim().toLowerCase();
+            final String value = rawPart.substring(equalsIndex + 1).trim().toLowerCase();
+            score += scoreVariantProperty(property, value, facing);
+        }
+        return score;
+    }
+
+    private int scoreVariantProperty(final String property, final String value, final BlockFacing facing) {
+        final String preferred = defaultBlockStateValue(property, value, facing);
+        if (!preferred.isBlank() && preferred.equals(value)) {
+            return 0;
+        }
+        if (isInteger(value)) {
+            return Math.min(20, Math.abs(Integer.parseInt(value)));
+        }
+        if ("false".equals(value) || "none".equals(value)) {
+            return 0;
+        }
+        if ("true".equals(value)) {
+            return 4;
+        }
+        return 2;
+    }
+
+    private boolean isInteger(final String value) {
+        if (value == null || value.isBlank()) {
+            return false;
+        }
+        int start = value.charAt(0) == '-' ? 1 : 0;
+        if (start == value.length()) {
+            return false;
+        }
+        for (int i = start; i < value.length(); i++) {
+            final char c = value.charAt(i);
+            if (c < '0' || c > '9') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private MinecraftBlockModel loadMinecraftBlockModel(final ModelDefinitionGroup group, final ModelComponent model, final Color grassTint) {
+        final List<ModelQuad> quads = new ArrayList<>();
+        for (final ModelDefinition definition : group.definitions()) {
+            appendMinecraftModelQuads(definition, model, grassTint, quads);
+        }
+        return quads.isEmpty() ? null : new MinecraftBlockModel(quads);
+    }
+
+    private void appendMinecraftModelQuads(
+            final ModelDefinition definition,
+            final ModelComponent model,
+            final Color grassTint,
+            final List<ModelQuad> quads
+    ) {
         final ResolvedMinecraftModel resolvedModel = resolveMinecraftBlockModel(definition.modelPath(), new HashSet<>());
         if (resolvedModel == null || resolvedModel.elements().isEmpty()) {
-            return null;
+            return;
         }
 
         try {
-            final List<ModelQuad> quads = new ArrayList<>();
             for (final Object rawElement : resolvedModel.elements()) {
                 final Map<String, Object> element = object(rawElement);
                 final float[] from = vec3(element.get("from"));
@@ -797,7 +1256,7 @@ public class WorldRenderer {
                     if (texturePath.isBlank()) {
                         continue;
                     }
-                    final boolean tinted = face.containsKey("tintindex") || model.hasTint("grass");
+                    final boolean tinted = face.containsKey("tintindex");
                     final int textureId = loadModelTexture(texturePath, tinted ? grassTint : null);
                     final float[][] uvs = faceUvs(face.get("uv"), Math.round(number(face.get("rotation"), 0.0f)));
                     final float[][] vertices = faceVertices(faceName, from, to);
@@ -808,12 +1267,17 @@ public class WorldRenderer {
                         vertices[i] = rotate(vertices[i], rotation);
                         vertices[i] = rotateBlockState(vertices[i], definition);
                     }
-                    quads.add(new ModelQuad(textureId, shadeForFace(faceName, shade), uvs, vertices));
+                    quads.add(new ModelQuad(
+                            textureId,
+                            shadeForTransformedFace(faceName, shade, vertices),
+                            uvs,
+                            vertices,
+                            normalFromVertices(vertices),
+                            tinted
+                    ));
                 }
             }
-            return quads.isEmpty() ? null : new MinecraftBlockModel(quads);
         } catch (RuntimeException ignored) {
-            return null;
         }
     }
 
@@ -871,7 +1335,7 @@ public class WorldRenderer {
             return cached;
         }
 
-        BufferedImage image = decodeImage(resourcePackLoader.loadBlockTexture(normalizedPath));
+        BufferedImage image = decodeImage(resourcePackLoader.loadMinecraftTexture(normalizedPath));
         if (image == null) {
             image = createSolidImage(16, 16, tint == null ? new Color(185, 82, 124, 255) : tint);
         } else if (tint != null) {
@@ -887,9 +1351,6 @@ public class WorldRenderer {
         final int namespaceIndex = path.indexOf(':');
         if (namespaceIndex >= 0) {
             path = path.substring(namespaceIndex + 1);
-        }
-        if (path.startsWith("block/")) {
-            path = path.substring("block/".length());
         }
         return path;
     }
@@ -1220,7 +1681,7 @@ public class WorldRenderer {
 
         final float[][] rotated = new float[4][2];
         for (int i = 0; i < corners.length; i++) {
-            rotated[i] = corners[Math.floorMod(i - steps, corners.length)];
+            rotated[i] = corners[Math.floorMod(i + steps, corners.length)];
         }
         return rotated;
     }
@@ -1338,6 +1799,34 @@ public class WorldRenderer {
         };
     }
 
+    private float shadeForTransformedFace(final String fallbackFaceName, final boolean shade, final float[][] vertices) {
+        if (!shade || vertices.length < 3) {
+            return shadeForFace(fallbackFaceName, shade);
+        }
+
+        final float ux = vertices[1][0] - vertices[0][0];
+        final float uy = vertices[1][1] - vertices[0][1];
+        final float uz = vertices[1][2] - vertices[0][2];
+        final float vx = vertices[2][0] - vertices[0][0];
+        final float vy = vertices[2][1] - vertices[0][1];
+        final float vz = vertices[2][2] - vertices[0][2];
+
+        final float nx = uy * vz - uz * vy;
+        final float ny = uz * vx - ux * vz;
+        final float nz = ux * vy - uy * vx;
+        final float ax = Math.abs(nx);
+        final float ay = Math.abs(ny);
+        final float az = Math.abs(nz);
+
+        if (ay >= ax && ay >= az) {
+            return shadeForFace(ny < 0.0f ? "down" : "up", true);
+        }
+        if (ax >= az) {
+            return shadeForFace(nx < 0.0f ? "west" : "east", true);
+        }
+        return shadeForFace(nz < 0.0f ? "north" : "south", true);
+    }
+
     private int uploadTexture(final BufferedImage image) {
         return textureLoader.uploadTexture(image);
     }
@@ -1367,6 +1856,35 @@ public class WorldRenderer {
     private void setShade(final float shade) {
         final float s = clampFloat(shade, 0.0f, 1.0f);
         glColor3f(s, s, s);
+    }
+
+    private float[] normalFromVertices(final float[][] vertices) {
+        if (vertices == null || vertices.length < 3) {
+            return new float[]{0.0f, 1.0f, 0.0f};
+        }
+        return normalFromPoints(vertices[0], vertices[1], vertices[2]);
+    }
+
+    private float[] normalFromQuad(
+            final float x1, final float y1, final float z1,
+            final float x2, final float y2, final float z2,
+            final float x3, final float y3, final float z3
+    ) {
+        return normalFromPoints(
+                new float[]{x1, y1, z1},
+                new float[]{x2, y2, z2},
+                new float[]{x3, y3, z3}
+        );
+    }
+
+    private float[] normalFromPoints(final float[] a, final float[] b, final float[] c) {
+        final float[] ab = new float[]{b[0] - a[0], b[1] - a[1], b[2] - a[2]};
+        final float[] ac = new float[]{c[0] - a[0], c[1] - a[1], c[2] - a[2]};
+        final float[] normal = cross(ab, ac);
+        if (lengthSquared(normal) <= 0.000001f) {
+            return new float[]{0.0f, 1.0f, 0.0f};
+        }
+        return normalize(normal);
     }
 
     private float[] normalize(final float x, final float y, final float z) {
@@ -1414,21 +1932,48 @@ public class WorldRenderer {
         }
     }
 
-    private record BlockTextures(int side, int front, int top, int bottom, boolean directional, boolean generatedCube) {
+    private record BlockTextures(int side, int front, int top, int bottom, boolean directional) {
+    }
+
+    private record BlockModelKey(ResourceId blockId, BlockFacing facing) {
+    }
+
+    private record LightingState(float ambient, float sunDiffuse, float moonDiffuse, float[] sunDirection, float[] moonDirection) {
     }
 
     private record MinecraftBlockModel(List<ModelQuad> quads) {
         private void render(final float baseX, final float baseY, final float baseZ, final float blockSize) {
+            boolean hasTintedQuads = false;
             for (final ModelQuad quad : quads) {
-                glBindTexture(GL_TEXTURE_2D, quad.textureId());
-                setStaticShade(quad.shade());
-                glBegin(GL_QUADS);
-                texVertex(quad.uvs()[0], quad.vertices()[0], baseX, baseY, baseZ, blockSize);
-                texVertex(quad.uvs()[1], quad.vertices()[1], baseX, baseY, baseZ, blockSize);
-                texVertex(quad.uvs()[2], quad.vertices()[2], baseX, baseY, baseZ, blockSize);
-                texVertex(quad.uvs()[3], quad.vertices()[3], baseX, baseY, baseZ, blockSize);
-                glEnd();
+                if (quad.tinted()) {
+                    hasTintedQuads = true;
+                    continue;
+                }
+                renderQuad(quad, baseX, baseY, baseZ, blockSize);
             }
+            if (!hasTintedQuads) {
+                return;
+            }
+
+            glDepthFunc(GL_LEQUAL);
+            for (final ModelQuad quad : quads) {
+                if (quad.tinted()) {
+                    renderQuad(quad, baseX, baseY, baseZ, blockSize);
+                }
+            }
+            glDepthFunc(GL_LESS);
+        }
+
+        private static void renderQuad(final ModelQuad quad, final float baseX, final float baseY, final float baseZ, final float blockSize) {
+            glBindTexture(GL_TEXTURE_2D, quad.textureId());
+            setStaticShade(quad.shade());
+            glNormal3f(quad.normal()[0], quad.normal()[1], quad.normal()[2]);
+            glBegin(GL_QUADS);
+            texVertex(quad.uvs()[0], quad.vertices()[0], baseX, baseY, baseZ, blockSize);
+            texVertex(quad.uvs()[1], quad.vertices()[1], baseX, baseY, baseZ, blockSize);
+            texVertex(quad.uvs()[2], quad.vertices()[2], baseX, baseY, baseZ, blockSize);
+            texVertex(quad.uvs()[3], quad.vertices()[3], baseX, baseY, baseZ, blockSize);
+            glEnd();
         }
 
         private static void texVertex(final float[] uv, final float[] vertex, final float baseX, final float baseY, final float baseZ, final float blockSize) {
@@ -1446,10 +1991,13 @@ public class WorldRenderer {
         }
     }
 
-    private record ModelQuad(int textureId, float shade, float[][] uvs, float[][] vertices) {
+    private record ModelQuad(int textureId, float shade, float[][] uvs, float[][] vertices, float[] normal, boolean tinted) {
     }
 
     private record ModelDefinition(String modelPath, float xRotation, float yRotation, float zRotation) {
+    }
+
+    private record ModelDefinitionGroup(List<ModelDefinition> definitions, int weight) {
     }
 
     private record ResolvedMinecraftModel(List<Object> elements, Map<String, Object> textures) {

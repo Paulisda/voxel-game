@@ -117,21 +117,22 @@ public final class EnvironmentSystem {
     }
 
     public float skyRed() {
-        return skyChannel(0.045f, 0.53f);
+        return skyChannel(0.060f, 0.53f, 0.035f);
     }
 
     public float skyGreen() {
-        return skyChannel(0.065f, 0.77f);
+        return skyChannel(0.080f, 0.77f, 0.048f);
     }
 
     public float skyBlue() {
-        return skyChannel(0.12f, 1.0f);
+        return skyChannel(0.155f, 1.0f, 0.095f);
     }
 
-    private float skyChannel(final float night, final float day) {
+    private float skyChannel(final float night, final float day, final float moonGlow) {
         final float dayLight = clamp((sunAltitude() + 0.18f) / 1.05f, 0.0f, 1.0f);
+        final float moonLight = moonVisibility() * (1.0f - dayLight);
         final float rainDim = 1.0f - rainStrength * 0.32f;
-        return (night + (day - night) * dayLight) * rainDim;
+        return clamp((night + (day - night) * dayLight + moonGlow * moonLight) * rainDim, 0.0f, 1.0f);
     }
 
     private static float clamp(final float value, final float min, final float max) {
