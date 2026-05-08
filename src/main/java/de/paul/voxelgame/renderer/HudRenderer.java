@@ -7,6 +7,7 @@ import de.paul.voxelgame.core.ChatSystem;
 import de.paul.voxelgame.audio.SoundEffectManager;
 import de.paul.voxelgame.core.DisplayManager;
 import de.paul.voxelgame.core.InventorySystem;
+import de.paul.voxelgame.core.InventoryStack;
 import de.paul.voxelgame.core.LocalizationManager;
 import de.paul.voxelgame.core.MenuAction;
 import de.paul.voxelgame.core.MenuSystem;
@@ -91,8 +92,15 @@ public class HudRenderer {
     private static final float CREATIVE_SLOT_Y = 38.0f;
     private static final float CREATIVE_SLOT_SIZE = 35.0f;
     private static final float CREATIVE_SLOT_STEP = 36.0f;
-    private static final float CREATIVE_HOTBAR_Y = 215.0f;
+    private static final float CREATIVE_HOTBAR_X = 14.0f;
+    private static final float CREATIVE_HOTBAR_Y = 216.0f;
     private static final float CREATIVE_ICON_SIZE = 24.0f;
+    private static final float CREATIVE_SEARCH_FIELD_X = 8.0f;
+    private static final float CREATIVE_SEARCH_FIELD_Y = 5.0f;
+    private static final float CREATIVE_SEARCH_FIELD_W = 246.0f;
+    private static final float CREATIVE_SEARCH_FIELD_H = 28.0f;
+    private static final float CREATIVE_SEARCH_TEXT_X = 24.0f;
+    private static final float CREATIVE_SEARCH_TEXT_Y = 10.0f;
     private static final float CREATIVE_VISIBLE_CENTER_X = 188.5f;
     private static final float CREATIVE_VISIBLE_CENTER_Y = 134.5f;
     private static final float SURVIVAL_TEXTURE_SIZE = 512.0f;
@@ -201,14 +209,13 @@ public class HudRenderer {
 
         final float iconSize = 16.0f * hudScale;
         for (int i = 0; i < HUD_SLOT_COUNT; i++) {
-            final GameObject item = player.getHotbarItem(i);
-            if (item == null) {
+            final InventoryStack stack = player.getHotbarStack(i);
+            if (stack == null) {
                 continue;
             }
-            final int iconTexture = iconFor(item);
             final float iconX = hotbarX + (3 + i * 20) * hudScale;
             final float iconY = hotbarY + 3.0f * hudScale;
-            drawTexturedQuad(iconTexture, iconX, iconY, iconSize, iconSize);
+            drawStackIcon(stack, iconX, iconY, iconSize, font(11, scale));
         }
 
         final GameObject selectedItem = player.getHotbarItem(selected);
@@ -322,6 +329,24 @@ public class HudRenderer {
                 ? creativeHotbarLayout(inventorySystem.filteredInventoryEntries(localization).size(), width, height)
                 : survivalHotbarLayout(width, height);
         return pickSlotInRow(mouseX, mouseY, layout);
+    }
+
+    public boolean isCreativeSearchField(final double mouseX, final double mouseY, final int width, final int height) {
+        if (!inventorySystem.isOpen() || !GameConfig.isCreative()) {
+            return false;
+        }
+        final CreativeInventoryLayout layout = creativeInventoryLayout(inventorySystem.filteredInventoryEntries(localization).size(), width, height);
+        return mouseX >= layout.searchFieldX() && mouseX <= layout.searchFieldX() + layout.searchFieldWidth()
+                && mouseY >= layout.searchFieldY() && mouseY <= layout.searchFieldY() + layout.searchFieldHeight();
+    }
+
+    public boolean isCreativeInventoryPanel(final double mouseX, final double mouseY, final int width, final int height) {
+        if (!inventorySystem.isOpen() || !GameConfig.isCreative()) {
+            return false;
+        }
+        final CreativeInventoryLayout layout = creativeInventoryLayout(inventorySystem.filteredInventoryEntries(localization).size(), width, height);
+        return mouseX >= layout.panelX() && mouseX <= layout.panelX() + layout.panelWidth()
+                && mouseY >= layout.panelY() && mouseY <= layout.panelY() + layout.panelHeight();
     }
 
     public int pickHudHotbarSlot(final double mouseX, final double mouseY, final int width, final int height) {
@@ -445,41 +470,55 @@ public class HudRenderer {
 
     private void drawCreativeSearchText(final CreativeInventoryLayout layout) {
         final String query = inventorySystem.searchQuery();
-        if (query.isBlank()) {
+        if (query.isBlank() && !inventorySystem.isSearchFocused()) {
             return;
         }
-        textRenderer.drawText(shortName(query, 36), layout.searchX(), layout.searchY(), font(12, layout.scale()), TEXT_COLOR);
+        final String searchText = query.isBlank() ? localization.translate("ui.inventory.search") : shortName(query, 36);
+        final Color color = query.isBlank() ? MUTED_TEXT_COLOR : TEXT_COLOR;
+        textRenderer.drawText(searchText, layout.searchX(), layout.searchY(), font(12, layout.scale()), color);
     }
 
     private void renderStorageItems(final SurvivalInventoryLayout layout) {
         for (int i = 0; i < inventorySystem.inventorySlotCount(); i++) {
-            final GameObject item = inventorySystem.inventorySlot(i);
-            if (item == null) {
+            final InventoryStack stack = inventorySystem.inventorySlot(i);
+            if (stack == null) {
                 continue;
             }
             final int column = i % INVENTORY_COLUMNS;
             final int row = i / INVENTORY_COLUMNS;
             final float slotX = layout.storageStartX() + column * (layout.slotSize() + layout.slotGap());
             final float slotY = layout.storageStartY() + row * (layout.slotSize() + layout.slotGap());
-            drawSlotItem(item, slotX, slotY, layout.slotSize(), layout.iconSize());
+            drawSlotStack(stack, slotX, slotY, layout.slotSize(), layout.iconSize(), Math.max(8, Math.round(layout.iconSize() * 0.42f)));
         }
     }
 
     private void renderHotbarItems(final float slotStartX, final float slotStartY, final float slotSize, final float slotGap, final float iconSize) {
         for (int i = 0; i < player.getHotbarSize(); i++) {
-            final GameObject item = player.getHotbarItem(i);
-            if (item == null) {
+            final InventoryStack stack = player.getHotbarStack(i);
+            if (stack == null) {
                 continue;
             }
             final float slotX = slotStartX + i * (slotSize + slotGap);
-            drawSlotItem(item, slotX, slotStartY, slotSize, iconSize);
+            drawSlotStack(stack, slotX, slotStartY, slotSize, iconSize, font(10, 1.0f));
         }
     }
 
-    private void drawSlotItem(final GameObject item, final float slotX, final float slotY, final float slotSize, final float iconSize) {
+    private void drawSlotStack(final InventoryStack stack, final float slotX, final float slotY, final float slotSize, final float iconSize, final int countFont) {
         final float iconX = slotX + (slotSize - iconSize) * 0.5f;
         final float iconY = slotY + (slotSize - iconSize) * 0.5f;
-        drawTexturedQuad(iconFor(item), iconX, iconY, iconSize, iconSize);
+        drawStackIcon(stack, iconX, iconY, iconSize, countFont);
+    }
+
+    private void drawStackIcon(final InventoryStack stack, final float iconX, final float iconY, final float iconSize, final int countFont) {
+        drawTexturedQuad(iconFor(stack.item()), iconX, iconY, iconSize, iconSize);
+        if (stack.count() <= 1) {
+            return;
+        }
+        final String count = Integer.toString(stack.count());
+        final float labelX = iconX + iconSize - Math.max(9.0f, count.length() * countFont * 0.45f);
+        final float labelY = iconY + iconSize - countFont * 0.82f;
+        drawColoredQuad(labelX - 1.0f, labelY - 1.0f, count.length() * countFont * 0.55f + 2.0f, countFont + 2.0f, 0.0f, 0.0f, 0.0f, 0.48f);
+        textRenderer.drawText(count, labelX, labelY, countFont, TEXT_COLOR);
     }
 
     private CreativeInventoryLayout creativeInventoryLayout(final int entryCount, final int width, final int height) {
@@ -506,10 +545,14 @@ public class HudRenderer {
                 slotSize,
                 slotGap,
                 iconSize,
-                panelX + panelSize * (CREATIVE_SLOT_X / CREATIVE_TEXTURE_SIZE),
+                panelX + panelSize * (CREATIVE_HOTBAR_X / CREATIVE_TEXTURE_SIZE),
                 panelY + panelSize * (CREATIVE_HOTBAR_Y / CREATIVE_TEXTURE_SIZE),
-                panelX + panelSize * (24.0f / CREATIVE_TEXTURE_SIZE),
-                panelY + panelSize * (10.0f / CREATIVE_TEXTURE_SIZE),
+                panelX + panelSize * (CREATIVE_SEARCH_TEXT_X / CREATIVE_TEXTURE_SIZE),
+                panelY + panelSize * (CREATIVE_SEARCH_TEXT_Y / CREATIVE_TEXTURE_SIZE),
+                panelX + panelSize * (CREATIVE_SEARCH_FIELD_X / CREATIVE_TEXTURE_SIZE),
+                panelY + panelSize * (CREATIVE_SEARCH_FIELD_Y / CREATIVE_TEXTURE_SIZE),
+                panelSize * (CREATIVE_SEARCH_FIELD_W / CREATIVE_TEXTURE_SIZE),
+                panelSize * (CREATIVE_SEARCH_FIELD_H / CREATIVE_TEXTURE_SIZE),
                 scale,
                 rows,
                 pageSize,
@@ -549,12 +592,12 @@ public class HudRenderer {
     }
 
     private void renderCarriedItem(final double mouseX, final double mouseY, final float scale) {
-        final GameObject item = inventorySystem.carriedItem();
-        if (item == null) {
+        final InventoryStack stack = inventorySystem.carriedStack();
+        if (stack == null) {
             return;
         }
         final float size = s(32.0f, scale);
-        drawTexturedQuad(iconFor(item), (float) mouseX - size * 0.5f, (float) mouseY - size * 0.5f, size, size);
+        drawStackIcon(stack, (float) mouseX - size * 0.5f, (float) mouseY - size * 0.5f, size, font(11, scale));
     }
 
     private void renderChat(final int width, final int height, final float hotbarY, final float scale) {
@@ -1029,6 +1072,10 @@ public class HudRenderer {
             float hotbarStartY,
             float searchX,
             float searchY,
+            float searchFieldX,
+            float searchFieldY,
+            float searchFieldWidth,
+            float searchFieldHeight,
             float scale,
             int rows,
             int pageSize,

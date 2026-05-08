@@ -2,6 +2,7 @@ package de.paul.voxelgame.mob;
 
 import de.paul.voxelgame.GameConfig;
 import de.paul.voxelgame.audio.SoundEffectManager;
+import de.paul.voxelgame.core.InventoryStack;
 import de.paul.voxelgame.engine.InputState;
 import de.paul.voxelgame.map.Block;
 import de.paul.voxelgame.map.BlockFacing;
@@ -53,6 +54,7 @@ public class Player extends Mob {
     private static final double CREATIVE_SPEED = 8.0;
     private static final double SPRINT_MULTIPLIER = 1.6;
     private static final double FLY_VERTICAL_SPEED = 7.0;
+    private static final double FLIGHT_TOGGLE_TAP_SECONDS = 0.35;
     private static final int[] HOTBAR_KEYS = {
             GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3, GLFW_KEY_4, GLFW_KEY_5,
             GLFW_KEY_6, GLFW_KEY_7, GLFW_KEY_8, GLFW_KEY_9
@@ -62,7 +64,7 @@ public class Player extends Mob {
 
     private final long window;
     private final SoundEffectManager soundEffectManager;
-    private final GameObject[] hotbarItems;
+    private final InventoryStack[] hotbarItems;
     private int selectedHotbarSlot;
     private int healthPoints = 20;
     private int hungerPoints = 20;
@@ -72,12 +74,15 @@ public class Player extends Mob {
     private double lastMouseX;
     private double lastMouseY;
     private double mouseSensitivity = DEFAULT_MOUSE_SENSITIVITY;
+    private double elapsedSeconds;
+    private double lastCreativeSpaceTap = -10.0;
+    private boolean creativeFlying;
 
-    public Player(final long window, final World world, final GameObject[] hotbarItems, final SoundEffectManager soundEffectManager) {
+    public Player(final long window, final World world, final InventoryStack[] hotbarItems, final SoundEffectManager soundEffectManager) {
         super(world);
         this.window = window;
         this.soundEffectManager = soundEffectManager;
-        this.hotbarItems = hotbarItems == null ? new GameObject[HOTBAR_KEYS.length] : hotbarItems.clone();
+        this.hotbarItems = hotbarItems == null ? new InventoryStack[HOTBAR_KEYS.length] : hotbarItems.clone();
 
         movementSpeed = SURVIVAL_SPEED;
         gravityOn = GameConfig.isSurvival();
@@ -95,6 +100,7 @@ public class Player extends Mob {
     }
 
     public void update(final InputState input, final double deltaSeconds) {
+        elapsedSeconds += Math.max(0.0, deltaSeconds);
         handleHotbarSelectionInput(input);
         handleMouseCapture(input);
         if (mouseCaptured) {
@@ -145,7 +151,7 @@ public class Player extends Mob {
             destroyBlockInView();
         }
         if (input.isMousePressed(GLFW_MOUSE_BUTTON_RIGHT)) {
-            useItemInView(getSelectedHotbarItem());
+            useItemInView(getSelectedHotbarStack());
         }
     }
 
@@ -184,6 +190,8 @@ public class Player extends Mob {
             movement = movement.sub(right);
         }
 
+        final boolean toggledCreativeFlight = handleCreativeFlightToggle(input);
+        final boolean groundedMovement = GameConfig.isSurvival() || (GameConfig.isCreative() && !creativeFlying);
         double speed = GameConfig.isSurvival() ? SURVIVAL_SPEED : CREATIVE_SPEED;
         if (input.isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
             speed *= SPRINT_MULTIPLIER;
@@ -193,8 +201,8 @@ public class Player extends Mob {
             movement = movement.normalized().mul((float) speed);
         }
 
-        if (GameConfig.isSurvival()) {
-            if (input.isKeyDown(GLFW_KEY_SPACE) && isOnGround) {
+        if (groundedMovement) {
+            if (input.isKeyPressed(GLFW_KEY_SPACE) && isOnGround && !toggledCreativeFlight) {
                 fallVelocity = jumpVelocity;
                 isOnGround = false;
                 soundEffectManager.play(JUMP_EFFECT);
@@ -224,6 +232,28 @@ public class Player extends Mob {
         return movement;
     }
 
+    private boolean handleCreativeFlightToggle(final InputState input) {
+        if (!GameConfig.isCreative()) {
+            creativeFlying = false;
+            lastCreativeSpaceTap = -10.0;
+            return false;
+        }
+        if (!input.isKeyPressed(GLFW_KEY_SPACE)) {
+            return false;
+        }
+
+        final boolean doubleTap = elapsedSeconds - lastCreativeSpaceTap <= FLIGHT_TOGGLE_TAP_SECONDS;
+        lastCreativeSpaceTap = elapsedSeconds;
+        if (!doubleTap) {
+            return false;
+        }
+
+        creativeFlying = !creativeFlying;
+        fallVelocity = 0;
+        lastCreativeSpaceTap = -10.0;
+        return true;
+    }
+
     public void destroyBlockInView() {
         final RaycastHit hit = raycastSolidBlock(BREAK_REACH, RAYCAST_STEP);
         if (hit != null) {
@@ -233,12 +263,18 @@ public class Player extends Mob {
         }
     }
 
-    public void useItemInView(final GameObject item) {
-        if (item == null) {
+    public void useItemInView(final InventoryStack stack) {
+        if (stack == null || stack.isEmpty()) {
             return;
         }
+        final GameObject item = stack.item();
         if (item.has(BlockItemComponent.class)) {
-            placeBlockItemInView(item.get(BlockItemComponent.class));
+            if (placeBlockItemInView(item.get(BlockItemComponent.class)) && GameConfig.isSurvival()) {
+                stack.remove(1);
+                if (stack.isEmpty()) {
+                    setHotbarStack(selectedHotbarSlot, null);
+                }
+            }
             return;
         }
         if (item.has(SpawnEntityComponent.class)) {
@@ -246,10 +282,10 @@ public class Player extends Mob {
         }
     }
 
-    private void placeBlockItemInView(final BlockItemComponent blockItem) {
+    private boolean placeBlockItemInView(final BlockItemComponent blockItem) {
         final RaycastHit hit = raycastSolidBlock(BREAK_REACH, RAYCAST_STEP);
         if (hit == null || !hit.hasPlacementCandidate) {
-            return;
+            return false;
         }
 
         final double size = GameConfig.BLOCK_SIZE;
@@ -258,12 +294,14 @@ public class Player extends Mob {
                 new Vector3f((hit.placeX + 1) * size, (hit.placeY + 1) * size, (hit.placeZ + 1) * size)
         );
         if (candidate.intersects(getHitBox())) {
-            return;
+            return false;
         }
 
         if (world.placeBlock(hit.placeX, hit.placeY, hit.placeZ, blockItem.blockId(), placementFacing())) {
             soundEffectManager.play(TAP_EFFECT);
+            return true;
         }
+        return false;
     }
 
     private BlockFacing placementFacing() {
@@ -341,6 +379,11 @@ public class Player extends Mob {
     }
 
     public GameObject getHotbarItem(final int slotIndex) {
+        final InventoryStack stack = getHotbarStack(slotIndex);
+        return stack == null ? null : stack.item();
+    }
+
+    public InventoryStack getHotbarStack(final int slotIndex) {
         if (slotIndex < 0 || slotIndex >= hotbarItems.length) {
             return null;
         }
@@ -348,10 +391,14 @@ public class Player extends Mob {
     }
 
     public void setHotbarItem(final int slotIndex, final GameObject item) {
+        setHotbarStack(slotIndex, item == null ? null : InventoryStack.fullStack(item));
+    }
+
+    public void setHotbarStack(final int slotIndex, final InventoryStack stack) {
         if (slotIndex < 0 || slotIndex >= hotbarItems.length) {
             return;
         }
-        hotbarItems[slotIndex] = item;
+        hotbarItems[slotIndex] = stack == null || stack.isEmpty() ? null : stack;
     }
 
     public double getMouseSensitivity() {
@@ -394,8 +441,8 @@ public class Player extends Mob {
         return getPitch();
     }
 
-    private GameObject getSelectedHotbarItem() {
-        return getHotbarItem(selectedHotbarSlot);
+    private InventoryStack getSelectedHotbarStack() {
+        return getHotbarStack(selectedHotbarSlot);
     }
 
     private static int clampStat(final int value) {

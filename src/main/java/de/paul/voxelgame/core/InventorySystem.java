@@ -13,44 +13,53 @@ public final class InventorySystem {
     private static final int INVENTORY_SLOT_COUNT = 27;
 
     private final RegistryManager registries;
-    private final GameObject[] inventorySlots = new GameObject[INVENTORY_SLOT_COUNT];
+    private final InventoryStack[] inventorySlots = new InventoryStack[INVENTORY_SLOT_COUNT];
     private boolean open;
     private int page;
     private String searchQuery = "";
-    private GameObject carriedItem;
+    private boolean searchFocused;
+    private InventoryStack carriedStack;
 
     public InventorySystem(final RegistryManager registries) {
         this.registries = registries;
     }
 
-    public GameObject[] createDefaultHotbar() {
-        return new GameObject[HOTBAR_SLOT_COUNT];
+    public InventoryStack[] createDefaultHotbar() {
+        return new InventoryStack[HOTBAR_SLOT_COUNT];
     }
 
     public int inventorySlotCount() {
         return inventorySlots.length;
     }
 
-    public GameObject inventorySlot(final int slotIndex) {
+    public InventoryStack inventorySlot(final int slotIndex) {
         if (slotIndex < 0 || slotIndex >= inventorySlots.length) {
             return null;
         }
         return inventorySlots[slotIndex];
     }
 
-    public void setInventorySlot(final int slotIndex, final GameObject item) {
+    public void setInventorySlot(final int slotIndex, final InventoryStack stack) {
         if (slotIndex < 0 || slotIndex >= inventorySlots.length) {
             return;
         }
-        inventorySlots[slotIndex] = item;
+        inventorySlots[slotIndex] = stack == null || stack.isEmpty() ? null : stack;
     }
 
-    public GameObject carriedItem() {
-        return carriedItem;
+    public InventoryStack carriedStack() {
+        return carriedStack;
     }
 
-    public void setCarriedItem(final GameObject carriedItem) {
-        this.carriedItem = carriedItem;
+    public void setCarriedStack(final InventoryStack carriedStack) {
+        this.carriedStack = carriedStack == null || carriedStack.isEmpty() ? null : carriedStack;
+    }
+
+    public boolean isSearchFocused() {
+        return searchFocused;
+    }
+
+    public void setSearchFocused(final boolean searchFocused) {
+        this.searchFocused = searchFocused;
     }
 
     public List<GameObject> blocksWithTag(final String tag) {
@@ -97,13 +106,15 @@ public final class InventorySystem {
         open = true;
         page = 0;
         searchQuery = "";
+        searchFocused = false;
     }
 
     public void close() {
         open = false;
         page = 0;
         searchQuery = "";
-        carriedItem = null;
+        searchFocused = false;
+        carriedStack = null;
     }
 
     public boolean isOpen() {

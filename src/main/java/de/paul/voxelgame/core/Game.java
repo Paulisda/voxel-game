@@ -9,7 +9,6 @@ import de.paul.voxelgame.engine.InputState;
 import de.paul.voxelgame.map.World;
 import de.paul.voxelgame.math.Vector3f;
 import de.paul.voxelgame.mob.Player;
-import de.paul.voxelgame.objects.GameObject;
 import de.paul.voxelgame.objects.RegistryManager;
 import de.paul.voxelgame.objects.ResourceId;
 import de.paul.voxelgame.renderer.HudRenderer;
@@ -103,8 +102,8 @@ public class Game {
     private HudRenderer hudRenderer;
     private WorldRenderer worldRenderer;
     private Player player;
-    private InventoryDragSource inventoryDragSource = InventoryDragSource.NONE;
-    private int inventoryDragSourceSlot = -1;
+    private InventoryCarrySource inventoryCarrySource = InventoryCarrySource.NONE;
+    private int inventoryCarrySourceSlot = -1;
     private double lastFrameTime;
     private int[] frameWidth;
     private int[] frameHeight;
@@ -439,7 +438,7 @@ public class Game {
             inputState.consumeTypedText();
             return false;
         }
-        if (!GameConfig.isCreative()) {
+        if (!GameConfig.isCreative() || !inventorySystem.isSearchFocused()) {
             inputState.consumeTypedText();
             return false;
         }
@@ -572,127 +571,164 @@ public class Game {
             return false;
         }
 
-        boolean consumed = false;
-        if (inputState.isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
-            consumed = beginInventoryDrag(width, height);
+        if (!inputState.isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
+            return false;
         }
-        if (inputState.isMouseReleased(GLFW_MOUSE_BUTTON_LEFT) && inventorySystem.carriedItem() != null) {
-            finishInventoryDrag(width, height);
-            consumed = true;
-        }
-        return consumed;
+        return inventorySystem.carriedStack() == null
+                ? pickUpInventoryStack(width, height)
+                : placeCarriedInventoryStack(width, height);
     }
 
-    private boolean beginInventoryDrag(final int width, final int height) {
-        if (inventorySystem.carriedItem() != null) {
+    private boolean pickUpInventoryStack(final int width, final int height) {
+        if (inventorySystem.carriedStack() != null) {
             return false;
         }
 
         final double mouseX = inputState.getMouseX();
         final double mouseY = inputState.getMouseY();
+        if (GameConfig.isCreative() && hudRenderer.isCreativeSearchField(mouseX, mouseY, width, height)) {
+            inventorySystem.setSearchFocused(true);
+            return true;
+        }
+        inventorySystem.setSearchFocused(false);
+
         int slot = hudRenderer.pickInventoryHotbarSlot(mouseX, mouseY, width, height);
         if (slot < 0) {
             slot = hudRenderer.pickHudHotbarSlot(mouseX, mouseY, width, height);
         }
         if (slot >= 0) {
-            final GameObject item = player.getHotbarItem(slot);
-            if (item == null) {
+            final InventoryStack stack = player.getHotbarStack(slot);
+            if (stack == null) {
                 return false;
             }
-            inventoryDragSource = InventoryDragSource.HOTBAR;
-            inventoryDragSourceSlot = slot;
-            inventorySystem.setCarriedItem(item);
-            player.setHotbarItem(slot, null);
+            inventoryCarrySource = InventoryCarrySource.HOTBAR;
+            inventoryCarrySourceSlot = slot;
+            inventorySystem.setCarriedStack(stack);
+            player.setHotbarStack(slot, null);
             return true;
         }
 
         slot = hudRenderer.pickInventoryStorageSlot(mouseX, mouseY, width, height);
         if (slot >= 0) {
-            final GameObject item = inventorySystem.inventorySlot(slot);
-            if (item == null) {
+            final InventoryStack stack = inventorySystem.inventorySlot(slot);
+            if (stack == null) {
                 return false;
             }
-            inventoryDragSource = InventoryDragSource.INVENTORY;
-            inventoryDragSourceSlot = slot;
-            inventorySystem.setCarriedItem(item);
+            inventoryCarrySource = InventoryCarrySource.INVENTORY;
+            inventoryCarrySourceSlot = slot;
+            inventorySystem.setCarriedStack(stack);
             inventorySystem.setInventorySlot(slot, null);
             return true;
         }
 
-        final GameObject creativeItem = hudRenderer.pickInventoryItem(mouseX, mouseY, width, height);
+        final var creativeItem = hudRenderer.pickInventoryItem(mouseX, mouseY, width, height);
         if (creativeItem == null) {
             return false;
         }
-        inventoryDragSource = InventoryDragSource.CREATIVE;
-        inventoryDragSourceSlot = -1;
-        inventorySystem.setCarriedItem(creativeItem);
+        inventoryCarrySource = InventoryCarrySource.CREATIVE;
+        inventoryCarrySourceSlot = -1;
+        inventorySystem.setCarriedStack(InventoryStack.fullStack(creativeItem));
         return true;
     }
 
-    private void finishInventoryDrag(final int width, final int height) {
-        final GameObject carriedItem = inventorySystem.carriedItem();
-        if (carriedItem == null) {
-            clearInventoryDrag();
-            return;
-        }
-
+    private boolean placeCarriedInventoryStack(final int width, final int height) {
         final double mouseX = inputState.getMouseX();
         final double mouseY = inputState.getMouseY();
+        if (GameConfig.isCreative() && hudRenderer.isCreativeSearchField(mouseX, mouseY, width, height)) {
+            inventorySystem.setSearchFocused(true);
+            return true;
+        }
+        inventorySystem.setSearchFocused(false);
+
         int targetSlot = hudRenderer.pickInventoryHotbarSlot(mouseX, mouseY, width, height);
         if (targetSlot < 0) {
             targetSlot = hudRenderer.pickHudHotbarSlot(mouseX, mouseY, width, height);
         }
         if (targetSlot >= 0) {
-            final GameObject replaced = player.getHotbarItem(targetSlot);
-            player.setHotbarItem(targetSlot, carriedItem);
-            placeReplacedItemBack(replaced);
-            clearInventoryDrag();
+            placeCarriedIntoHotbar(targetSlot);
             soundEffectManager.play(UI_TAP_EFFECT);
-            return;
+            return true;
         }
 
         targetSlot = hudRenderer.pickInventoryStorageSlot(mouseX, mouseY, width, height);
         if (targetSlot >= 0) {
-            final GameObject replaced = inventorySystem.inventorySlot(targetSlot);
-            inventorySystem.setInventorySlot(targetSlot, carriedItem);
-            placeReplacedItemBack(replaced);
-            clearInventoryDrag();
+            placeCarriedIntoInventory(targetSlot);
             soundEffectManager.play(UI_TAP_EFFECT);
-            return;
+            return true;
         }
 
-        cancelInventoryDrag();
+        if (GameConfig.isCreative() && hudRenderer.isCreativeInventoryPanel(mouseX, mouseY, width, height)) {
+            clearInventoryCarry();
+            soundEffectManager.play(UI_TAP_EFFECT);
+            return true;
+        }
+
+        return true;
     }
 
-    private void placeReplacedItemBack(final GameObject replaced) {
-        if (replaced == null) {
+    private void placeCarriedIntoHotbar(final int slot) {
+        final InventoryStack carried = inventorySystem.carriedStack();
+        if (carried == null) {
             return;
         }
-        if (inventoryDragSource == InventoryDragSource.HOTBAR) {
-            player.setHotbarItem(inventoryDragSourceSlot, replaced);
-        } else if (inventoryDragSource == InventoryDragSource.INVENTORY) {
-            inventorySystem.setInventorySlot(inventoryDragSourceSlot, replaced);
+        final InventoryStack target = player.getHotbarStack(slot);
+        if (target == null) {
+            player.setHotbarStack(slot, carried);
+            inventorySystem.setCarriedStack(null);
+        } else if (target.canMerge(carried)) {
+            target.mergeFrom(carried);
+            player.setHotbarStack(slot, target);
+            inventorySystem.setCarriedStack(carried.isEmpty() ? null : carried);
+        } else {
+            player.setHotbarStack(slot, carried);
+            inventorySystem.setCarriedStack(target);
         }
+        resetCarrySourceAfterPlace();
+    }
+
+    private void placeCarriedIntoInventory(final int slot) {
+        final InventoryStack carried = inventorySystem.carriedStack();
+        if (carried == null) {
+            return;
+        }
+        final InventoryStack target = inventorySystem.inventorySlot(slot);
+        if (target == null) {
+            inventorySystem.setInventorySlot(slot, carried);
+            inventorySystem.setCarriedStack(null);
+        } else if (target.canMerge(carried)) {
+            target.mergeFrom(carried);
+            inventorySystem.setInventorySlot(slot, target);
+            inventorySystem.setCarriedStack(carried.isEmpty() ? null : carried);
+        } else {
+            inventorySystem.setInventorySlot(slot, carried);
+            inventorySystem.setCarriedStack(target);
+        }
+        resetCarrySourceAfterPlace();
+    }
+
+    private void resetCarrySourceAfterPlace() {
+        inventoryCarrySource = InventoryCarrySource.NONE;
+        inventoryCarrySourceSlot = -1;
     }
 
     private void cancelInventoryDrag() {
-        final GameObject carriedItem = inventorySystem.carriedItem();
-        if (carriedItem == null) {
-            clearInventoryDrag();
+        final InventoryStack carriedStack = inventorySystem.carriedStack();
+        if (carriedStack == null) {
+            clearInventoryCarry();
             return;
         }
-        if (inventoryDragSource == InventoryDragSource.HOTBAR) {
-            player.setHotbarItem(inventoryDragSourceSlot, carriedItem);
-        } else if (inventoryDragSource == InventoryDragSource.INVENTORY) {
-            inventorySystem.setInventorySlot(inventoryDragSourceSlot, carriedItem);
+        if (inventoryCarrySource == InventoryCarrySource.HOTBAR) {
+            player.setHotbarStack(inventoryCarrySourceSlot, carriedStack);
+        } else if (inventoryCarrySource == InventoryCarrySource.INVENTORY) {
+            inventorySystem.setInventorySlot(inventoryCarrySourceSlot, carriedStack);
         }
-        clearInventoryDrag();
+        clearInventoryCarry();
     }
 
-    private void clearInventoryDrag() {
-        inventorySystem.setCarriedItem(null);
-        inventoryDragSource = InventoryDragSource.NONE;
-        inventoryDragSourceSlot = -1;
+    private void clearInventoryCarry() {
+        inventorySystem.setCarriedStack(null);
+        inventoryCarrySource = InventoryCarrySource.NONE;
+        inventoryCarrySourceSlot = -1;
     }
 
     private void handleHotbarScroll() {
@@ -703,7 +739,7 @@ public class Game {
     }
 
     private void handleInventoryScroll(final int width, final int height) {
-        if (!inventorySystem.isOpen() || chatSystem.isOpen() || inventorySystem.carriedItem() != null) {
+        if (!inventorySystem.isOpen() || chatSystem.isOpen() || inventorySystem.carriedStack() != null) {
             return;
         }
 
@@ -816,7 +852,7 @@ public class Game {
         return Math.max(1.0f, Math.min(2.0f, Math.min(scaleByWidth, scaleByHeight)));
     }
 
-    private enum InventoryDragSource {
+    private enum InventoryCarrySource {
         NONE,
         CREATIVE,
         HOTBAR,
