@@ -14,6 +14,7 @@ target/
 .idea/
 .github/
 logs/
+resources/resourcepacks/Tooniverse_64x_v1.2.7/
 
 ### Eclipse ###
 .apt_generated
