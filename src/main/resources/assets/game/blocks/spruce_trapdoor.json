@@ -1,0 +1,36 @@
+﻿{
+  "id": "game:spruce_trapdoor",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 3,
+      "resistance": 6,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "spruce_trapdoor"
+      ],
+      "textures": {
+        "side": [
+          "spruce_trapdoor"
+        ],
+        "top": [
+          "spruce_trapdoor"
+        ],
+        "bottom": [
+          "spruce_trapdoor"
+        ]
+      },
+      "fallback": {
+        "side": "#8b5a2b",
+        "top": "#8b5a2b",
+        "bottom": "#8b5a2b",
+        "default": "#8b5a2b"
+      }
+    }
+  }
+}

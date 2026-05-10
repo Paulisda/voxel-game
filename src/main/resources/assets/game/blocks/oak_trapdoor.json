@@ -1,0 +1,36 @@
+﻿{
+  "id": "game:oak_trapdoor",
+  "components": {
+    "block": {
+      "solid": true,
+      "hardness": 2,
+      "resistance": 3,
+      "breakable": true
+    },
+    "stack": {
+      "max": 64
+    },
+    "model": {
+      "texture": [
+        "oak_trapdoor"
+      ],
+      "textures": {
+        "side": [
+          "oak_trapdoor"
+        ],
+        "top": [
+          "oak_trapdoor"
+        ],
+        "bottom": [
+          "oak_trapdoor"
+        ]
+      },
+      "fallback": {
+        "side": "#8b5a2b",
+        "top": "#8b5a2b",
+        "bottom": "#8b5a2b",
+        "default": "#8b5a2b"
+      }
+    }
+  }
+}
