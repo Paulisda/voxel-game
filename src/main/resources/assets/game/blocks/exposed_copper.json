@@ -1,5 +1,5 @@
 ﻿{
-  "id": "game:waxed_copper",
+  "id": "game:exposed_copper",
   "components": {
     "block": {
       "solid": true,
@@ -12,33 +12,17 @@
     },
     "model": {
       "texture": [
-        "stone",
-        "stone0",
-        "stone1",
-        "stone2",
-        "stone3"
+        "exposed_copper"
       ],
       "textures": {
         "side": [
-          "stone",
-          "stone0",
-          "stone1",
-          "stone2",
-          "stone3"
+          "exposed_copper"
         ],
         "top": [
-          "stone",
-          "stone0",
-          "stone1",
-          "stone2",
-          "stone3"
+          "exposed_copper"
         ],
         "bottom": [
-          "stone",
-          "stone0",
-          "stone1",
-          "stone2",
-          "stone3"
+          "exposed_copper"
         ]
       },
       "fallback": {

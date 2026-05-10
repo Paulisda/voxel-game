@@ -1,5 +1,5 @@
 ﻿{
-  "id": "game:exposed_copper_trapdoor",
+  "id": "game:waxed_copper_block",
   "components": {
     "block": {
       "solid": true,
@@ -12,24 +12,24 @@
     },
     "model": {
       "texture": [
-        "exposed_copper"
+        "copper_block"
       ],
       "textures": {
         "side": [
-          "exposed_copper"
+          "copper_block"
         ],
         "top": [
-          "exposed_copper"
+          "copper_block"
         ],
         "bottom": [
-          "exposed_copper"
+          "copper_block"
         ]
       },
       "fallback": {
-        "side": "#8b5a2b",
-        "top": "#8b5a2b",
-        "bottom": "#8b5a2b",
-        "default": "#8b5a2b"
+        "side": "#b66b45",
+        "top": "#b66b45",
+        "bottom": "#b66b45",
+        "default": "#b66b45"
       }
     }
   }
