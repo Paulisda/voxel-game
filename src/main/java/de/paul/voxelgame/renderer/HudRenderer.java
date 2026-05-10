@@ -300,6 +300,7 @@ public class HudRenderer {
             renderMenu(width, height);
         }
         renderChat(width, height, hotbarY, hudTextScale);
+        renderInventoryTooltip(width, height, mouseX, mouseY, scale);
         renderCarriedItem(mouseX, mouseY, scale);
 
         glPopMatrix();
@@ -670,6 +671,71 @@ public class HudRenderer {
         drawStackIcon(stack, (float) mouseX - size * 0.5f, (float) mouseY - size * 0.5f, size, font(11, scale));
     }
 
+    private void renderInventoryTooltip(final int width, final int height, final double mouseX, final double mouseY, final float scale) {
+        if (!inventorySystem.isOpen() || menuSystem.isOpen() || inventorySystem.carriedStack() != null) {
+            return;
+        }
+
+        final GameObject hovered = hoveredInventoryItem(mouseX, mouseY, width, height);
+        if (hovered == null) {
+            return;
+        }
+
+        drawItemTooltip(localization.objectName(hovered), mouseX, mouseY, width, height, scale);
+    }
+
+    private GameObject hoveredInventoryItem(final double mouseX, final double mouseY, final int width, final int height) {
+        if (GameConfig.isCreative()) {
+            final GameObject creativeItem = pickInventoryItem(mouseX, mouseY, width, height);
+            if (creativeItem != null) {
+                return creativeItem;
+            }
+        } else {
+            final int storageSlot = pickInventoryStorageSlot(mouseX, mouseY, width, height);
+            if (storageSlot >= 0) {
+                final InventoryStack stack = inventorySystem.inventorySlot(storageSlot);
+                return stack == null ? null : stack.item();
+            }
+        }
+
+        final int hotbarSlot = pickInventoryHotbarSlot(mouseX, mouseY, width, height);
+        if (hotbarSlot < 0) {
+            return null;
+        }
+        final InventoryStack stack = player.getHotbarStack(hotbarSlot);
+        return stack == null ? null : stack.item();
+    }
+
+    private void drawItemTooltip(final String itemName, final double mouseX, final double mouseY, final int width, final int height, final float scale) {
+        if (itemName == null || itemName.isBlank()) {
+            return;
+        }
+
+        final int textSize = font(12, scale);
+        final float paddingX = s(7.0f, scale);
+        final float paddingY = s(5.0f, scale);
+        final float textWidth = Math.max(textSize, itemName.codePointCount(0, itemName.length()) * textSize * 0.54f);
+        final float boxWidth = textWidth + paddingX * 2.0f;
+        final float boxHeight = textSize * 1.35f + paddingY * 2.0f;
+        final float gap = s(12.0f, scale);
+        float boxX = (float) mouseX + gap;
+        float boxY = (float) mouseY + gap;
+
+        if (boxX + boxWidth > width - s(4.0f, scale)) {
+            boxX = (float) mouseX - boxWidth - gap;
+        }
+        if (boxY + boxHeight > height - s(4.0f, scale)) {
+            boxY = (float) mouseY - boxHeight - gap;
+        }
+        boxX = clamp(boxX, s(4.0f, scale), Math.max(s(4.0f, scale), width - boxWidth - s(4.0f, scale)));
+        boxY = clamp(boxY, s(4.0f, scale), Math.max(s(4.0f, scale), height - boxHeight - s(4.0f, scale)));
+
+        drawColoredQuad(boxX - 1.0f, boxY - 1.0f, boxWidth + 2.0f, boxHeight + 2.0f, 0.18f, 0.13f, 0.25f, 0.92f);
+        drawColoredQuad(boxX, boxY, boxWidth, boxHeight, 0.02f, 0.02f, 0.04f, 0.94f);
+        drawColoredQuad(boxX + 1.0f, boxY + 1.0f, boxWidth - 2.0f, 1.0f, 0.36f, 0.28f, 0.50f, 0.78f);
+        textRenderer.drawText(itemName, boxX + paddingX, boxY + paddingY, textSize, TEXT_COLOR);
+    }
+
     private void renderChat(final int width, final int height, final float hotbarY, final float scale) {
         final List<ChatSystem.VisibleMessage> messages = chatSystem.visibleMessages();
         final float left = s(10.0f, scale);
@@ -1027,10 +1093,9 @@ public class HudRenderer {
 
     private BufferedImage loadItemIconImage(final GameObject item, final ModelComponent model) {
         BufferedImage icon = loadMinecraftItemModelIcon(item.id().path());
-        if (icon != null) {
-            return icon;
-        }
-
+            if (icon != null) {
+                return icon;
+            }
         if (item.has(BlockItemComponent.class)) {
             icon = decodeImage(resourcePackLoader.loadBlockTexture(model.textureCandidates()));
             if (icon == null && model.hasFrontCandidates()) {

@@ -9,28 +9,6 @@
     },
     "stack": {
       "max": 64
-    },
-    "model": {
-      "texture": [
-        "acacia_log_top"
-      ],
-      "textures": {
-        "side": [
-          "acacia_log"
-        ],
-        "top": [
-          "acacia_log_top"
-        ],
-        "bottom": [
-          "acacia_log_top"
-        ]
-      },
-      "fallback": {
-        "side": "#8b5a2b",
-        "top": "#8b5a2b",
-        "bottom": "#8b5a2b",
-        "default": "#8b5a2b"
-      }
     }
   }
 }
