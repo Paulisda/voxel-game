@@ -50,6 +50,9 @@ public class Player extends Mob {
     private static final double DEFAULT_MOUSE_SENSITIVITY = 0.11;
     private static final double MIN_MOUSE_SENSITIVITY = 0.02;
     private static final double MAX_MOUSE_SENSITIVITY = 0.30;
+    private static final float DEFAULT_FIELD_OF_VIEW = 78.0f;
+    private static final float MIN_FIELD_OF_VIEW = 30.0f;
+    private static final float MAX_FIELD_OF_VIEW = 110.0f;
     private static final double BREAK_REACH = 6.0;
     private static final double RAYCAST_STEP = 0.1;
     private static final double SURVIVAL_SPEED = 5.0;
@@ -79,6 +82,7 @@ public class Player extends Mob {
     private double lastMouseX;
     private double lastMouseY;
     private double mouseSensitivity = DEFAULT_MOUSE_SENSITIVITY;
+    private float fieldOfView = DEFAULT_FIELD_OF_VIEW;
     private double elapsedSeconds;
     private double lastCreativeSpaceTap = -10.0;
     private double voidDamageAccumulator;
@@ -538,6 +542,14 @@ public class Player extends Mob {
         setMouseSensitivity(mouseSensitivity + delta);
     }
 
+    public void setFieldOfView(final float fieldOfView) {
+        this.fieldOfView = Math.max(MIN_FIELD_OF_VIEW, Math.min(MAX_FIELD_OF_VIEW, fieldOfView));
+    }
+
+    public void adjustFieldOfView(final float delta) {
+        setFieldOfView(fieldOfView + delta);
+    }
+
     public int getHealthPoints() {
         return healthPoints;
     }
@@ -555,7 +567,7 @@ public class Player extends Mob {
     }
 
     public float getFieldOfView() {
-        return 75.0f;
+        return fieldOfView;
     }
 
     public double getYawDegrees() {

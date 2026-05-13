@@ -8,6 +8,7 @@ import de.paul.voxelgame.math.Vector3f;
 public abstract class Mob {
     private static final double COLLISION_EPSILON = 1e-4;
     private static final double MAX_COLLISION_STEP = GameConfig.BLOCK_SIZE * 0.45;
+    private static final double MAX_GROUND_SNAP = GameConfig.BLOCK_SIZE * 0.35;
 
     protected final float gravity = -24f;
     protected final float jumpVelocity = 8f;
@@ -126,13 +127,13 @@ public abstract class Mob {
                         final double blockMinX = bx * blockSize;
                         final double allowed = blockMinX - hitBox.getMax().getX() - COLLISION_EPSILON;
                         if (allowed < move) {
-                            move = allowed;
+                            move = Math.max(0, allowed);
                         }
                     } else {
                         final double blockMaxX = (bx + 1) * blockSize;
                         final double allowed = blockMaxX - hitBox.getMin().getX() + COLLISION_EPSILON;
                         if (allowed > move) {
-                            move = allowed;
+                            move = Math.min(0, allowed);
                         }
                     }
                 }
@@ -170,13 +171,13 @@ public abstract class Mob {
                         final double blockMinY = by * blockSize;
                         final double allowed = blockMinY - hitBox.getMax().getY() - COLLISION_EPSILON;
                         if (allowed < move) {
-                            move = allowed;
+                            move = Math.max(0, allowed);
                         }
                     } else {
                         final double blockMaxY = (by + 1) * blockSize;
                         final double allowed = blockMaxY - hitBox.getMin().getY() + COLLISION_EPSILON;
                         if (allowed > move) {
-                            move = allowed;
+                            move = Math.min(0, allowed);
                         }
                     }
                 }
@@ -214,13 +215,13 @@ public abstract class Mob {
                         final double blockMinZ = bz * blockSize;
                         final double allowed = blockMinZ - hitBox.getMax().getZ() - COLLISION_EPSILON;
                         if (allowed < move) {
-                            move = allowed;
+                            move = Math.max(0, allowed);
                         }
                     } else {
                         final double blockMaxZ = (bz + 1) * blockSize;
                         final double allowed = blockMaxZ - hitBox.getMin().getZ() + COLLISION_EPSILON;
                         if (allowed > move) {
-                            move = allowed;
+                            move = Math.min(0, allowed);
                         }
                     }
                 }
@@ -243,30 +244,35 @@ public abstract class Mob {
         final int minBZ = toBlockCoordinate(hitBox.getMin().getZ() + COLLISION_EPSILON);
         final int maxBZ = toBlockCoordinate(hitBox.getMax().getZ() - COLLISION_EPSILON);
 
-        double highestSolidTop = Double.NEGATIVE_INFINITY;
+        double nearestSolidTop = Double.NEGATIVE_INFINITY;
         for (int bx = minBX; bx <= maxBX; bx++) {
             for (int by = minBY; by <= maxBY; by++) {
                 for (int bz = minBZ; bz <= maxBZ; bz++) {
                     if (isSolidBlockAt(bx, by, bz) && intersectsBlock(bx, by, bz)) {
-                        highestSolidTop = Math.max(highestSolidTop, (by + 1) * blockSize);
+                        final double blockTop = (by + 1) * blockSize;
+                        if (blockTop <= hitBox.getMin().getY() + MAX_GROUND_SNAP) {
+                            nearestSolidTop = Math.max(nearestSolidTop, blockTop);
+                        }
                     }
                 }
             }
         }
 
-        if (highestSolidTop == Double.NEGATIVE_INFINITY) {
+        if (nearestSolidTop == Double.NEGATIVE_INFINITY) {
             return;
         }
 
         final int feetBlockX = toBlockCoordinate(getFeetX());
         final int feetBlockZ = toBlockCoordinate(getFeetZ());
         final int surfaceY = world.getSurfaceY(feetBlockX, feetBlockZ);
-        if (hitBox.getMin().getY() < (surfaceY + 1) * blockSize
+        final double surfaceTop = (surfaceY + 1) * blockSize;
+        if (hitBox.getMin().getY() < surfaceTop
+                && surfaceTop <= hitBox.getMin().getY() + MAX_GROUND_SNAP
                 && world.isSolidCollisionBlock(feetBlockX, surfaceY, feetBlockZ)) {
-            highestSolidTop = Math.max(highestSolidTop, (surfaceY + 1) * blockSize);
+            nearestSolidTop = Math.max(nearestSolidTop, surfaceTop);
         }
 
-        setLocation(hitBox.getMin().getX(), highestSolidTop + COLLISION_EPSILON, hitBox.getMin().getZ());
+        setLocation(hitBox.getMin().getX(), nearestSolidTop + COLLISION_EPSILON, hitBox.getMin().getZ());
         isOnGround = true;
         fallVelocity = 0;
     }

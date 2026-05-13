@@ -460,7 +460,7 @@ public class Game {
             player.captureMouse();
         } else {
             inventorySystem.open();
-            inventorySystem.setSearchFocused(GameConfig.isCreative());
+            inventorySystem.setSearchFocused(false);
             player.releaseMouse();
         }
         return true;
@@ -519,6 +519,11 @@ public class Game {
             return false;
         }
 
+        if (hudRenderer.applyMenuSliderClick(inputState.getMouseX(), inputState.getMouseY(), width, height)) {
+            soundEffectManager.play(UI_TAP_EFFECT);
+            return true;
+        }
+
         final MenuAction action = hudRenderer.pickMenuAction(inputState.getMouseX(), inputState.getMouseY(), width, height);
         switch (action) {
             case RESUME -> {
@@ -532,6 +537,26 @@ public class Game {
                 menuSystem.openOptions();
                 return true;
             }
+            case MUSIC_OPTIONS -> {
+                soundEffectManager.play(UI_TAP_EFFECT);
+                menuSystem.openMusicOptions();
+                return true;
+            }
+            case GRAPHICS_OPTIONS -> {
+                soundEffectManager.play(UI_TAP_EFFECT);
+                menuSystem.openGraphicsOptions();
+                return true;
+            }
+            case CONTROLS_OPTIONS -> {
+                soundEffectManager.play(UI_TAP_EFFECT);
+                menuSystem.openControlsOptions();
+                return true;
+            }
+            case LANGUAGE_OPTIONS -> {
+                soundEffectManager.play(UI_TAP_EFFECT);
+                menuSystem.openLanguageOptions();
+                return true;
+            }
             case EXIT -> {
                 soundEffectManager.play(UI_TAP_EFFECT);
                 glfwSetWindowShouldClose(window, true);
@@ -539,7 +564,11 @@ public class Game {
             }
             case BACK -> {
                 soundEffectManager.play(UI_TAP_EFFECT);
-                menuSystem.openPause();
+                if (menuSystem.isOptionsRoot()) {
+                    menuSystem.openPause();
+                } else {
+                    menuSystem.openOptions();
+                }
                 return true;
             }
             case SENSITIVITY_DECREASE -> {
@@ -592,6 +621,16 @@ public class Game {
                 soundEffectManager.adjustVolume(0.05f);
                 return true;
             }
+            case FIELD_OF_VIEW_DECREASE -> {
+                soundEffectManager.play(UI_TAP_EFFECT);
+                player.adjustFieldOfView(-1.0f);
+                return true;
+            }
+            case FIELD_OF_VIEW_INCREASE -> {
+                soundEffectManager.play(UI_TAP_EFFECT);
+                player.adjustFieldOfView(1.0f);
+                return true;
+            }
             case FULLSCREEN_TOGGLE -> {
                 soundEffectManager.play(UI_TAP_EFFECT);
                 displayManager.toggleFullscreen(window);
@@ -642,11 +681,19 @@ public class Game {
 
         final double mouseX = inputState.getMouseX();
         final double mouseY = inputState.getMouseY();
+        if (GameConfig.isCreative() && hudRenderer.isCreativeSearchTab(mouseX, mouseY, width, height)) {
+            inventorySystem.setSearchFocused(true);
+            return true;
+        }
+        if (GameConfig.isCreative() && hudRenderer.isCreativePrimaryTab(mouseX, mouseY, width, height)) {
+            inventorySystem.setSearchFocused(false);
+            inventorySystem.clearSearch();
+            return true;
+        }
         if (GameConfig.isCreative() && hudRenderer.isCreativeSearchField(mouseX, mouseY, width, height)) {
             inventorySystem.setSearchFocused(true);
             return true;
         }
-        inventorySystem.setSearchFocused(false);
 
         int slot = hudRenderer.pickInventoryHotbarSlot(mouseX, mouseY, width, height);
         if (slot < 0) {
@@ -690,11 +737,19 @@ public class Game {
     private boolean placeCarriedInventoryStack(final int width, final int height) {
         final double mouseX = inputState.getMouseX();
         final double mouseY = inputState.getMouseY();
+        if (GameConfig.isCreative() && hudRenderer.isCreativeSearchTab(mouseX, mouseY, width, height)) {
+            inventorySystem.setSearchFocused(true);
+            return true;
+        }
+        if (GameConfig.isCreative() && hudRenderer.isCreativePrimaryTab(mouseX, mouseY, width, height)) {
+            inventorySystem.setSearchFocused(false);
+            inventorySystem.clearSearch();
+            return true;
+        }
         if (GameConfig.isCreative() && hudRenderer.isCreativeSearchField(mouseX, mouseY, width, height)) {
             inventorySystem.setSearchFocused(true);
             return true;
         }
-        inventorySystem.setSearchFocused(false);
 
         int targetSlot = hudRenderer.pickInventoryHotbarSlot(mouseX, mouseY, width, height);
         if (targetSlot < 0) {

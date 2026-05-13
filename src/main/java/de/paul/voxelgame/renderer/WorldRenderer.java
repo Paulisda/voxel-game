@@ -73,6 +73,7 @@ import static org.lwjgl.opengl.GL11.glColorMaterial;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glDisableClientState;
 import static org.lwjgl.opengl.GL11.glDepthFunc;
+import static org.lwjgl.opengl.GL11.glDepthMask;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnableClientState;
@@ -114,7 +115,10 @@ public class WorldRenderer {
     private static final Color DEFAULT_GRASS_TINT = new Color(0x7F, 0xB2, 0x38);
     private static final Color DEFAULT_WATER_TINT = new Color(62, 128, 216, 200);
     private static final int MATERIAL_VARIANT_BUCKETS = Math.max(1, Integer.getInteger("voxel.texture.variants", 4));
-    private static final boolean ENABLE_MINECRAFT_BLOCK_MODELS = Boolean.getBoolean("voxel.minecraft.models");
+    private static final int MINECRAFT_MODEL_VARIANT_BUCKETS = Math.max(1, Integer.getInteger("voxel.minecraft.model.variants", 64));
+    private static final int MAX_EXPANDED_MODEL_WEIGHT = 64;
+    private static final int MAX_MODEL_SELECTION_WEIGHT = 65536;
+    private static final boolean ENABLE_MINECRAFT_BLOCK_MODELS = Boolean.parseBoolean(System.getProperty("voxel.minecraft.models", "true"));
     private static final int MOON_PHASE_COLUMNS = 4;
     private static final int MOON_PHASE_ROWS = 2;
     private static final float CELESTIAL_DISTANCE = 700.0f;
@@ -577,9 +581,14 @@ public class WorldRenderer {
         glEnableClientState(GL_NORMAL_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glEnableClientState(GL_COLOR_ARRAY);
-        for (final ChunkMesh mesh : chunkMeshes.values()) {
-            mesh.render();
+        for (final RenderLayer layer : RenderLayer.values()) {
+            glDepthMask(layer != RenderLayer.TRANSLUCENT);
+            for (final ChunkMesh mesh : chunkMeshes.values()) {
+                mesh.render(layer);
+            }
         }
+        glDepthMask(true);
+        glDepthFunc(GL_LESS);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDisableClientState(GL_COLOR_ARRAY);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -639,7 +648,7 @@ public class WorldRenderer {
         final MinecraftBlockModel[] minecraftModels = ENABLE_MINECRAFT_BLOCK_MODELS ? minecraftModelsFor(block) : null;
         if (minecraftModels != null && minecraftModels.length > 0) {
             final int modelIndex = computeMaterialVariant(block.getTypeId(), x, y, z, minecraftModels.length);
-            appendMinecraftModelToMesh(builder, minecraftModels[modelIndex], minX, minY, minZ, size);
+            appendMinecraftModelToMesh(builder, minecraftModels[modelIndex], block, minX, minY, minZ, size);
             return;
         }
 
@@ -662,34 +671,42 @@ public class WorldRenderer {
         }
 
         if (isFaceVisible(block, x, y, z + 1)) {
-            builder.addQuad(horizontalTexture(horizontalTextures(variants, block, BlockFacing.SOUTH), block, BlockFacing.SOUTH), 0.88f, 0.0f, 0.0f, 1.0f, minX, minY, maxZ, maxX, minY, maxZ, maxX, maxY, maxZ, minX, maxY, maxZ);
+            builder.addQuad(horizontalTexture(horizontalTextures(variants, block, BlockFacing.SOUTH), block, BlockFacing.SOUTH), renderLayer(block), 0.88f, 0.0f, 0.0f, 1.0f, minX, minY, maxZ, maxX, minY, maxZ, maxX, maxY, maxZ, minX, maxY, maxZ);
         }
         if (isFaceVisible(block, x, y, z - 1)) {
-            builder.addQuad(horizontalTexture(horizontalTextures(variants, block, BlockFacing.NORTH), block, BlockFacing.NORTH), 0.88f, 0.0f, 0.0f, -1.0f, maxX, minY, minZ, minX, minY, minZ, minX, maxY, minZ, maxX, maxY, minZ);
+            builder.addQuad(horizontalTexture(horizontalTextures(variants, block, BlockFacing.NORTH), block, BlockFacing.NORTH), renderLayer(block), 0.88f, 0.0f, 0.0f, -1.0f, maxX, minY, minZ, minX, minY, minZ, minX, maxY, minZ, maxX, maxY, minZ);
         }
         if (isFaceVisible(block, x + 1, y, z)) {
-            builder.addQuad(horizontalTexture(horizontalTextures(variants, block, BlockFacing.EAST), block, BlockFacing.EAST), 0.83f, 1.0f, 0.0f, 0.0f, maxX, minY, maxZ, maxX, minY, minZ, maxX, maxY, minZ, maxX, maxY, maxZ);
+            builder.addQuad(horizontalTexture(horizontalTextures(variants, block, BlockFacing.EAST), block, BlockFacing.EAST), renderLayer(block), 0.83f, 1.0f, 0.0f, 0.0f, maxX, minY, maxZ, maxX, minY, minZ, maxX, maxY, minZ, maxX, maxY, maxZ);
         }
         if (isFaceVisible(block, x - 1, y, z)) {
-            builder.addQuad(horizontalTexture(horizontalTextures(variants, block, BlockFacing.WEST), block, BlockFacing.WEST), 0.83f, -1.0f, 0.0f, 0.0f, minX, minY, minZ, minX, minY, maxZ, minX, maxY, maxZ, minX, maxY, minZ);
+            builder.addQuad(horizontalTexture(horizontalTextures(variants, block, BlockFacing.WEST), block, BlockFacing.WEST), renderLayer(block), 0.83f, -1.0f, 0.0f, 0.0f, minX, minY, minZ, minX, minY, maxZ, minX, maxY, maxZ, minX, maxY, minZ);
         }
         if (isFaceVisible(block, x, y + 1, z)) {
-            builder.addQuad(textures.top(), 1.0f, 0.0f, 1.0f, 0.0f, minX, maxY, maxZ, maxX, maxY, maxZ, maxX, maxY, minZ, minX, maxY, minZ);
+            builder.addQuad(textures.top(), renderLayer(block), 1.0f, 0.0f, 1.0f, 0.0f, minX, maxY, maxZ, maxX, maxY, maxZ, maxX, maxY, minZ, minX, maxY, minZ);
         }
         if (isFaceVisible(block, x, y - 1, z)) {
-            builder.addQuad(textures.bottom(), 0.72f, 0.0f, -1.0f, 0.0f, minX, minY, minZ, maxX, minY, minZ, maxX, minY, maxZ, minX, minY, maxZ);
+            builder.addQuad(textures.bottom(), renderLayer(block), 0.72f, 0.0f, -1.0f, 0.0f, minX, minY, minZ, maxX, minY, minZ, maxX, minY, maxZ, minX, minY, maxZ);
         }
+    }
+
+    private RenderLayer renderLayer(final Block block) {
+        return isLiquidBlock(block) ? RenderLayer.TRANSLUCENT : RenderLayer.OPAQUE;
     }
 
     private void appendMinecraftModelToMesh(
             final ChunkMeshBuilder builder,
             final MinecraftBlockModel model,
+            final Block block,
             final float baseX,
             final float baseY,
             final float baseZ,
             final float blockSize
     ) {
         for (final ModelQuad quad : model.quads()) {
+            if (quad.cullable() && !isModelCullFaceVisible(block, quad.normal())) {
+                continue;
+            }
             final float[][] vertices = new float[4][3];
             for (int i = 0; i < vertices.length; i++) {
                 vertices[i] = new float[]{
@@ -698,8 +715,41 @@ public class WorldRenderer {
                         baseZ + (quad.vertices()[i][2] / 16.0f) * blockSize
                 };
             }
-            builder.addQuad(quad.textureId(), quad.shade(), quad.normal()[0], quad.normal()[1], quad.normal()[2], vertices, quad.uvs());
+            builder.addQuad(
+                    quad.textureId(),
+                    quad.tinted() ? RenderLayer.DEPTH_EQUAL : RenderLayer.OPAQUE,
+                    quad.shade(),
+                    quad.normal()[0],
+                    quad.normal()[1],
+                    quad.normal()[2],
+                    vertices,
+                    quad.uvs()
+            );
         }
+    }
+
+    private boolean isModelCullFaceVisible(final Block block, final float[] normal) {
+        if (block == null || normal == null || normal.length < 3) {
+            return true;
+        }
+
+        final float ax = Math.abs(normal[0]);
+        final float ay = Math.abs(normal[1]);
+        final float az = Math.abs(normal[2]);
+        if (ax <= 0.0001f && ay <= 0.0001f && az <= 0.0001f) {
+            return true;
+        }
+
+        final int x = block.getWorldX();
+        final int y = block.getWorldY();
+        final int z = block.getWorldZ();
+        if (ay >= ax && ay >= az) {
+            return isFaceVisible(block, x, y + (normal[1] >= 0.0f ? 1 : -1), z);
+        }
+        if (ax >= az) {
+            return isFaceVisible(block, x + (normal[0] >= 0.0f ? 1 : -1), y, z);
+        }
+        return isFaceVisible(block, x, y, z + (normal[2] >= 0.0f ? 1 : -1));
     }
 
     private void appendCrossPlant(final ChunkMeshBuilder builder, final int textureId, final float minX, final float minY, final float minZ, final float size) {
@@ -849,6 +899,9 @@ public class WorldRenderer {
         if (isLiquidBlock(block)) {
             return neighbor == null;
         }
+        if (isLeafBlock(block.getTypeId()) && isLeafBlock(neighbor == null ? null : neighbor.getTypeId())) {
+            return false;
+        }
         if (isLiquidBlock(neighbor)) {
             return true;
         }
@@ -857,6 +910,9 @@ public class WorldRenderer {
 
     private boolean isOccludingFullBlock(final Block block) {
         if (block == null) {
+            return false;
+        }
+        if (isLeafBlock(block.getTypeId())) {
             return false;
         }
         final String shape = blockShapes.getOrDefault(block.getTypeId(), "cube");
@@ -986,13 +1042,17 @@ public class WorldRenderer {
         for (final ModelDefinitionGroup group : groups) {
             final MinecraftBlockModel resolvedModel = loadMinecraftBlockModel(group, model, grassTint);
             if (resolvedModel != null) {
-                final int weight = clampInt(group.weight(), 1, 64);
+                final int weight = expandedModelWeight(group);
                 for (int i = 0; i < weight; i++) {
                     models.add(resolvedModel);
                 }
             }
         }
         return models;
+    }
+
+    private int expandedModelWeight(final ModelDefinitionGroup group) {
+        return clampInt(group == null ? 1 : group.weight(), 1, MAX_EXPANDED_MODEL_WEIGHT);
     }
 
     private List<ModelDefinitionGroup> loadBlockStateModelDefinitionGroups(final String blockName, final BlockFacing facing) {
@@ -1010,19 +1070,19 @@ public class WorldRenderer {
 
             final List<Object> multipart = list(root.get("multipart"));
             if (!multipart.isEmpty()) {
-                final List<ModelDefinition> composite = new ArrayList<>();
+                final List<List<ModelDefinitionGroup>> choicesByPart = new ArrayList<>();
                 for (final Object rawPart : multipart) {
                     final Map<String, Object> part = object(rawPart);
                     if (!matchesDefaultState(part.get("when"), facing)) {
                         continue;
                     }
 
-                    final ModelDefinitionGroup selectedApply = selectMultipartApplyGroup(part.get("apply"));
-                    if (selectedApply != null) {
-                        composite.addAll(selectedApply.definitions());
+                    final List<ModelDefinitionGroup> applyChoices = readModelDefinitionGroups(part.get("apply"));
+                    if (!applyChoices.isEmpty()) {
+                        choicesByPart.add(applyChoices);
                     }
                 }
-                return composite.isEmpty() ? List.of() : List.of(new ModelDefinitionGroup(composite, 1));
+                return buildMultipartDefinitionGroups(choicesByPart);
             }
             return List.of();
         } catch (RuntimeException ignored) {
@@ -1051,9 +1111,97 @@ public class WorldRenderer {
         return bestKey == null ? null : variants.get(bestKey);
     }
 
-    private ModelDefinitionGroup selectMultipartApplyGroup(final Object apply) {
-        final List<ModelDefinitionGroup> groups = readModelDefinitionGroups(apply);
-        return groups.isEmpty() ? null : groups.get(0);
+    private List<ModelDefinitionGroup> buildMultipartDefinitionGroups(final List<List<ModelDefinitionGroup>> choicesByPart) {
+        if (choicesByPart.isEmpty()) {
+            return List.of();
+        }
+
+        final int bucketCount = hasMultipartVariations(choicesByPart) ? MINECRAFT_MODEL_VARIANT_BUCKETS : 1;
+        final List<ModelDefinitionGroup> groups = new ArrayList<>();
+        final Set<String> seen = new HashSet<>();
+        for (int bucket = 0; bucket < bucketCount; bucket++) {
+            final List<ModelDefinition> composite = new ArrayList<>();
+            for (int part = 0; part < choicesByPart.size(); part++) {
+                final ModelDefinitionGroup selected = selectWeightedMultipartChoice(choicesByPart.get(part), bucket, part);
+                if (selected != null) {
+                    composite.addAll(selected.definitions());
+                }
+            }
+            if (composite.isEmpty()) {
+                continue;
+            }
+
+            final String key = modelDefinitionKey(composite);
+            if (seen.add(key)) {
+                groups.add(new ModelDefinitionGroup(composite, 1));
+            }
+        }
+        return groups;
+    }
+
+    private boolean hasMultipartVariations(final List<List<ModelDefinitionGroup>> choicesByPart) {
+        for (final List<ModelDefinitionGroup> choices : choicesByPart) {
+            if (choices.size() > 1) {
+                return true;
+            }
+            if (!choices.isEmpty() && choices.get(0).weight() > 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private ModelDefinitionGroup selectWeightedMultipartChoice(final List<ModelDefinitionGroup> choices, final int bucket, final int part) {
+        if (choices == null || choices.isEmpty()) {
+            return null;
+        }
+        if (choices.size() == 1) {
+            return choices.get(0);
+        }
+
+        long totalWeight = 0L;
+        for (final ModelDefinitionGroup choice : choices) {
+            totalWeight += selectionWeight(choice);
+        }
+        if (totalWeight <= 0L) {
+            return choices.get(0);
+        }
+
+        long selectedWeight = Math.floorMod(modelVariantSeed(bucket, part), totalWeight);
+        for (final ModelDefinitionGroup choice : choices) {
+            selectedWeight -= selectionWeight(choice);
+            if (selectedWeight < 0L) {
+                return choice;
+            }
+        }
+        return choices.get(choices.size() - 1);
+    }
+
+    private int selectionWeight(final ModelDefinitionGroup group) {
+        return clampInt(group == null ? 1 : group.weight(), 1, MAX_MODEL_SELECTION_WEIGHT);
+    }
+
+    private long modelVariantSeed(final int bucket, final int part) {
+        long hash = 1469598103934665603L;
+        hash = (hash ^ bucket) * 1099511628211L;
+        hash = (hash ^ (part * 31L + 0x9E3779B97F4A7C15L)) * 1099511628211L;
+        hash ^= hash >>> 32;
+        return hash & Long.MAX_VALUE;
+    }
+
+    private String modelDefinitionKey(final List<ModelDefinition> definitions) {
+        final StringBuilder key = new StringBuilder();
+        for (final ModelDefinition definition : definitions) {
+            key.append(definition.modelPath())
+                    .append('@')
+                    .append(definition.xRotation())
+                    .append(',')
+                    .append(definition.yRotation())
+                    .append(',')
+                    .append(definition.zRotation())
+                    .append(';');
+        }
+        return key.toString();
     }
 
     private List<ModelDefinitionGroup> readModelDefinitionGroups(final Object value) {
@@ -1081,7 +1229,7 @@ public class WorldRenderer {
                 number(model.get("y"), 0.0f),
                 number(model.get("z"), 0.0f)
         );
-        final int weight = clampInt(Math.round(number(model.get("weight"), 1.0f)), 1, 64);
+        final int weight = clampInt(Math.round(number(model.get("weight"), 1.0f)), 1, MAX_MODEL_SELECTION_WEIGHT);
         return List.of(new ModelDefinitionGroup(List.of(definition), weight));
     }
 
@@ -1290,6 +1438,7 @@ public class WorldRenderer {
                         continue;
                     }
                     final boolean tinted = face.containsKey("tintindex");
+                    final boolean cullable = !string(face, "cullface", "").isBlank();
                     final int textureId = loadModelTexture(texturePath, tinted ? grassTint : null);
                     final float[][] uvs = faceUvs(face.get("uv"), Math.round(number(face.get("rotation"), 0.0f)));
                     final float[][] vertices = faceVertices(faceName, from, to);
@@ -1306,7 +1455,8 @@ public class WorldRenderer {
                             uvs,
                             vertices,
                             normalFromVertices(vertices),
-                            tinted
+                            tinted,
+                            cullable
                     ));
                 }
             }
@@ -1948,7 +2098,7 @@ public class WorldRenderer {
     }
 
     private static final class ChunkMeshBuilder {
-        private final Map<Integer, FloatList> batches = new LinkedHashMap<>();
+        private final Map<BatchKey, FloatList> batches = new LinkedHashMap<>();
 
         private void addQuad(
                 final int textureId,
@@ -1961,7 +2111,32 @@ public class WorldRenderer {
                 final float x3, final float y3, final float z3,
                 final float x4, final float y4, final float z4
         ) {
-            addQuad(textureId, shade, normalX, normalY, normalZ, new float[][]{
+            addQuad(textureId, RenderLayer.OPAQUE, shade, normalX, normalY, normalZ, new float[][]{
+                    {x1, y1, z1},
+                    {x2, y2, z2},
+                    {x3, y3, z3},
+                    {x4, y4, z4}
+            }, new float[][]{
+                    {0.0f, 0.0f},
+                    {1.0f, 0.0f},
+                    {1.0f, 1.0f},
+                    {0.0f, 1.0f}
+            });
+        }
+
+        private void addQuad(
+                final int textureId,
+                final RenderLayer layer,
+                final float shade,
+                final float normalX,
+                final float normalY,
+                final float normalZ,
+                final float x1, final float y1, final float z1,
+                final float x2, final float y2, final float z2,
+                final float x3, final float y3, final float z3,
+                final float x4, final float y4, final float z4
+        ) {
+            addQuad(textureId, layer, shade, normalX, normalY, normalZ, new float[][]{
                     {x1, y1, z1},
                     {x2, y2, z2},
                     {x3, y3, z3},
@@ -2005,10 +2180,23 @@ public class WorldRenderer {
                 final float[][] vertices,
                 final float[][] uvs
         ) {
+            addQuad(textureId, RenderLayer.OPAQUE, shade, normalX, normalY, normalZ, vertices, uvs);
+        }
+
+        private void addQuad(
+                final int textureId,
+                final RenderLayer layer,
+                final float shade,
+                final float normalX,
+                final float normalY,
+                final float normalZ,
+                final float[][] vertices,
+                final float[][] uvs
+        ) {
             if (textureId == 0 || vertices.length < 4 || uvs.length < 4) {
                 return;
             }
-            final FloatList data = batches.computeIfAbsent(textureId, ignored -> new FloatList());
+            final FloatList data = batches.computeIfAbsent(new BatchKey(textureId, layer), ignored -> new FloatList());
             addTriangle(data, shade, normalX, normalY, normalZ, vertices, uvs, 0, 1, 2);
             addTriangle(data, shade, normalX, normalY, normalZ, vertices, uvs, 0, 2, 3);
         }
@@ -2054,7 +2242,18 @@ public class WorldRenderer {
 
         private ChunkMesh upload(final long revision) {
             final List<MeshBatch> uploaded = new ArrayList<>();
-            for (final Map.Entry<Integer, FloatList> entry : batches.entrySet()) {
+            for (final RenderLayer layer : RenderLayer.values()) {
+                uploadBatches(uploaded, layer);
+            }
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            return new ChunkMesh(revision, uploaded);
+        }
+
+        private void uploadBatches(final List<MeshBatch> uploaded, final RenderLayer layer) {
+            for (final Map.Entry<BatchKey, FloatList> entry : batches.entrySet()) {
+                if (entry.getKey().layer() != layer) {
+                    continue;
+                }
                 final FloatList data = entry.getValue();
                 if (data.isEmpty()) {
                     continue;
@@ -2067,11 +2266,18 @@ public class WorldRenderer {
 
                 glBindBuffer(GL_ARRAY_BUFFER, vboId);
                 glBufferData(GL_ARRAY_BUFFER, data.toBuffer(), GL_STATIC_DRAW);
-                uploaded.add(new MeshBatch(entry.getKey(), vboId, data.vertexCount()));
+                uploaded.add(new MeshBatch(entry.getKey().textureId(), entry.getKey().layer(), vboId, data.vertexCount()));
             }
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            return new ChunkMesh(revision, uploaded);
         }
+    }
+
+    private record BatchKey(int textureId, RenderLayer layer) {
+    }
+
+    private enum RenderLayer {
+        OPAQUE,
+        DEPTH_EQUAL,
+        TRANSLUCENT
     }
 
     private static final class FloatList {
@@ -2104,8 +2310,11 @@ public class WorldRenderer {
     }
 
     private record ChunkMesh(long builtRevision, List<MeshBatch> batches) {
-        private void render() {
+        private void render(final RenderLayer layer) {
             for (final MeshBatch batch : batches) {
+                if (batch.layer() != layer) {
+                    continue;
+                }
                 batch.render();
             }
         }
@@ -2117,11 +2326,12 @@ public class WorldRenderer {
         }
     }
 
-    private record MeshBatch(int textureId, int vboId, int vertexCount) {
+    private record MeshBatch(int textureId, RenderLayer layer, int vboId, int vertexCount) {
         private void render() {
             if (vboId == 0 || vertexCount <= 0) {
                 return;
             }
+            glDepthFunc(layer == RenderLayer.OPAQUE ? GL_LESS : GL_LEQUAL);
             glBindTexture(GL_TEXTURE_2D, textureId);
             glBindBuffer(GL_ARRAY_BUFFER, vboId);
             glVertexPointer(3, GL_FLOAT, VERTEX_STRIDE_BYTES, 0L);
@@ -2210,7 +2420,7 @@ public class WorldRenderer {
         }
     }
 
-    private record ModelQuad(int textureId, float shade, float[][] uvs, float[][] vertices, float[] normal, boolean tinted) {
+    private record ModelQuad(int textureId, float shade, float[][] uvs, float[][] vertices, float[] normal, boolean tinted, boolean cullable) {
     }
 
     private record ModelDefinition(String modelPath, float xRotation, float yRotation, float zRotation) {
