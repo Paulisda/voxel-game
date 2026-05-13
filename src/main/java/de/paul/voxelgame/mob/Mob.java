@@ -1,7 +1,6 @@
 package de.paul.voxelgame.mob;
 
 import de.paul.voxelgame.GameConfig;
-import de.paul.voxelgame.map.Block;
 import de.paul.voxelgame.map.World;
 import de.paul.voxelgame.math.HitBox;
 import de.paul.voxelgame.math.Vector3f;
@@ -50,6 +49,7 @@ public abstract class Mob {
             final Vector3f appliedStep = moveSingleStep(stepVelocity);
             appliedTotal = appliedTotal.add(appliedStep);
         }
+        resolveEmbeddedInBlocks();
 
         return appliedTotal;
     }
@@ -231,8 +231,58 @@ public abstract class Mob {
     }
 
     private boolean isSolidBlockAt(final int blockX, final int blockY, final int blockZ) {
-        final Block block = world.getBlock(blockX, blockY, blockZ);
-        return block != null && block.isSolid();
+        return world.isSolidCollisionBlock(blockX, blockY, blockZ);
+    }
+
+    private void resolveEmbeddedInBlocks() {
+        final double blockSize = GameConfig.BLOCK_SIZE;
+        final int minBX = toBlockCoordinate(hitBox.getMin().getX() + COLLISION_EPSILON);
+        final int maxBX = toBlockCoordinate(hitBox.getMax().getX() - COLLISION_EPSILON);
+        final int minBY = toBlockCoordinate(hitBox.getMin().getY() + COLLISION_EPSILON);
+        final int maxBY = toBlockCoordinate(hitBox.getMax().getY() - COLLISION_EPSILON);
+        final int minBZ = toBlockCoordinate(hitBox.getMin().getZ() + COLLISION_EPSILON);
+        final int maxBZ = toBlockCoordinate(hitBox.getMax().getZ() - COLLISION_EPSILON);
+
+        double highestSolidTop = Double.NEGATIVE_INFINITY;
+        for (int bx = minBX; bx <= maxBX; bx++) {
+            for (int by = minBY; by <= maxBY; by++) {
+                for (int bz = minBZ; bz <= maxBZ; bz++) {
+                    if (isSolidBlockAt(bx, by, bz) && intersectsBlock(bx, by, bz)) {
+                        highestSolidTop = Math.max(highestSolidTop, (by + 1) * blockSize);
+                    }
+                }
+            }
+        }
+
+        if (highestSolidTop == Double.NEGATIVE_INFINITY) {
+            return;
+        }
+
+        final int feetBlockX = toBlockCoordinate(getFeetX());
+        final int feetBlockZ = toBlockCoordinate(getFeetZ());
+        final int surfaceY = world.getSurfaceY(feetBlockX, feetBlockZ);
+        if (hitBox.getMin().getY() < (surfaceY + 1) * blockSize
+                && world.isSolidCollisionBlock(feetBlockX, surfaceY, feetBlockZ)) {
+            highestSolidTop = Math.max(highestSolidTop, (surfaceY + 1) * blockSize);
+        }
+
+        setLocation(hitBox.getMin().getX(), highestSolidTop + COLLISION_EPSILON, hitBox.getMin().getZ());
+        isOnGround = true;
+        fallVelocity = 0;
+    }
+
+    private boolean intersectsBlock(final int blockX, final int blockY, final int blockZ) {
+        final double blockSize = GameConfig.BLOCK_SIZE;
+        final double blockMinX = blockX * blockSize;
+        final double blockMinY = blockY * blockSize;
+        final double blockMinZ = blockZ * blockSize;
+        final double blockMaxX = blockMinX + blockSize;
+        final double blockMaxY = blockMinY + blockSize;
+        final double blockMaxZ = blockMinZ + blockSize;
+
+        return hitBox.getMin().getX() < blockMaxX && hitBox.getMax().getX() > blockMinX
+                && hitBox.getMin().getY() < blockMaxY && hitBox.getMax().getY() > blockMinY
+                && hitBox.getMin().getZ() < blockMaxZ && hitBox.getMax().getZ() > blockMinZ;
     }
 
     protected int toBlockCoordinate(final double worldCoordinate) {

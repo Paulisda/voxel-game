@@ -785,7 +785,7 @@ public class HudRenderer {
         drawTiledTexture(optionsBackgroundTexture, 0.0f, 0.0f, width, height, s(32.0f, scale), 0.56f);
         drawColoredQuad(0, 0, width, height, 0.02f, 0.025f, 0.03f, 0.32f);
         final float panelWidth = s(menuSystem.isOptions() ? 520.0f : 360.0f, scale);
-        final float panelHeight = s(menuSystem.isOptions() ? 560.0f : 260.0f, scale);
+        final float panelHeight = s(menuSystem.isOptions() ? 620.0f : 260.0f, scale);
         final float panelX = (width - panelWidth) * 0.5f;
         final float panelY = (height - panelHeight) * 0.44f;
         drawColoredQuad(panelX - s(5.0f, scale), panelY - s(5.0f, scale),
@@ -816,14 +816,16 @@ public class HudRenderer {
         textRenderer.drawCenteredBoldText(String.format(Locale.ROOT, "%.2f", player.getMouseSensitivity()), centerX, panelY + s(84.0f, scale), font(18, scale), TEXT_COLOR);
         textRenderer.drawText(localization.translate("ui.options.hud_scale"), labelX, panelY + s(118.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
         textRenderer.drawCenteredBoldText(hudScaleSetting + "x", centerX, panelY + s(144.0f, scale), font(18, scale), TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.music_volume"), labelX, panelY + s(178.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
-        textRenderer.drawCenteredBoldText(percent(musicManager.getVolume()), centerX, panelY + s(204.0f, scale), font(18, scale), TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.effects_volume"), labelX, panelY + s(238.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
-        textRenderer.drawCenteredBoldText(percent(soundEffectManager.getVolume()), centerX, panelY + s(264.0f, scale), font(18, scale), TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.fullscreen"), labelX, panelY + s(298.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.resolution"), labelX, panelY + s(356.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
-        textRenderer.drawCenteredBoldText(displayManager.currentResolutionLabel(), centerX, panelY + s(384.0f, scale), font(18, scale), TEXT_COLOR);
-        textRenderer.drawText(localization.translate("ui.options.language"), labelX, panelY + s(424.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.view_distance"), labelX, panelY + s(178.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawCenteredBoldText(GameConfig.getViewDistanceChunks() + " chunks", centerX, panelY + s(204.0f, scale), font(18, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.music_volume"), labelX, panelY + s(238.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawCenteredBoldText(percent(musicManager.getVolume()), centerX, panelY + s(264.0f, scale), font(18, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.effects_volume"), labelX, panelY + s(298.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawCenteredBoldText(percent(soundEffectManager.getVolume()), centerX, panelY + s(324.0f, scale), font(18, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.fullscreen"), labelX, panelY + s(358.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.resolution"), labelX, panelY + s(416.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
+        textRenderer.drawCenteredBoldText(displayManager.currentResolutionLabel(), centerX, panelY + s(444.0f, scale), font(18, scale), TEXT_COLOR);
+        textRenderer.drawText(localization.translate("ui.options.language"), labelX, panelY + s(484.0f, scale), font(15, scale), MUTED_TEXT_COLOR);
         for (final MenuButton button : menuButtonsForOptions(panelX, panelY, panelWidth, scale)) {
             drawMenuButton(button, labelFor(button.action()), scale);
         }
@@ -847,6 +849,8 @@ public class HudRenderer {
             case SENSITIVITY_INCREASE -> "+";
             case HUD_SCALE_DECREASE -> "-";
             case HUD_SCALE_INCREASE -> "+";
+            case VIEW_DISTANCE_DECREASE -> "-";
+            case VIEW_DISTANCE_INCREASE -> "+";
             case MUSIC_VOLUME_DECREASE -> "-";
             case MUSIC_VOLUME_INCREASE -> "+";
             case EFFECTS_VOLUME_DECREASE -> "-";
@@ -864,7 +868,7 @@ public class HudRenderer {
     private MenuButton[] menuButtons(final int width, final int height) {
         final float scale = uiScale(width, height);
         final float panelWidth = s(menuSystem.isOptions() ? 520.0f : 360.0f, scale);
-        final float panelHeight = s(menuSystem.isOptions() ? 560.0f : 260.0f, scale);
+        final float panelHeight = s(menuSystem.isOptions() ? 620.0f : 260.0f, scale);
         final float panelX = (width - panelWidth) * 0.5f;
         final float panelY = (height - panelHeight) * 0.44f;
         return menuSystem.isOptions()
@@ -896,15 +900,17 @@ public class HudRenderer {
                 new MenuButton(MenuAction.SENSITIVITY_INCREASE, rightSmallX, panelY + s(78.0f, scale), smallButtonWidth, smallButtonHeight),
                 new MenuButton(MenuAction.HUD_SCALE_DECREASE, leftSmallX, panelY + s(138.0f, scale), smallButtonWidth, smallButtonHeight),
                 new MenuButton(MenuAction.HUD_SCALE_INCREASE, rightSmallX, panelY + s(138.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.MUSIC_VOLUME_DECREASE, leftSmallX, panelY + s(198.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.MUSIC_VOLUME_INCREASE, rightSmallX, panelY + s(198.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.EFFECTS_VOLUME_DECREASE, leftSmallX, panelY + s(258.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.EFFECTS_VOLUME_INCREASE, rightSmallX, panelY + s(258.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.FULLSCREEN_TOGGLE, wideButtonX, panelY + s(318.0f, scale), wideButtonWidth, wideButtonHeight),
-                new MenuButton(MenuAction.RESOLUTION_PREVIOUS, leftSmallX, panelY + s(378.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.RESOLUTION_NEXT, rightSmallX, panelY + s(378.0f, scale), smallButtonWidth, smallButtonHeight),
-                new MenuButton(MenuAction.LANGUAGE_TOGGLE, wideButtonX, panelY + s(448.0f, scale), wideButtonWidth, wideButtonHeight),
-                new MenuButton(MenuAction.BACK, wideButtonX, panelY + s(508.0f, scale), wideButtonWidth, wideButtonHeight)
+                new MenuButton(MenuAction.VIEW_DISTANCE_DECREASE, leftSmallX, panelY + s(198.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.VIEW_DISTANCE_INCREASE, rightSmallX, panelY + s(198.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.MUSIC_VOLUME_DECREASE, leftSmallX, panelY + s(258.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.MUSIC_VOLUME_INCREASE, rightSmallX, panelY + s(258.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.EFFECTS_VOLUME_DECREASE, leftSmallX, panelY + s(318.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.EFFECTS_VOLUME_INCREASE, rightSmallX, panelY + s(318.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.FULLSCREEN_TOGGLE, wideButtonX, panelY + s(378.0f, scale), wideButtonWidth, wideButtonHeight),
+                new MenuButton(MenuAction.RESOLUTION_PREVIOUS, leftSmallX, panelY + s(438.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.RESOLUTION_NEXT, rightSmallX, panelY + s(438.0f, scale), smallButtonWidth, smallButtonHeight),
+                new MenuButton(MenuAction.LANGUAGE_TOGGLE, wideButtonX, panelY + s(508.0f, scale), wideButtonWidth, wideButtonHeight),
+                new MenuButton(MenuAction.BACK, wideButtonX, panelY + s(568.0f, scale), wideButtonWidth, wideButtonHeight)
         };
     }
 

@@ -103,6 +103,7 @@ public class Game {
     private InputState inputState;
     private HudRenderer hudRenderer;
     private WorldRenderer worldRenderer;
+    private World world;
     private Player player;
     private InventoryCarrySource inventoryCarrySource = InventoryCarrySource.NONE;
     private int inventoryCarrySourceSlot = -1;
@@ -131,6 +132,7 @@ public class Game {
             initWindow();
             initOpenGL();
             contentLoader.loadAll();
+            soundEffectManager.preload(UI_TAP_EFFECT);
             initScene(worldSystem.createWorld(false));
             musicManager.playFirstAvailableLooping();
             gameLoop();
@@ -167,6 +169,7 @@ public class Game {
             environmentSystem.update(deltaSeconds);
             chatSystem.update(deltaSeconds);
             hudRenderer.update(deltaSeconds);
+            world.updateLoadedChunks(player.getFeetX(), player.getFeetZ(), GameConfig.getViewDistanceChunks());
 
             if (!menuSystem.isOpen()
                     && !inventorySystem.isOpen()
@@ -179,6 +182,7 @@ public class Game {
                     && !consumedMenuClick
                     && !consumedInventoryClick) {
                 player.update(inputState, deltaSeconds);
+                world.updateLoadedChunks(player.getFeetX(), player.getFeetZ(), GameConfig.getViewDistanceChunks());
             }
 
             glViewport(0, 0, width, height);
@@ -558,6 +562,16 @@ public class Game {
                 hudRenderer.adjustHudScale(1);
                 return true;
             }
+            case VIEW_DISTANCE_DECREASE -> {
+                soundEffectManager.play(UI_TAP_EFFECT);
+                GameConfig.adjustViewDistanceChunks(-1);
+                return true;
+            }
+            case VIEW_DISTANCE_INCREASE -> {
+                soundEffectManager.play(UI_TAP_EFFECT);
+                GameConfig.adjustViewDistanceChunks(1);
+                return true;
+            }
             case MUSIC_VOLUME_DECREASE -> {
                 soundEffectManager.play(UI_TAP_EFFECT);
                 musicManager.adjustVolume(-0.05f);
@@ -803,6 +817,7 @@ public class Game {
     }
 
     private void initScene(final World world) {
+        this.world = world;
         inputState = new InputState(window);
         player = new Player(window, world, inventorySystem.createDefaultHotbar(), inventorySystem, registries, soundEffectManager);
         final Vector3f spawnPoint = world.getSpawnPoint();

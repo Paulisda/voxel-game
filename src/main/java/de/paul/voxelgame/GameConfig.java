@@ -14,8 +14,14 @@ public final class GameConfig {
     public static final int BLOCK_SIZE = 1;
     public static final int CHUNK_WIDTH = 16;
     public static final int CHUNK_DEPTH = 16;
-    public static final int CHUNK_HEIGHT = 24;
-    public static final int WORLD_CHUNK_RADIUS = 1;
+    public static final int CHUNK_HEIGHT = 256;
+    public static final int SEA_LEVEL = 63;
+    public static final int WORLD_HALF_SIZE_BLOCKS = 30_000_000;
+    public static final int MIN_VIEW_DISTANCE_CHUNKS = 2;
+    public static final int MAX_VIEW_DISTANCE_CHUNKS = 64;
+    public static final int DEFAULT_VIEW_DISTANCE_CHUNKS = 4;
+
+    private static int viewDistanceChunks = clampViewDistance(Integer.getInteger("voxel.viewDistance", DEFAULT_VIEW_DISTANCE_CHUNKS));
 
     private GameConfig() {
     }
@@ -38,5 +44,26 @@ public final class GameConfig {
 
     public static boolean isCreative() {
         return gameMode == GAMEMODE_CREATIVE;
+    }
+
+    public static int getViewDistanceChunks() {
+        return viewDistanceChunks;
+    }
+
+    public static void setViewDistanceChunks(final int chunks) {
+        viewDistanceChunks = clampViewDistance(chunks);
+    }
+
+    public static void adjustViewDistanceChunks(final int delta) {
+        setViewDistanceChunks(viewDistanceChunks + delta);
+    }
+
+    public static boolean isInsideWorld(final int blockX, final int blockZ) {
+        return blockX >= -WORLD_HALF_SIZE_BLOCKS && blockX < WORLD_HALF_SIZE_BLOCKS
+                && blockZ >= -WORLD_HALF_SIZE_BLOCKS && blockZ < WORLD_HALF_SIZE_BLOCKS;
+    }
+
+    private static int clampViewDistance(final int chunks) {
+        return Math.max(MIN_VIEW_DISTANCE_CHUNKS, Math.min(MAX_VIEW_DISTANCE_CHUNKS, chunks));
     }
 }

@@ -7,6 +7,7 @@ import de.paul.voxelgame.core.JsonParser;
 import de.paul.voxelgame.core.TextureLoader;
 import de.paul.voxelgame.map.Block;
 import de.paul.voxelgame.map.BlockFacing;
+import de.paul.voxelgame.map.Chunk;
 import de.paul.voxelgame.map.World;
 import de.paul.voxelgame.mob.Player;
 import de.paul.voxelgame.objects.BlockComponent;
@@ -32,13 +33,13 @@ import java.util.Set;
 
 import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COMPILE;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_COLOR_ARRAY;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_DIFFUSE;
 import static org.lwjgl.opengl.GL11.GL_AMBIENT;
 import static org.lwjgl.opengl.GL11.GL_AMBIENT_AND_DIFFUSE;
 import static org.lwjgl.opengl.GL11.GL_COLOR_MATERIAL;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
 import static org.lwjgl.opengl.GL11.GL_GREATER;
 import static org.lwjgl.opengl.GL11.GL_LEQUAL;
@@ -55,37 +56,49 @@ import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.GL_SPECULAR;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_COORD_ARRAY;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
+import static org.lwjgl.opengl.GL11.GL_NORMAL_ARRAY;
 import static org.lwjgl.opengl.GL11.glAlphaFunc;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glCallList;
+import static org.lwjgl.opengl.GL11.glColorPointer;
 import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glColor4f;
 import static org.lwjgl.opengl.GL11.glColorMaterial;
-import static org.lwjgl.opengl.GL11.glDeleteLists;
 import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glDisableClientState;
 import static org.lwjgl.opengl.GL11.glDepthFunc;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glEnableClientState;
 import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glEndList;
 import static org.lwjgl.opengl.GL11.glFrustum;
-import static org.lwjgl.opengl.GL11.glGenLists;
 import static org.lwjgl.opengl.GL11.glLightModelfv;
 import static org.lwjgl.opengl.GL11.glLightModeli;
 import static org.lwjgl.opengl.GL11.glLightfv;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glNewList;
 import static org.lwjgl.opengl.GL11.glNormal3f;
+import static org.lwjgl.opengl.GL11.glNormalPointer;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
+import static org.lwjgl.opengl.GL11.glTexCoordPointer;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.glVertexPointer;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glDeleteBuffers;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
 
 public class WorldRenderer {
     private static final ResourceId DIRT_ID = ResourceId.of("game:dirt");
@@ -100,20 +113,28 @@ public class WorldRenderer {
     };
     private static final Color DEFAULT_GRASS_TINT = new Color(0x7F, 0xB2, 0x38);
     private static final Color DEFAULT_WATER_TINT = new Color(62, 128, 216, 200);
-    private static final int MATERIAL_VARIANT_BUCKETS = Math.max(1, Integer.getInteger("voxel.texture.variants", 16));
+    private static final int MATERIAL_VARIANT_BUCKETS = Math.max(1, Integer.getInteger("voxel.texture.variants", 4));
+    private static final boolean ENABLE_MINECRAFT_BLOCK_MODELS = Boolean.getBoolean("voxel.minecraft.models");
     private static final int MOON_PHASE_COLUMNS = 4;
     private static final int MOON_PHASE_ROWS = 2;
     private static final float CELESTIAL_DISTANCE = 700.0f;
     private static final float CELESTIAL_SIZE = 64.0f;
+    private static final int VERTEX_FLOATS = 11;
+    private static final int VERTEX_STRIDE_BYTES = VERTEX_FLOATS * Float.BYTES;
+    private static final long NORMAL_OFFSET_BYTES = 3L * Float.BYTES;
+    private static final long TEX_COORD_OFFSET_BYTES = 6L * Float.BYTES;
+    private static final long COLOR_OFFSET_BYTES = 8L * Float.BYTES;
 
     private final World world;
     private final RegistryManager registries;
     private final EnvironmentSystem environment;
     private final ResourcePackLoader resourcePackLoader = new ResourcePackLoader();
     private final TextureLoader textureLoader = new TextureLoader();
+    private final FloatBuffer lightScratchBuffer = BufferUtils.createFloatBuffer(4);
     private final Map<ResourceId, BlockTextures[]> blockTextureVariants = new LinkedHashMap<>();
     private final Map<BlockModelKey, MinecraftBlockModel[]> minecraftBlockModels = new LinkedHashMap<>();
     private final Map<ResourceId, String> blockShapes = new LinkedHashMap<>();
+    private final Map<Long, ChunkMesh> chunkMeshes = new LinkedHashMap<>();
     private final Map<Integer, Integer> fallbackTextureCache = new HashMap<>();
     private final Map<String, Integer> modelTextureCache = new HashMap<>();
     private final Map<String, ResolvedMinecraftModel> resolvedModelCache = new HashMap<>();
@@ -122,9 +143,6 @@ public class WorldRenderer {
     private int sunTexture;
     private int moonTexture;
     private int rainTexture;
-
-    private int displayListId;
-    private long builtRevision = -1;
 
     public WorldRenderer(final World world, final RegistryManager registries, final EnvironmentSystem environment) {
         this.world = world;
@@ -151,8 +169,7 @@ public class WorldRenderer {
         glAlphaFunc(GL_GREATER, 0.1f);
 
         setupWorldLighting();
-        rebuildDisplayListIfNeeded();
-        glCallList(displayListId);
+        renderChunks();
         teardownWorldLighting();
 
         glDisable(GL_ALPHA_TEST);
@@ -163,10 +180,11 @@ public class WorldRenderer {
     }
 
     public void destroy() {
-        if (displayListId != 0) {
-            glDeleteLists(displayListId, 1);
-            displayListId = 0;
+        for (final ChunkMesh mesh : chunkMeshes.values()) {
+            mesh.destroy();
         }
+        chunkMeshes.clear();
+
         final Set<Integer> textureIds = new HashSet<>();
         for (final BlockTextures[] variants : blockTextureVariants.values()) {
             if (variants == null) {
@@ -366,7 +384,6 @@ public class WorldRenderer {
 
     private void renderSky() {
         glDisable(GL_DEPTH_TEST);
-        glDisable(GL_CULL_FACE);
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -397,7 +414,6 @@ public class WorldRenderer {
         }
 
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
     }
 
@@ -449,9 +465,9 @@ public class WorldRenderer {
     }
 
     private FloatBuffer lightBuffer(final float r, final float g, final float b, final float a) {
-        final FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
-        buffer.put(r).put(g).put(b).put(a).flip();
-        return buffer;
+        lightScratchBuffer.clear();
+        lightScratchBuffer.put(r).put(g).put(b).put(a).flip();
+        return lightScratchBuffer;
     }
 
     private void renderCelestialQuad(
@@ -539,24 +555,64 @@ public class WorldRenderer {
         glEnable(GL_DEPTH_TEST);
     }
 
-    private void rebuildDisplayListIfNeeded() {
-        if (displayListId == 0) {
-            displayListId = glGenLists(1);
-        }
-        if (builtRevision == world.getRevision()) {
-            return;
+    private void renderChunks() {
+        final Set<Long> liveChunkKeys = new HashSet<>();
+        for (final Chunk chunk : world.getChunks()) {
+            final long key = chunkKey(chunk.getChunkX(), chunk.getChunkZ());
+            liveChunkKeys.add(key);
+
+            ChunkMesh mesh = chunkMeshes.get(key);
+            if (mesh == null || mesh.builtRevision() != chunk.getRevision()) {
+                if (mesh != null) {
+                    mesh.destroy();
+                }
+                mesh = buildChunkMesh(chunk);
+                chunkMeshes.put(key, mesh);
+            }
         }
 
-        glNewList(displayListId, GL_COMPILE);
-        glDisable(GL_CULL_FACE);
-        world.forEachBlock(this::renderBlock);
-        glEnable(GL_CULL_FACE);
-        glEndList();
+        removeStaleChunkMeshes(liveChunkKeys);
 
-        builtRevision = world.getRevision();
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_NORMAL_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glEnableClientState(GL_COLOR_ARRAY);
+        for (final ChunkMesh mesh : chunkMeshes.values()) {
+            mesh.render();
+        }
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glDisableClientState(GL_COLOR_ARRAY);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glDisableClientState(GL_NORMAL_ARRAY);
+        glDisableClientState(GL_VERTEX_ARRAY);
     }
 
-    private void renderBlock(final Block block) {
+    private ChunkMesh buildChunkMesh(final Chunk chunk) {
+        final ChunkMeshBuilder builder = new ChunkMeshBuilder();
+        chunk.forEachBlock(block -> appendBlockToMesh(builder, block));
+        return builder.upload(chunk.getRevision());
+    }
+
+    private void removeStaleChunkMeshes(final Set<Long> liveChunkKeys) {
+        final List<Long> staleKeys = new ArrayList<>();
+        for (final Long key : chunkMeshes.keySet()) {
+            if (!liveChunkKeys.contains(key)) {
+                staleKeys.add(key);
+            }
+        }
+        for (final Long key : staleKeys) {
+            final ChunkMesh removed = chunkMeshes.remove(key);
+            if (removed != null) {
+                removed.destroy();
+            }
+        }
+    }
+
+    private long chunkKey(final int x, final int z) {
+        return ((long) x << 32) ^ (z & 0xffffffffL);
+    }
+
+    private void appendBlockToMesh(final ChunkMeshBuilder builder, final Block block) {
         if (block == null) {
             return;
         }
@@ -577,68 +633,191 @@ public class WorldRenderer {
         if (variants == null || variants.length == 0) {
             return;
         }
-        final boolean leafBlock = isLeafBlock(block.getTypeId());
         final int variantIndex = computeMaterialVariant(block.getTypeId(), x, y, z, variants.length);
         final BlockTextures textures = variants[variantIndex];
 
-        final MinecraftBlockModel[] minecraftModels = minecraftModelsFor(block);
+        final MinecraftBlockModel[] minecraftModels = ENABLE_MINECRAFT_BLOCK_MODELS ? minecraftModelsFor(block) : null;
         if (minecraftModels != null && minecraftModels.length > 0) {
             final int modelIndex = computeMaterialVariant(block.getTypeId(), x, y, z, minecraftModels.length);
-            glDisable(GL_BLEND);
-            minecraftModels[modelIndex].render(minX, minY, minZ, size);
-            glEnable(GL_BLEND);
+            appendMinecraftModelToMesh(builder, minecraftModels[modelIndex], minX, minY, minZ, size);
             return;
         }
 
         final String shape = blockShapes.getOrDefault(block.getTypeId(), "cube");
         if ("cross".equals(shape)) {
-            glDisable(GL_BLEND);
-            drawCrossPlant(textures.side(), minX, minY, minZ, size);
-            glEnable(GL_BLEND);
+            appendCrossPlant(builder, textures.side(), minX, minY, minZ, size);
             return;
         }
         if ("crop".equals(shape)) {
-            glDisable(GL_BLEND);
-            drawCropPlant(textures.side(), minX, minY, minZ, size);
-            glEnable(GL_BLEND);
+            appendCropPlant(builder, textures.side(), minX, minY, minZ, size);
             return;
         }
         if ("torch".equals(shape)) {
-            glDisable(GL_BLEND);
-            drawTorchSprite(textures.side(), minX, minY, minZ, size);
-            glEnable(GL_BLEND);
+            appendTorchSprite(builder, textures.side(), minX, minY, minZ, size);
             return;
         }
         if ("redstone_wire".equals(shape)) {
-            glDisable(GL_BLEND);
-            drawRedstoneWire(block, textures.side(), minX, minY, minZ, size);
-            glEnable(GL_BLEND);
+            appendRedstoneWire(builder, block, textures.side(), minX, minY, minZ, size);
             return;
         }
 
-        if (isFaceVisible(x, y, z + 1)) {
-            drawFace(horizontalTexture(horizontalTextures(variants, block, BlockFacing.SOUTH), block, BlockFacing.SOUTH), 0.88f, minX, minY, maxZ, maxX, minY, maxZ, maxX, maxY, maxZ, minX, maxY, maxZ);
+        if (isFaceVisible(block, x, y, z + 1)) {
+            builder.addQuad(horizontalTexture(horizontalTextures(variants, block, BlockFacing.SOUTH), block, BlockFacing.SOUTH), 0.88f, 0.0f, 0.0f, 1.0f, minX, minY, maxZ, maxX, minY, maxZ, maxX, maxY, maxZ, minX, maxY, maxZ);
         }
-        if (isFaceVisible(x, y, z - 1)) {
-            drawFace(horizontalTexture(horizontalTextures(variants, block, BlockFacing.NORTH), block, BlockFacing.NORTH), 0.88f, maxX, minY, minZ, minX, minY, minZ, minX, maxY, minZ, maxX, maxY, minZ);
+        if (isFaceVisible(block, x, y, z - 1)) {
+            builder.addQuad(horizontalTexture(horizontalTextures(variants, block, BlockFacing.NORTH), block, BlockFacing.NORTH), 0.88f, 0.0f, 0.0f, -1.0f, maxX, minY, minZ, minX, minY, minZ, minX, maxY, minZ, maxX, maxY, minZ);
         }
-        if (isFaceVisible(x + 1, y, z)) {
-            drawFace(horizontalTexture(horizontalTextures(variants, block, BlockFacing.EAST), block, BlockFacing.EAST), 0.83f, maxX, minY, maxZ, maxX, minY, minZ, maxX, maxY, minZ, maxX, maxY, maxZ);
+        if (isFaceVisible(block, x + 1, y, z)) {
+            builder.addQuad(horizontalTexture(horizontalTextures(variants, block, BlockFacing.EAST), block, BlockFacing.EAST), 0.83f, 1.0f, 0.0f, 0.0f, maxX, minY, maxZ, maxX, minY, minZ, maxX, maxY, minZ, maxX, maxY, maxZ);
         }
-        if (isFaceVisible(x - 1, y, z)) {
-            drawFace(horizontalTexture(horizontalTextures(variants, block, BlockFacing.WEST), block, BlockFacing.WEST), 0.83f, minX, minY, minZ, minX, minY, maxZ, minX, maxY, maxZ, minX, maxY, minZ);
+        if (isFaceVisible(block, x - 1, y, z)) {
+            builder.addQuad(horizontalTexture(horizontalTextures(variants, block, BlockFacing.WEST), block, BlockFacing.WEST), 0.83f, -1.0f, 0.0f, 0.0f, minX, minY, minZ, minX, minY, maxZ, minX, maxY, maxZ, minX, maxY, minZ);
         }
-        if (isFaceVisible(x, y + 1, z)) {
-            drawFace(textures.top(), 1.0f, minX, maxY, maxZ, maxX, maxY, maxZ, maxX, maxY, minZ, minX, maxY, minZ);
+        if (isFaceVisible(block, x, y + 1, z)) {
+            builder.addQuad(textures.top(), 1.0f, 0.0f, 1.0f, 0.0f, minX, maxY, maxZ, maxX, maxY, maxZ, maxX, maxY, minZ, minX, maxY, minZ);
         }
-        if (isFaceVisible(x, y - 1, z)) {
-            drawFace(textures.bottom(), 0.72f, minX, minY, minZ, maxX, minY, minZ, maxX, minY, maxZ, minX, minY, maxZ);
+        if (isFaceVisible(block, x, y - 1, z)) {
+            builder.addQuad(textures.bottom(), 0.72f, 0.0f, -1.0f, 0.0f, minX, minY, minZ, maxX, minY, minZ, maxX, minY, maxZ, minX, minY, maxZ);
         }
+    }
 
-        if (leafBlock && minecraftModels != null && minecraftModels.length > 0) {
-            final int modelIndex = computeMaterialVariant(block.getTypeId(), x, y, z, minecraftModels.length);
-            minecraftModels[modelIndex].render(minX, minY, minZ, size);
+    private void appendMinecraftModelToMesh(
+            final ChunkMeshBuilder builder,
+            final MinecraftBlockModel model,
+            final float baseX,
+            final float baseY,
+            final float baseZ,
+            final float blockSize
+    ) {
+        for (final ModelQuad quad : model.quads()) {
+            final float[][] vertices = new float[4][3];
+            for (int i = 0; i < vertices.length; i++) {
+                vertices[i] = new float[]{
+                        baseX + (quad.vertices()[i][0] / 16.0f) * blockSize,
+                        baseY + (quad.vertices()[i][1] / 16.0f) * blockSize,
+                        baseZ + (quad.vertices()[i][2] / 16.0f) * blockSize
+                };
+            }
+            builder.addQuad(quad.textureId(), quad.shade(), quad.normal()[0], quad.normal()[1], quad.normal()[2], vertices, quad.uvs());
         }
+    }
+
+    private void appendCrossPlant(final ChunkMeshBuilder builder, final int textureId, final float minX, final float minY, final float minZ, final float size) {
+        final float inset = size * 0.05f;
+        final float maxY = minY + size;
+        final float centerX = minX + size * 0.5f;
+        final float centerZ = minZ + size * 0.5f;
+        final float leftX = minX + inset;
+        final float rightX = minX + size - inset;
+        final float nearZ = minZ + inset;
+        final float farZ = minZ + size - inset;
+
+        appendFace(builder, textureId, 1.0f, leftX, minY, centerZ, rightX, minY, centerZ, rightX, maxY, centerZ, leftX, maxY, centerZ);
+        appendFace(builder, textureId, 1.0f, centerX, minY, farZ, centerX, minY, nearZ, centerX, maxY, nearZ, centerX, maxY, farZ);
+    }
+
+    private void appendCropPlant(final ChunkMeshBuilder builder, final int textureId, final float minX, final float minY, final float minZ, final float size) {
+        final float maxY = minY + size * 0.875f;
+        final float leftX = minX + size * 0.18f;
+        final float rightX = minX + size * 0.82f;
+        final float nearZ = minZ + size * 0.18f;
+        final float farZ = minZ + size * 0.82f;
+        final float zA = minZ + size * 0.34f;
+        final float zB = minZ + size * 0.66f;
+        final float xA = minX + size * 0.34f;
+        final float xB = minX + size * 0.66f;
+
+        appendFace(builder, textureId, 1.0f, leftX, minY, zA, rightX, minY, zA, rightX, maxY, zA, leftX, maxY, zA);
+        appendFace(builder, textureId, 1.0f, leftX, minY, zB, rightX, minY, zB, rightX, maxY, zB, leftX, maxY, zB);
+        appendFace(builder, textureId, 1.0f, xA, minY, farZ, xA, minY, nearZ, xA, maxY, nearZ, xA, maxY, farZ);
+        appendFace(builder, textureId, 1.0f, xB, minY, farZ, xB, minY, nearZ, xB, maxY, nearZ, xB, maxY, farZ);
+    }
+
+    private void appendTorchSprite(final ChunkMeshBuilder builder, final int textureId, final float minX, final float minY, final float minZ, final float size) {
+        final float centerX = minX + size * 0.5f;
+        final float centerZ = minZ + size * 0.5f;
+        final float halfWidth = size * 0.22f;
+        final float bottomY = minY;
+        final float topY = minY + size * 0.88f;
+        appendFace(builder, textureId, 1.0f,
+                centerX - halfWidth, bottomY, centerZ - halfWidth,
+                centerX + halfWidth, bottomY, centerZ + halfWidth,
+                centerX + halfWidth, topY, centerZ + halfWidth,
+                centerX - halfWidth, topY, centerZ - halfWidth);
+        appendFace(builder, textureId, 1.0f,
+                centerX - halfWidth, bottomY, centerZ + halfWidth,
+                centerX + halfWidth, bottomY, centerZ - halfWidth,
+                centerX + halfWidth, topY, centerZ - halfWidth,
+                centerX - halfWidth, topY, centerZ + halfWidth);
+    }
+
+    private void appendRedstoneWire(final ChunkMeshBuilder builder, final Block block, final int textureId, final float minX, final float minY, final float minZ, final float size) {
+        final float y = minY + size * 0.028f;
+        final float centerX = minX + size * 0.5f;
+        final float centerZ = minZ + size * 0.5f;
+        final float dotHalf = size * 0.18f;
+        final float lineHalf = size * 0.095f;
+        final boolean north = isSameBlockType(block, 0, 0, -1);
+        final boolean south = isSameBlockType(block, 0, 0, 1);
+        final boolean west = isSameBlockType(block, -1, 0, 0);
+        final boolean east = isSameBlockType(block, 1, 0, 0);
+
+        builder.addFlatQuad(textureId, 1.0f,
+                centerX - dotHalf, y, centerZ - dotHalf,
+                centerX + dotHalf, y, centerZ - dotHalf,
+                centerX + dotHalf, y, centerZ + dotHalf,
+                centerX - dotHalf, y, centerZ + dotHalf,
+                0.0f, 0.0f, 1.0f, 1.0f);
+
+        if (north || (!south && !west && !east)) {
+            builder.addFlatQuad(textureId, 1.0f,
+                    centerX - lineHalf, y, minZ,
+                    centerX + lineHalf, y, minZ,
+                    centerX + lineHalf, y, centerZ,
+                    centerX - lineHalf, y, centerZ,
+                    0.0f, 0.0f, 1.0f, 1.0f);
+        }
+        if (south || (!north && !west && !east)) {
+            builder.addFlatQuad(textureId, 1.0f,
+                    centerX - lineHalf, y, centerZ,
+                    centerX + lineHalf, y, centerZ,
+                    centerX + lineHalf, y, minZ + size,
+                    centerX - lineHalf, y, minZ + size,
+                    0.0f, 0.0f, 1.0f, 1.0f);
+        }
+        if (west || (!north && !south && !east)) {
+            builder.addFlatQuad(textureId, 1.0f,
+                    minX, y, centerZ - lineHalf,
+                    centerX, y, centerZ - lineHalf,
+                    centerX, y, centerZ + lineHalf,
+                    minX, y, centerZ + lineHalf,
+                    0.0f, 0.0f, 1.0f, 1.0f);
+        }
+        if (east || (!north && !south && !west)) {
+            builder.addFlatQuad(textureId, 1.0f,
+                    centerX, y, centerZ - lineHalf,
+                    minX + size, y, centerZ - lineHalf,
+                    minX + size, y, centerZ + lineHalf,
+                    centerX, y, centerZ + lineHalf,
+                    0.0f, 0.0f, 1.0f, 1.0f);
+        }
+    }
+
+    private void appendFace(
+            final ChunkMeshBuilder builder,
+            final int textureId,
+            final float shade,
+            final float x1, final float y1, final float z1,
+            final float x2, final float y2, final float z2,
+            final float x3, final float y3, final float z3,
+            final float x4, final float y4, final float z4
+    ) {
+        final float[] normal = normalFromQuad(
+                x1, y1, z1,
+                x2, y2, z2,
+                x3, y3, z3
+        );
+        builder.addQuad(textureId, shade, normal[0], normal[1], normal[2], x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4);
     }
 
     private int horizontalTexture(final BlockTextures textures, final Block block, final BlockFacing face) {
@@ -660,180 +839,32 @@ public class WorldRenderer {
         return variants[variantIndex];
     }
 
-    private void drawFace(
-            final int textureId,
-            final float shade,
-            final float x1, final float y1, final float z1,
-            final float x2, final float y2, final float z2,
-            final float x3, final float y3, final float z3,
-            final float x4, final float y4, final float z4
-    ) {
-        glBindTexture(GL_TEXTURE_2D, textureId);
-        final float[] normal = normalFromQuad(
-                x1, y1, z1,
-                x2, y2, z2,
-                x3, y3, z3
-        );
-        setShade(shade);
-        glNormal3f(normal[0], normal[1], normal[2]);
-        glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f);
-        glVertex3f(x1, y1, z1);
-        glTexCoord2f(1.0f, 0.0f);
-        glVertex3f(x2, y2, z2);
-        glTexCoord2f(1.0f, 1.0f);
-        glVertex3f(x3, y3, z3);
-        glTexCoord2f(0.0f, 1.0f);
-        glVertex3f(x4, y4, z4);
-        glEnd();
-    }
-
-    private void drawCrossPlant(final int textureId, final float minX, final float minY, final float minZ, final float size) {
-        final float inset = size * 0.05f;
-        final float maxY = minY + size;
-        final float centerX = minX + size * 0.5f;
-        final float centerZ = minZ + size * 0.5f;
-        final float leftX = minX + inset;
-        final float rightX = minX + size - inset;
-        final float nearZ = minZ + inset;
-        final float farZ = minZ + size - inset;
-
-        drawFace(textureId, 1.0f, leftX, minY, centerZ, rightX, minY, centerZ, rightX, maxY, centerZ, leftX, maxY, centerZ);
-        drawFace(textureId, 1.0f, centerX, minY, farZ, centerX, minY, nearZ, centerX, maxY, nearZ, centerX, maxY, farZ);
-    }
-
-    private void drawCropPlant(final int textureId, final float minX, final float minY, final float minZ, final float size) {
-        final float maxY = minY + size * 0.875f;
-        final float leftX = minX + size * 0.18f;
-        final float rightX = minX + size * 0.82f;
-        final float nearZ = minZ + size * 0.18f;
-        final float farZ = minZ + size * 0.82f;
-        final float zA = minZ + size * 0.34f;
-        final float zB = minZ + size * 0.66f;
-        final float xA = minX + size * 0.34f;
-        final float xB = minX + size * 0.66f;
-
-        drawFace(textureId, 1.0f, leftX, minY, zA, rightX, minY, zA, rightX, maxY, zA, leftX, maxY, zA);
-        drawFace(textureId, 1.0f, leftX, minY, zB, rightX, minY, zB, rightX, maxY, zB, leftX, maxY, zB);
-        drawFace(textureId, 1.0f, xA, minY, farZ, xA, minY, nearZ, xA, maxY, nearZ, xA, maxY, farZ);
-        drawFace(textureId, 1.0f, xB, minY, farZ, xB, minY, nearZ, xB, maxY, nearZ, xB, maxY, farZ);
-    }
-
-    private void drawTorchSprite(final int textureId, final float minX, final float minY, final float minZ, final float size) {
-        final float centerX = minX + size * 0.5f;
-        final float centerZ = minZ + size * 0.5f;
-        final float halfWidth = size * 0.22f;
-        final float bottomY = minY;
-        final float topY = minY + size * 0.88f;
-        drawFace(textureId, 1.0f,
-                centerX - halfWidth, bottomY, centerZ - halfWidth,
-                centerX + halfWidth, bottomY, centerZ + halfWidth,
-                centerX + halfWidth, topY, centerZ + halfWidth,
-                centerX - halfWidth, topY, centerZ - halfWidth);
-        drawFace(textureId, 1.0f,
-                centerX - halfWidth, bottomY, centerZ + halfWidth,
-                centerX + halfWidth, bottomY, centerZ - halfWidth,
-                centerX + halfWidth, topY, centerZ - halfWidth,
-                centerX - halfWidth, topY, centerZ + halfWidth);
-    }
-
-    private void drawRedstoneWire(final Block block, final int textureId, final float minX, final float minY, final float minZ, final float size) {
-        final float y = minY + size * 0.028f;
-        final float centerX = minX + size * 0.5f;
-        final float centerZ = minZ + size * 0.5f;
-        final float dotHalf = size * 0.18f;
-        final float lineHalf = size * 0.095f;
-        final boolean north = isSameBlockType(block, 0, 0, -1);
-        final boolean south = isSameBlockType(block, 0, 0, 1);
-        final boolean west = isSameBlockType(block, -1, 0, 0);
-        final boolean east = isSameBlockType(block, 1, 0, 0);
-
-        drawFlatFace(textureId, 1.0f,
-                centerX - dotHalf, y, centerZ - dotHalf,
-                centerX + dotHalf, y, centerZ - dotHalf,
-                centerX + dotHalf, y, centerZ + dotHalf,
-                centerX - dotHalf, y, centerZ + dotHalf,
-                0.0f, 0.0f, 1.0f, 1.0f);
-
-        if (north || (!south && !west && !east)) {
-            drawFlatFace(textureId, 1.0f,
-                    centerX - lineHalf, y, minZ,
-                    centerX + lineHalf, y, minZ,
-                    centerX + lineHalf, y, centerZ,
-                    centerX - lineHalf, y, centerZ,
-                    0.0f, 0.0f, 1.0f, 1.0f);
-        }
-        if (south || (!north && !west && !east)) {
-            drawFlatFace(textureId, 1.0f,
-                    centerX - lineHalf, y, centerZ,
-                    centerX + lineHalf, y, centerZ,
-                    centerX + lineHalf, y, minZ + size,
-                    centerX - lineHalf, y, minZ + size,
-                    0.0f, 0.0f, 1.0f, 1.0f);
-        }
-        if (west || (!north && !south && !east)) {
-            drawFlatFace(textureId, 1.0f,
-                    minX, y, centerZ - lineHalf,
-                    centerX, y, centerZ - lineHalf,
-                    centerX, y, centerZ + lineHalf,
-                    minX, y, centerZ + lineHalf,
-                    0.0f, 0.0f, 1.0f, 1.0f);
-        }
-        if (east || (!north && !south && !west)) {
-            drawFlatFace(textureId, 1.0f,
-                    centerX, y, centerZ - lineHalf,
-                    minX + size, y, centerZ - lineHalf,
-                    minX + size, y, centerZ + lineHalf,
-                    centerX, y, centerZ + lineHalf,
-                    0.0f, 0.0f, 1.0f, 1.0f);
-        }
-    }
-
     private boolean isSameBlockType(final Block block, final int dx, final int dy, final int dz) {
         final Block neighbor = world.getBlock(block.getWorldX() + dx, block.getWorldY() + dy, block.getWorldZ() + dz);
         return neighbor != null && block.getTypeId().equals(neighbor.getTypeId());
     }
 
-    private void drawFlatFace(
-            final int textureId,
-            final float shade,
-            final float x1, final float y1, final float z1,
-            final float x2, final float y2, final float z2,
-            final float x3, final float y3, final float z3,
-            final float x4, final float y4, final float z4,
-            final float u1, final float v1, final float u2, final float v2
-    ) {
-        glBindTexture(GL_TEXTURE_2D, textureId);
-        final float[] normal = normalFromQuad(
-                x1, y1, z1,
-                x2, y2, z2,
-                x3, y3, z3
-        );
-        setShade(shade);
-        glNormal3f(normal[0], normal[1], normal[2]);
-        glBegin(GL_QUADS);
-        glTexCoord2f(u1, v1);
-        glVertex3f(x1, y1, z1);
-        glTexCoord2f(u2, v1);
-        glVertex3f(x2, y2, z2);
-        glTexCoord2f(u2, v2);
-        glVertex3f(x3, y3, z3);
-        glTexCoord2f(u1, v2);
-        glVertex3f(x4, y4, z4);
-        glEnd();
-    }
-
-    private boolean isFaceVisible(final int neighborX, final int neighborY, final int neighborZ) {
+    private boolean isFaceVisible(final Block block, final int neighborX, final int neighborY, final int neighborZ) {
         final Block neighbor = world.getBlock(neighborX, neighborY, neighborZ);
+        if (isLiquidBlock(block)) {
+            return neighbor == null;
+        }
+        if (isLiquidBlock(neighbor)) {
+            return true;
+        }
         return !isOccludingFullBlock(neighbor);
     }
 
     private boolean isOccludingFullBlock(final Block block) {
-        if (block == null || !block.isSolid()) {
+        if (block == null) {
             return false;
         }
         final String shape = blockShapes.getOrDefault(block.getTypeId(), "cube");
-        return "cube".equals(shape);
+        return "cube".equals(shape) && block.isSolid();
+    }
+
+    private boolean isLiquidBlock(final Block block) {
+        return block != null && ("water".equals(block.getTypeId().path()) || "lava".equals(block.getTypeId().path()));
     }
 
     private void initializeTextures() {
@@ -848,9 +879,11 @@ public class WorldRenderer {
                     ? type.get(ModelComponent.class)
                     : new ModelComponent(type.id().path());
             blockShapes.put(type.id(), model.shape());
-            final MinecraftBlockModel[] minecraftModels = loadMinecraftBlockModels(type, model, grassTint, BlockFacing.NORTH);
-            if (minecraftModels.length > 0) {
-                minecraftBlockModels.put(new BlockModelKey(type.id(), BlockFacing.NORTH), minecraftModels);
+            if (ENABLE_MINECRAFT_BLOCK_MODELS) {
+                final MinecraftBlockModel[] minecraftModels = loadMinecraftBlockModels(type, model, grassTint, BlockFacing.NORTH);
+                if (minecraftModels.length > 0) {
+                    minecraftBlockModels.put(new BlockModelKey(type.id(), BlockFacing.NORTH), minecraftModels);
+                }
             }
             final boolean leafBlock = isLeafBlock(type);
             final int variantCount = leafBlock ? 1 : resolveVariantCount(model);
@@ -1853,11 +1886,6 @@ public class WorldRenderer {
         return ((r & 0xff) << 24) | ((g & 0xff) << 16) | ((b & 0xff) << 8) | (a & 0xff);
     }
 
-    private void setShade(final float shade) {
-        final float s = clampFloat(shade, 0.0f, 1.0f);
-        glColor3f(s, s, s);
-    }
-
     private float[] normalFromVertices(final float[][] vertices) {
         if (vertices == null || vertices.length < 3) {
             return new float[]{0.0f, 1.0f, 0.0f};
@@ -1917,6 +1945,197 @@ public class WorldRenderer {
 
     private int clampInt(final int value, final int min, final int max) {
         return Math.max(min, Math.min(max, value));
+    }
+
+    private static final class ChunkMeshBuilder {
+        private final Map<Integer, FloatList> batches = new LinkedHashMap<>();
+
+        private void addQuad(
+                final int textureId,
+                final float shade,
+                final float normalX,
+                final float normalY,
+                final float normalZ,
+                final float x1, final float y1, final float z1,
+                final float x2, final float y2, final float z2,
+                final float x3, final float y3, final float z3,
+                final float x4, final float y4, final float z4
+        ) {
+            addQuad(textureId, shade, normalX, normalY, normalZ, new float[][]{
+                    {x1, y1, z1},
+                    {x2, y2, z2},
+                    {x3, y3, z3},
+                    {x4, y4, z4}
+            }, new float[][]{
+                    {0.0f, 0.0f},
+                    {1.0f, 0.0f},
+                    {1.0f, 1.0f},
+                    {0.0f, 1.0f}
+            });
+        }
+
+        private void addFlatQuad(
+                final int textureId,
+                final float shade,
+                final float x1, final float y1, final float z1,
+                final float x2, final float y2, final float z2,
+                final float x3, final float y3, final float z3,
+                final float x4, final float y4, final float z4,
+                final float u1, final float v1, final float u2, final float v2
+        ) {
+            addQuad(textureId, shade, 0.0f, 1.0f, 0.0f, new float[][]{
+                    {x1, y1, z1},
+                    {x2, y2, z2},
+                    {x3, y3, z3},
+                    {x4, y4, z4}
+            }, new float[][]{
+                    {u1, v1},
+                    {u2, v1},
+                    {u2, v2},
+                    {u1, v2}
+            });
+        }
+
+        private void addQuad(
+                final int textureId,
+                final float shade,
+                final float normalX,
+                final float normalY,
+                final float normalZ,
+                final float[][] vertices,
+                final float[][] uvs
+        ) {
+            if (textureId == 0 || vertices.length < 4 || uvs.length < 4) {
+                return;
+            }
+            final FloatList data = batches.computeIfAbsent(textureId, ignored -> new FloatList());
+            addTriangle(data, shade, normalX, normalY, normalZ, vertices, uvs, 0, 1, 2);
+            addTriangle(data, shade, normalX, normalY, normalZ, vertices, uvs, 0, 2, 3);
+        }
+
+        private void addTriangle(
+                final FloatList data,
+                final float shade,
+                final float normalX,
+                final float normalY,
+                final float normalZ,
+                final float[][] vertices,
+                final float[][] uvs,
+                final int a,
+                final int b,
+                final int c
+        ) {
+            addVertex(data, shade, normalX, normalY, normalZ, vertices[a], uvs[a]);
+            addVertex(data, shade, normalX, normalY, normalZ, vertices[b], uvs[b]);
+            addVertex(data, shade, normalX, normalY, normalZ, vertices[c], uvs[c]);
+        }
+
+        private void addVertex(
+                final FloatList data,
+                final float shade,
+                final float normalX,
+                final float normalY,
+                final float normalZ,
+                final float[] vertex,
+                final float[] uv
+        ) {
+            data.add(vertex[0]);
+            data.add(vertex[1]);
+            data.add(vertex[2]);
+            data.add(normalX);
+            data.add(normalY);
+            data.add(normalZ);
+            data.add(uv[0]);
+            data.add(uv[1]);
+            data.add(shade);
+            data.add(shade);
+            data.add(shade);
+        }
+
+        private ChunkMesh upload(final long revision) {
+            final List<MeshBatch> uploaded = new ArrayList<>();
+            for (final Map.Entry<Integer, FloatList> entry : batches.entrySet()) {
+                final FloatList data = entry.getValue();
+                if (data.isEmpty()) {
+                    continue;
+                }
+
+                final int vboId = glGenBuffers();
+                if (vboId == 0) {
+                    continue;
+                }
+
+                glBindBuffer(GL_ARRAY_BUFFER, vboId);
+                glBufferData(GL_ARRAY_BUFFER, data.toBuffer(), GL_STATIC_DRAW);
+                uploaded.add(new MeshBatch(entry.getKey(), vboId, data.vertexCount()));
+            }
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            return new ChunkMesh(revision, uploaded);
+        }
+    }
+
+    private static final class FloatList {
+        private float[] values = new float[1024];
+        private int size;
+
+        private void add(final float value) {
+            if (size == values.length) {
+                final float[] grown = new float[values.length * 2];
+                System.arraycopy(values, 0, grown, 0, values.length);
+                values = grown;
+            }
+            values[size++] = value;
+        }
+
+        private boolean isEmpty() {
+            return size == 0;
+        }
+
+        private int vertexCount() {
+            return size / VERTEX_FLOATS;
+        }
+
+        private FloatBuffer toBuffer() {
+            final FloatBuffer buffer = BufferUtils.createFloatBuffer(size);
+            buffer.put(values, 0, size);
+            buffer.flip();
+            return buffer;
+        }
+    }
+
+    private record ChunkMesh(long builtRevision, List<MeshBatch> batches) {
+        private void render() {
+            for (final MeshBatch batch : batches) {
+                batch.render();
+            }
+        }
+
+        private void destroy() {
+            for (final MeshBatch batch : batches) {
+                batch.destroy();
+            }
+        }
+    }
+
+    private record MeshBatch(int textureId, int vboId, int vertexCount) {
+        private void render() {
+            if (vboId == 0 || vertexCount <= 0) {
+                return;
+            }
+            glBindTexture(GL_TEXTURE_2D, textureId);
+            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+            glVertexPointer(3, GL_FLOAT, VERTEX_STRIDE_BYTES, 0L);
+            glNormalPointer(GL_FLOAT, VERTEX_STRIDE_BYTES, NORMAL_OFFSET_BYTES);
+            glTexCoordPointer(2, GL_FLOAT, VERTEX_STRIDE_BYTES, TEX_COORD_OFFSET_BYTES);
+            glColorPointer(3, GL_FLOAT, VERTEX_STRIDE_BYTES, COLOR_OFFSET_BYTES);
+            glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+        }
+
+        private void destroy() {
+            if (vboId != 0) {
+                glDeleteBuffers(vboId);
+            }
+        }
     }
 
     private enum Face {
